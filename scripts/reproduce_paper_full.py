@@ -84,7 +84,8 @@ def get_dominant_stressor(c: dict) -> str:
         return "Lock-mint"
 
 def run_reproduction():
-    exploits_path = Path("/Users/elite/Downloads/archived/xtain/CrossTaint/data/crosschain_bridge_exploits_55.json")
+    root_p = Path(__file__).resolve().parent.parent
+    exploits_path = root_p / "data" / "crosschain_bridge_exploits_55.json"
     with open(exploits_path, "r", encoding="utf-8") as f:
         exploits_data = json.load(f)
     cases_raw = exploits_data["cases"]
@@ -440,7 +441,7 @@ def run_reproduction():
         "statistical_significance": significance,
     }
 
-    out_dir = Path("/Users/elite/Downloads/archived/xtain/CrossTaint/results")
+    out_dir = root_p / "results"
     out_dir.mkdir(parents=True, exist_ok=True)
     with open(out_dir / "paper_reproduction_rigorous.json", "w", encoding="utf-8") as f:
         json.dump(out_res, f, indent=2)

@@ -383,7 +383,7 @@ def run_evaluation(
     return final_results
 
 if __name__ == "__main__":
-    m_path = Path("/Users/elite/Downloads/archived/xtain/CrossTaint/data/manifest_55_corpus.json")
+    m_path = Path(__file__).resolve().parent.parent / "data" / "manifest_55_corpus.json"
     out = run_evaluation(manifest_path=m_path, num_runs=10, seed=42)
     print("Benchmark complete!")
     print(json.dumps(out["table2_benchmarks"], indent=2))

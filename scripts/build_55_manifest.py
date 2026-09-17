@@ -126,7 +126,8 @@ def build_manifest(exploits_path: Path, output_path: Path) -> dict:
     return manifest
 
 if __name__ == "__main__":
-    src_p = Path("/Users/elite/Downloads/archived/xtain/CrossTaint/data/crosschain_bridge_exploits_55.json")
-    dst_p = Path("/Users/elite/Downloads/archived/xtain/CrossTaint/data/manifest_55_corpus.json")
+    root_p = Path(__file__).resolve().parent.parent
+    src_p = root_p / "data" / "crosschain_bridge_exploits_55.json"
+    dst_p = root_p / "data" / "manifest_55_corpus.json"
     res = build_manifest(src_p, dst_p)
     print(f"Generated manifest with {res['total_cases']} cases, total stolen: ${res['total_stolen_usd']:,}")
