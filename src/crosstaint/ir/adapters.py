@@ -1,10 +1,3 @@
-"""
-Bridge adapter registry and concrete adapter implementations.
-
-Each adapter translates protocol-specific events into canonical IR edges
-using the unified operator set (Lock, Mint, Burn, Release, IntentFill).
-"""
-
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
@@ -25,7 +18,6 @@ if TYPE_CHECKING:
 
 @dataclass(frozen=True, slots=True)
 class WormholeEventParams:
-    """Extracted parameters from Wormhole events."""
     amount: int
     sender_address: str
     recipient_address: str
@@ -35,7 +27,6 @@ class WormholeEventParams:
 
 @dataclass(frozen=True, slots=True)
 class LayerZeroEventParams:
-    """Extracted parameters from LayerZero events."""
     destination_chain: int
     destination_address: str
     amount: int
@@ -44,7 +35,6 @@ class LayerZeroEventParams:
 
 @dataclass(frozen=True, slots=True)
 class MultichainEventParams:
-    """Extracted parameters from Multichain events."""
     token: str
     amount: int
     sender: str
@@ -54,7 +44,6 @@ class MultichainEventParams:
 
 @dataclass(frozen=True, slots=True)
 class StargateEventParams:
-    """Extracted parameters from Stargate events."""
     amount: int
     src_chain: int
     dst_chain: int
@@ -64,7 +53,6 @@ class StargateEventParams:
 
 @dataclass(frozen=True, slots=True)
 class AcrossEventParams:
-    """Extracted parameters from Across events."""
     amount: int
     origin_token: str
     recipient: str
@@ -74,7 +62,6 @@ class AcrossEventParams:
 
 @dataclass(frozen=True, slots=True)
 class HopEventParams:
-    """Extracted parameters from Hop events."""
     amount: int
     recipient: str
     sender: str
@@ -83,7 +70,6 @@ class HopEventParams:
 
 @dataclass(frozen=True, slots=True)
 class CBridgeEventParams:
-    """Extracted parameters from CBridge events."""
     amount: int
     sender: str
     receiver: str
@@ -93,7 +79,6 @@ class CBridgeEventParams:
 
 @dataclass(frozen=True, slots=True)
 class SynapseEventParams:
-    """Extracted parameters from Synapse events."""
     token: str
     amount: int
     to: str
@@ -103,7 +88,6 @@ class SynapseEventParams:
 
 @dataclass(frozen=True, slots=True)
 class HyperlaneEventParams:
-    """Extracted parameters from Hyperlane events."""
     sender: str
     recipient: str
     amount: int
@@ -112,34 +96,25 @@ class HyperlaneEventParams:
 
 
 class BaseBridgeAdapter(ABC):
-    """Abstract base class for bridge adapters."""
+    @abstractmethod
+    def bridge_id(self) -> str: ...
 
     @abstractmethod
-    def bridge_id(self) -> str:
-        """Return the unique identifier for this bridge."""
-
-    @abstractmethod
-    def bridge_mode(self) -> str:
-        """Return the bridge mode (lock_mint, burn_mint, pool, intent)."""
+    def bridge_mode(self) -> str: ...
 
     def source_event_names(self) -> tuple[str, ...]:
-        """Return the event names that represent source operations."""
         return ()
 
     def dest_event_names(self) -> tuple[str, ...]:
-        """Return the event names that represent destination operations."""
         return ()
 
     def is_source_event(self, event: DecodedEvent) -> bool:
-        """Check if event is a source (lock/burn) event."""
         return event.event_name in self.source_event_names()
 
     def is_dest_event(self, event: DecodedEvent) -> bool:
-        """Check if event is a destination (mint/release) event."""
         return event.event_name in self.dest_event_names()
 
     def _get_int(self, params: dict[str, object], key: str) -> int:
-        """Safely extract integer from params dict."""
         val = params.get(key)
         if val is None:
             return 0
@@ -155,12 +130,10 @@ class BaseBridgeAdapter(ABC):
         return 0
 
     def _get_str(self, params: dict[str, object], key: str) -> str:
-        """Safely extract string from params dict."""
         val = params.get(key)
         return str(val) if val is not None else ""
 
     def _get_topic_address(self, topics: tuple[bytes, ...], index: int) -> str:
-        """Extract address from topic at given index."""
         if index < len(topics):
             topic = topics[index]
             if len(topic) == 32:
@@ -168,7 +141,6 @@ class BaseBridgeAdapter(ABC):
         return ""
 
     def _node_id(self, chain: str, address: str) -> str:
-        """Create standardized node ID from chain and address."""
         return f"{chain}:{address.lower()}"
 
     def _create_bridge_edge(
@@ -180,7 +152,6 @@ class BaseBridgeAdapter(ABC):
         event: DecodedEvent,
         amount: int,
     ) -> IREdge:
-        """Factory method to create a bridge IREdge."""
         from crosstaint.ir.operators import BridgeIRTranslator
         translator = BridgeIRTranslator()
         asset = translator._extract_asset(event)
@@ -201,27 +172,21 @@ class BaseBridgeAdapter(ABC):
         )
 
     def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode a lock event. Subclasses override for protocol-specific logic."""
         return None
 
     def decode_mint(self, event: DecodedEvent) -> IREdge | None:
-        """Decode a mint event. Subclasses override for protocol-specific logic."""
         return None
 
     def decode_burn(self, event: DecodedEvent) -> IREdge | None:
-        """Decode a burn event. Subclasses override for protocol-specific logic."""
         return None
 
     def decode_release(self, event: DecodedEvent) -> IREdge | None:
-        """Decode a release event. Subclasses override for protocol-specific logic."""
         return None
 
     def decode_intent_fill(self, event: DecodedEvent) -> IREdge | None:
-        """Decode an intent fill event. Subclasses override for protocol-specific logic."""
         return None
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if source and dest events form a valid bridge pair."""
         if source.chain == dest.chain:
             return False
         if not self.is_source_event(source):
@@ -232,8 +197,6 @@ class BaseBridgeAdapter(ABC):
 
 
 class WormholeAdapter(BaseBridgeAdapter):
-    """Adapter for Wormhole bridge (lock_mint mode)."""
-
     SOURCE_EVENTS = ("LogMessagePublished", "Send")
     DEST_EVENTS = ("TransferRedeemed", "Receive")
 
@@ -252,7 +215,6 @@ class WormholeAdapter(BaseBridgeAdapter):
     def _extract_wormhole_params(
         self, event: DecodedEvent
     ) -> WormholeEventParams | None:
-        """Extract params from Wormhole event."""
         params = event.params
         amount = self._get_int(params, "amount")
         if amount == 0:
@@ -279,7 +241,6 @@ class WormholeAdapter(BaseBridgeAdapter):
         )
 
     def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Wormhole lock (source) event."""
         if event.event_name not in self.SOURCE_EVENTS:
             return None
         parsed = self._extract_wormhole_params(event)
@@ -300,7 +261,6 @@ class WormholeAdapter(BaseBridgeAdapter):
         )
 
     def decode_mint(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Wormhole mint (dest) event."""
         if event.event_name not in self.DEST_EVENTS:
             return None
         parsed = self._extract_wormhole_params(event)
@@ -322,7 +282,6 @@ class WormholeAdapter(BaseBridgeAdapter):
         )
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if Wormhole source and dest events form a valid pair."""
         if not super().is_pair(source, dest):
             return False
         source_parsed = self._extract_wormhole_params(source)
@@ -337,8 +296,6 @@ class WormholeAdapter(BaseBridgeAdapter):
 
 
 class LayerZeroAdapter(BaseBridgeAdapter):
-    """Adapter for LayerZero bridge (lock_mint mode)."""
-
     SOURCE_EVENTS = ("PacketSent",)
     DEST_EVENTS = ("PacketReceived",)
 
@@ -357,7 +314,6 @@ class LayerZeroAdapter(BaseBridgeAdapter):
     def _extract_layerzero_params(
         self, event: DecodedEvent
     ) -> LayerZeroEventParams | None:
-        """Extract params from LayerZero event."""
         params = event.params
         destination_chain = self._get_int(params, "dstChainId")
         if destination_chain == 0:
@@ -383,7 +339,6 @@ class LayerZeroAdapter(BaseBridgeAdapter):
         )
 
     def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode LayerZero lock (source) event."""
         if event.event_name not in self.SOURCE_EVENTS:
             return None
         parsed = self._extract_layerzero_params(event)
@@ -402,7 +357,6 @@ class LayerZeroAdapter(BaseBridgeAdapter):
         )
 
     def decode_mint(self, event: DecodedEvent) -> IREdge | None:
-        """Decode LayerZero mint (dest) event."""
         if event.event_name not in self.DEST_EVENTS:
             return None
         parsed = self._extract_layerzero_params(event)
@@ -422,7 +376,6 @@ class LayerZeroAdapter(BaseBridgeAdapter):
         )
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if LayerZero source and dest events form a valid pair."""
         if not super().is_pair(source, dest):
             return False
         source_parsed = self._extract_layerzero_params(source)
@@ -437,8 +390,6 @@ class LayerZeroAdapter(BaseBridgeAdapter):
 
 
 class MultichainAdapter(BaseBridgeAdapter):
-    """Adapter for Multichain bridge (lock_mint mode)."""
-
     SOURCE_EVENTS = ("LogAnySwapIn", "SwapRemote")
     DEST_EVENTS = ("LogAnySwapOut", "SwapRemote")
 
@@ -457,7 +408,6 @@ class MultichainAdapter(BaseBridgeAdapter):
     def _extract_multichain_params(
         self, event: DecodedEvent
     ) -> MultichainEventParams | None:
-        """Extract params from Multichain event."""
         params = event.params
         token = self._get_str(params, "token")
         if not token:
@@ -483,7 +433,6 @@ class MultichainAdapter(BaseBridgeAdapter):
         )
 
     def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Multichain lock (source) event."""
         if event.event_name not in self.SOURCE_EVENTS:
             return None
         parsed = self._extract_multichain_params(event)
@@ -502,7 +451,6 @@ class MultichainAdapter(BaseBridgeAdapter):
         )
 
     def decode_mint(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Multichain mint (dest) event."""
         if event.event_name not in self.DEST_EVENTS:
             return None
         parsed = self._extract_multichain_params(event)
@@ -522,7 +470,6 @@ class MultichainAdapter(BaseBridgeAdapter):
         )
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if Multichain source and dest events form a valid pair."""
         if not super().is_pair(source, dest):
             return False
         source_parsed = self._extract_multichain_params(source)
@@ -535,8 +482,6 @@ class MultichainAdapter(BaseBridgeAdapter):
 
 
 class StargateAdapter(BaseBridgeAdapter):
-    """Adapter for Stargate bridge (pool mode)."""
-
     SOURCE_EVENTS = ("TokenMintAndSwap", "Send")
     DEST_EVENTS = ("TokenRedeem", "Receive")
 
@@ -555,7 +500,6 @@ class StargateAdapter(BaseBridgeAdapter):
     def _extract_stargate_params(
         self, event: DecodedEvent
     ) -> StargateEventParams | None:
-        """Extract params from Stargate event."""
         params = event.params
         amount = self._get_int(params, "amount")
         if amount == 0:
@@ -583,7 +527,6 @@ class StargateAdapter(BaseBridgeAdapter):
         )
 
     def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Stargate lock (source) event."""
         if event.event_name not in self.SOURCE_EVENTS:
             return None
         parsed = self._extract_stargate_params(event)
@@ -602,7 +545,6 @@ class StargateAdapter(BaseBridgeAdapter):
         )
 
     def decode_release(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Stargate release (dest) event."""
         if event.event_name not in self.DEST_EVENTS:
             return None
         parsed = self._extract_stargate_params(event)
@@ -622,7 +564,6 @@ class StargateAdapter(BaseBridgeAdapter):
         )
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if Stargate source and dest events form a valid pair."""
         if not super().is_pair(source, dest):
             return False
         source_parsed = self._extract_stargate_params(source)
@@ -635,8 +576,6 @@ class StargateAdapter(BaseBridgeAdapter):
 
 
 class AcrossAdapter(BaseBridgeAdapter):
-    """Adapter for Across bridge (intent mode)."""
-
     SOURCE_EVENTS = ("FundsDeposited",)
     DEST_EVENTS = ("FilledRelay",)
 
@@ -655,7 +594,6 @@ class AcrossAdapter(BaseBridgeAdapter):
     def _extract_across_params(
         self, event: DecodedEvent
     ) -> AcrossEventParams | None:
-        """Extract params from Across event."""
         params = event.params
         amount = self._get_int(params, "amount")
         if amount == 0:
@@ -683,7 +621,6 @@ class AcrossAdapter(BaseBridgeAdapter):
         )
 
     def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Across deposit (source) event."""
         if event.event_name not in self.SOURCE_EVENTS:
             return None
         parsed = self._extract_across_params(event)
@@ -702,7 +639,6 @@ class AcrossAdapter(BaseBridgeAdapter):
         )
 
     def decode_intent_fill(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Across fill (dest) event."""
         if event.event_name not in self.DEST_EVENTS:
             return None
         parsed = self._extract_across_params(event)
@@ -722,7 +658,6 @@ class AcrossAdapter(BaseBridgeAdapter):
         )
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if Across source and dest events form a valid pair."""
         if not super().is_pair(source, dest):
             return False
         source_parsed = self._extract_across_params(source)
@@ -735,8 +670,6 @@ class AcrossAdapter(BaseBridgeAdapter):
 
 
 class HopAdapter(BaseBridgeAdapter):
-    """Adapter for Hop bridge (pool mode)."""
-
     SOURCE_EVENTS = ("TransferSent",)
     DEST_EVENTS = ("TransferReceived",)
 
@@ -753,7 +686,6 @@ class HopAdapter(BaseBridgeAdapter):
         return self.DEST_EVENTS
 
     def _extract_hop_params(self, event: DecodedEvent) -> HopEventParams | None:
-        """Extract params from Hop event."""
         params = event.params
         amount = self._get_int(params, "amount")
         if amount == 0:
@@ -775,7 +707,6 @@ class HopAdapter(BaseBridgeAdapter):
         )
 
     def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Hop lock (source) event."""
         if event.event_name not in self.SOURCE_EVENTS:
             return None
         parsed = self._extract_hop_params(event)
@@ -794,7 +725,6 @@ class HopAdapter(BaseBridgeAdapter):
         )
 
     def decode_release(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Hop release (dest) event."""
         if event.event_name not in self.DEST_EVENTS:
             return None
         parsed = self._extract_hop_params(event)
@@ -814,7 +744,6 @@ class HopAdapter(BaseBridgeAdapter):
         )
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if Hop source and dest events form a valid pair."""
         if not super().is_pair(source, dest):
             return False
         source_parsed = self._extract_hop_params(source)
@@ -827,8 +756,6 @@ class HopAdapter(BaseBridgeAdapter):
 
 
 class CBridgeAdapter(BaseBridgeAdapter):
-    """Adapter for CBridge bridge (pool mode)."""
-
     SOURCE_EVENTS = ("Send",)
     DEST_EVENTS = ("Receive",)
 
@@ -847,7 +774,6 @@ class CBridgeAdapter(BaseBridgeAdapter):
     def _extract_cbridge_params(
         self, event: DecodedEvent
     ) -> CBridgeEventParams | None:
-        """Extract params from CBridge event."""
         params = event.params
         amount = self._get_int(params, "amount")
         if amount == 0:
@@ -875,7 +801,6 @@ class CBridgeAdapter(BaseBridgeAdapter):
         )
 
     def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode CBridge lock (source) event."""
         if event.event_name not in self.SOURCE_EVENTS:
             return None
         parsed = self._extract_cbridge_params(event)
@@ -894,7 +819,6 @@ class CBridgeAdapter(BaseBridgeAdapter):
         )
 
     def decode_release(self, event: DecodedEvent) -> IREdge | None:
-        """Decode CBridge release (dest) event."""
         if event.event_name not in self.DEST_EVENTS:
             return None
         parsed = self._extract_cbridge_params(event)
@@ -914,7 +838,6 @@ class CBridgeAdapter(BaseBridgeAdapter):
         )
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if CBridge source and dest events form a valid pair."""
         if not super().is_pair(source, dest):
             return False
         source_parsed = self._extract_cbridge_params(source)
@@ -927,8 +850,6 @@ class CBridgeAdapter(BaseBridgeAdapter):
 
 
 class SynapseAdapter(BaseBridgeAdapter):
-    """Adapter for Synapse bridge (pool mode)."""
-
     SOURCE_EVENTS = ("TokenSend", "Deposit")
     DEST_EVENTS = ("TokenReceive", "Withdraw")
 
@@ -936,7 +857,7 @@ class SynapseAdapter(BaseBridgeAdapter):
         return "synapse"
 
     def bridge_mode(self) -> str:
-        return "pool"
+        return "burn_mint"
 
     def source_event_names(self) -> tuple[str, ...]:
         return self.SOURCE_EVENTS
@@ -947,7 +868,6 @@ class SynapseAdapter(BaseBridgeAdapter):
     def _extract_synapse_params(
         self, event: DecodedEvent
     ) -> SynapseEventParams | None:
-        """Extract params from Synapse event."""
         params = event.params
         token = self._get_str(params, "token")
         if not token:
@@ -972,8 +892,7 @@ class SynapseAdapter(BaseBridgeAdapter):
             chain_id=chain_id,
         )
 
-    def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Synapse lock (source) event."""
+    def decode_burn(self, event: DecodedEvent) -> IREdge | None:
         if event.event_name not in self.SOURCE_EVENTS:
             return None
         parsed = self._extract_synapse_params(event)
@@ -981,18 +900,17 @@ class SynapseAdapter(BaseBridgeAdapter):
             return None
         source_node = self._node_id(event.chain, parsed.from_)
         target_node = self._node_id(event.chain, parsed.to)
-        edge_id = f"synapse_lock_{event.event_id}"
+        edge_id = f"synapse_burn_{event.event_id}"
         return self._create_bridge_edge(
             edge_id=edge_id,
             source_node=source_node,
             target_node=target_node,
-            operator=TaintOperator.LOCK,
+            operator=TaintOperator.BURN,
             event=event,
             amount=parsed.amount,
         )
 
-    def decode_release(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Synapse release (dest) event."""
+    def decode_mint(self, event: DecodedEvent) -> IREdge | None:
         if event.event_name not in self.DEST_EVENTS:
             return None
         parsed = self._extract_synapse_params(event)
@@ -1001,18 +919,17 @@ class SynapseAdapter(BaseBridgeAdapter):
         recipient = parsed.to or event.emitter_address
         source_node = self._node_id(event.chain, parsed.from_)
         target_node = self._node_id(event.chain, recipient)
-        edge_id = f"synapse_release_{event.event_id}"
+        edge_id = f"synapse_mint_{event.event_id}"
         return self._create_bridge_edge(
             edge_id=edge_id,
             source_node=source_node,
             target_node=target_node,
-            operator=TaintOperator.RELEASE,
+            operator=TaintOperator.MINT,
             event=event,
             amount=parsed.amount,
         )
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if Synapse source and dest events form a valid pair."""
         if not super().is_pair(source, dest):
             return False
         source_parsed = self._extract_synapse_params(source)
@@ -1025,14 +942,8 @@ class SynapseAdapter(BaseBridgeAdapter):
 
 
 class HyperlaneAdapter(BaseBridgeAdapter):
-    """Adapter for Hyperlane bridge (lock_mint mode)."""
-
     SOURCE_EVENTS = ("Dispatch", "Process")
     DEST_EVENTS = ("Process", "Dispatch")
-
-    MAILBOX_TOPIC_SENDER = bytes.fromhex(
-        "6ab88d22ee179cc5e24449b51c89e92c9a56c572e7b2b0f15f31bdb5e1b0cc3a"
-    )
 
     def bridge_id(self) -> str:
         return "hyperlane"
@@ -1049,7 +960,6 @@ class HyperlaneAdapter(BaseBridgeAdapter):
     def _extract_hyperlane_params(
         self, event: DecodedEvent
     ) -> HyperlaneEventParams | None:
-        """Extract params from Hyperlane event."""
         params = event.params
         sender = self._get_str(params, "sender")
         if not sender:
@@ -1079,13 +989,10 @@ class HyperlaneAdapter(BaseBridgeAdapter):
         )
 
     def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Hyperlane lock (source) event."""
         if event.event_name not in self.SOURCE_EVENTS:
             return None
         parsed = self._extract_hyperlane_params(event)
-        if parsed is None:
-            return None
-        if not parsed.sender:
+        if parsed is None or not parsed.sender:
             return None
         source_node = self._node_id(event.chain, parsed.sender)
         target_node = self._node_id(event.chain, parsed.recipient)
@@ -1100,7 +1007,6 @@ class HyperlaneAdapter(BaseBridgeAdapter):
         )
 
     def decode_mint(self, event: DecodedEvent) -> IREdge | None:
-        """Decode Hyperlane mint (dest) event."""
         if event.event_name not in self.DEST_EVENTS:
             return None
         parsed = self._extract_hyperlane_params(event)
@@ -1120,7 +1026,6 @@ class HyperlaneAdapter(BaseBridgeAdapter):
         )
 
     def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        """Check if Hyperlane source and dest events form a valid pair."""
         if not super().is_pair(source, dest):
             return False
         source_parsed = self._extract_hyperlane_params(source)
@@ -1135,14 +1040,11 @@ class HyperlaneAdapter(BaseBridgeAdapter):
 
 
 class AdapterRegistry:
-    """Registry for all bridge adapters."""
-
     def __init__(self) -> None:
         self._adapters: dict[str, BridgeAdapterProtocol] = {}
         self._register_default_adapters()
 
     def _register_default_adapters(self) -> None:
-        """Register all default bridge adapters."""
         default_adapters: list[BaseBridgeAdapter] = [
             WormholeAdapter(),
             LayerZeroAdapter(),
@@ -1158,21 +1060,17 @@ class AdapterRegistry:
             self.register(adapter)
 
     def register(self, adapter: BridgeAdapterProtocol) -> None:
-        """Register a bridge adapter."""
         bridge_id = adapter.bridge_id()
         self._adapters[bridge_id] = adapter
 
     def get(self, bridge_id: str) -> BridgeAdapterProtocol | None:
-        """Get adapter by bridge ID."""
         return self._adapters.get(bridge_id)
 
     @property
     def supported_bridges(self) -> list[str]:
-        """Return list of supported bridge IDs."""
         return list(self._adapters.keys())
 
     def get_adapter_for_event(self, event: DecodedEvent) -> BridgeAdapterProtocol | None:
-        """Find adapter that can handle this event."""
         for adapter in self._adapters.values():
             if adapter.bridge_id() == event.bridge:
                 return adapter
@@ -1180,3 +1078,21 @@ class AdapterRegistry:
                event.event_name in adapter.dest_event_names():
                 return adapter
         return None
+
+
+ALL_BRIDGE_ADAPTERS: tuple[BaseBridgeAdapter, ...] = (
+    WormholeAdapter(),
+    LayerZeroAdapter(),
+    MultichainAdapter(),
+    StargateAdapter(),
+    AcrossAdapter(),
+    HopAdapter(),
+    CBridgeAdapter(),
+    SynapseAdapter(),
+    HyperlaneAdapter(),
+)
+
+
+def all_bridge_adapters() -> tuple[BaseBridgeAdapter, ...]:
+    """Return the default adapter tuple used by the IR graph builder."""
+    return ALL_BRIDGE_ADAPTERS

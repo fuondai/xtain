@@ -1,0 +1,4686 @@
+{
+  "benchmark_name": "CrossTaint Ground-Truth Exploit Corpus 55",
+  "version": "2.0.0",
+  "total_cases": 55,
+  "total_stolen_usd": 2908928354,
+  "cases": [
+    {
+      "case_id": "ronin_2022",
+      "name": "Ronin Bridge",
+      "incident_date": "2022-03-23",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x098b716b8aaf21512996dc57eb0615e2383e2f96",
+        "chain": "ethereum",
+        "value": 624000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "OFAC SDN Designation 2022-04-14 (Lazarus Group Attribution)"
+        },
+        {
+          "source": "FBI National Press Release 2022-04"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/ronin-rekt/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x1a2a1c938ce3ec39b6d47113c7955baa9dd454f2",
+          "value": 624000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "OFAC SDN Designation 2022-04-14 (Lazarus Group Attribution)"
+            },
+            {
+              "source": "FBI National Press Release 2022-04"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/ronin-rekt/"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xc48d851a7db499e6ddfe3e10cd3b8d137e67b1cc",
+          "value": 624000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "OFAC SDN Designation 2022-04-14 (Lazarus Group Attribution)"
+            },
+            {
+              "source": "FBI National Press Release 2022-04"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/ronin-rekt/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "poly_network_2021",
+      "name": "Poly Network",
+      "incident_date": "2021-08-10",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Poly Network",
+      "bridge_mechanism": "Pool-Based",
+      "origin": {
+        "address": "0xc8a65fadf0e0ddaf421f28feab69bf6e2e589963",
+        "chain": "ethereum",
+        "value": 611000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "SlowMist Post-Mortem: https://slowmist.medium.com/the-root-cause-of-poly-network-being-hacked-ec2ee1b0c68f"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/polynetwork-rekt/"
+        },
+        {
+          "source": "BlockSec Incident Analysis 2021"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "multichain",
+          "address": "0x838bf9e95cb12dd76a54c9f9d2e3082eaf928270",
+          "value": 611000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "SlowMist Post-Mortem: https://slowmist.medium.com/the-root-cause-of-poly-network-being-hacked-ec2ee1b0c68f"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/polynetwork-rekt/"
+            },
+            {
+              "source": "BlockSec Incident Analysis 2021"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "multichain",
+          "address": "0x4c549ca42019374706fa1885a8c06d8180b1f555",
+          "value": 611000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "SlowMist Post-Mortem: https://slowmist.medium.com/the-root-cause-of-poly-network-being-hacked-ec2ee1b0c68f"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/polynetwork-rekt/"
+            },
+            {
+              "source": "BlockSec Incident Analysis 2021"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "bsc_token_hub_2022",
+      "name": "BSC Token Hub / BNB Chain Bridge",
+      "incident_date": "2022-10-06",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Wormhole / Portal",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x489a8756c18c0b8b24ec2a2b9ff3d4d447f79bec",
+        "chain": "bsc",
+        "value": 570000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "BNB Chain Official Incident Post-Mortem"
+        },
+        {
+          "source": "Paradigm Security Writeup: https://www.paradigm.xyz/2022/10/bsc"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/bnb-bridge-rekt/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x0000000000000000000000000000000000001004",
+          "value": 570000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "BNB Chain Official Incident Post-Mortem"
+            },
+            {
+              "source": "Paradigm Security Writeup: https://www.paradigm.xyz/2022/10/bsc"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/bnb-bridge-rekt/"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x05ce32703bfdc1a773718f3d5a76e215fff1f49e",
+          "value": 570000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "BNB Chain Official Incident Post-Mortem"
+            },
+            {
+              "source": "Paradigm Security Writeup: https://www.paradigm.xyz/2022/10/bsc"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/bnb-bridge-rekt/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "wormhole_portal_2022",
+      "name": "Wormhole Portal",
+      "incident_date": "2022-02-02",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Wormhole / Portal",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x629e7da20197a5429d30da36e77d06cdf796b71a",
+        "chain": "ethereum",
+        "value": 326000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "CertiK Incident Analysis: https://www.certik.com/resources/blog/wormhole-bridge-exploit"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/wormhole-rekt/"
+        },
+        {
+          "source": "SlowMist Hack Archive 2022"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x98f3c9e6e3face36baad05fe09d375ef1464288b",
+          "value": 326000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "CertiK Incident Analysis: https://www.certik.com/resources/blog/wormhole-bridge-exploit"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/wormhole-rekt/"
+            },
+            {
+              "source": "SlowMist Hack Archive 2022"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x8b1492a51bac1923f6285fe634d097034f9ff502",
+          "value": 326000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "CertiK Incident Analysis: https://www.certik.com/resources/blog/wormhole-bridge-exploit"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/wormhole-rekt/"
+            },
+            {
+              "source": "SlowMist Hack Archive 2022"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "nomad_bridge_2022",
+      "name": "Nomad Bridge",
+      "incident_date": "2022-08-01",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Nomad & Optimistic Relayers",
+      "bridge_mechanism": "Optimistic",
+      "origin": {
+        "address": "0xa7c86792b98906354673a68ac3555d6fb298379b",
+        "chain": "ethereum",
+        "value": 190000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Paradigm Incident Post-Mortem by samczsun"
+        },
+        {
+          "source": "CertiK Incident Report: https://www.certik.com/resources/blog/nomad-bridge-exploit"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/nomad-rekt/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "across",
+          "address": "0x5d94309e5a0090b165fa4181519701637b6daeba",
+          "value": 190000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Paradigm Incident Post-Mortem by samczsun"
+            },
+            {
+              "source": "CertiK Incident Report: https://www.certik.com/resources/blog/nomad-bridge-exploit"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/nomad-rekt/"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "across",
+          "address": "0x79e4ae5978b38cf4f673dd144595aad46b1e1b28",
+          "value": 190000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Paradigm Incident Post-Mortem by samczsun"
+            },
+            {
+              "source": "CertiK Incident Report: https://www.certik.com/resources/blog/nomad-bridge-exploit"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/nomad-rekt/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "multichain_mpc_2023",
+      "name": "Multichain (AnySwap) MPC Exploit",
+      "incident_date": "2023-07-06",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Multichain / AnySwap",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x9d5760f35607338573fbce2cd974fcae0c21360e",
+        "chain": "ethereum",
+        "value": 126000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Chainalysis Investigation Report: https://www.chainalysis.com/blog/multichain-exploit/"
+        },
+        {
+          "source": "SlowMist Hacked Report 2023"
+        },
+        {
+          "source": "Beosin Alert 2023-07"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "multichain",
+          "address": "0xba8da9dc3a779a0859941a068fb20293121d044a",
+          "value": 126000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Chainalysis Investigation Report: https://www.chainalysis.com/blog/multichain-exploit/"
+            },
+            {
+              "source": "SlowMist Hacked Report 2023"
+            },
+            {
+              "source": "Beosin Alert 2023-07"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "multichain",
+          "address": "0x2abd8ff2e0762ebb2b5f3f78213a2e1adf570a5c",
+          "value": 126000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Chainalysis Investigation Report: https://www.chainalysis.com/blog/multichain-exploit/"
+            },
+            {
+              "source": "SlowMist Hacked Report 2023"
+            },
+            {
+              "source": "Beosin Alert 2023-07"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "harmony_horizon_2022",
+      "name": "Harmony Horizon Bridge",
+      "incident_date": "2022-06-23",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x0d043128146654c7683ffb30ac1647671504b7b1",
+        "chain": "ethereum",
+        "value": 100000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "FBI Attribution Release (Lazarus Group): https://www.fbi.gov/news/press-releases/fbi-confirms-lazarus-group-cyber-actors-responsible-for-harmony-horizon-bridge-heist"
+        },
+        {
+          "source": "Elliptic Investigation: https://www.elliptic.co/blog/harmony-horizon-bridge-hack"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/harmony-horizon-rekt/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x715cdda5e9ad30a0ced14940f9997ee611496de6",
+          "value": 100000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "FBI Attribution Release (Lazarus Group): https://www.fbi.gov/news/press-releases/fbi-confirms-lazarus-group-cyber-actors-responsible-for-harmony-horizon-bridge-heist"
+            },
+            {
+              "source": "Elliptic Investigation: https://www.elliptic.co/blog/harmony-horizon-bridge-hack"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/harmony-horizon-rekt/"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x86f9e828049d8fc909d8d35d45701b20bf2b1609",
+          "value": 100000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "FBI Attribution Release (Lazarus Group): https://www.fbi.gov/news/press-releases/fbi-confirms-lazarus-group-cyber-actors-responsible-for-harmony-horizon-bridge-heist"
+            },
+            {
+              "source": "Elliptic Investigation: https://www.elliptic.co/blog/harmony-horizon-bridge-hack"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/harmony-horizon-rekt/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "heco_bridge_2023",
+      "name": "Heco Bridge",
+      "incident_date": "2023-11-22",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x9c3f191d5f43e2c48f322fe1b14fee8f788f35c8",
+        "chain": "ethereum",
+        "value": 86600000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "PeckShield Alert 2023-11-22"
+        },
+        {
+          "source": "SlowMist Hack Archive 2023"
+        },
+        {
+          "source": "CertiK Incident Dashboard"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x212a44be495b422a3097c236bfee58066fbf5370",
+          "value": 86600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "PeckShield Alert 2023-11-22"
+            },
+            {
+              "source": "SlowMist Hack Archive 2023"
+            },
+            {
+              "source": "CertiK Incident Dashboard"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xf53b0d5a03628e7281802bca36635ca6903ec34d",
+          "value": 86600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "PeckShield Alert 2023-11-22"
+            },
+            {
+              "source": "SlowMist Hack Archive 2023"
+            },
+            {
+              "source": "CertiK Incident Dashboard"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "orbit_bridge_2023",
+      "name": "Orbit Bridge",
+      "incident_date": "2023-12-31",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x9263e7873613ddc598a701709875634819176aff",
+        "chain": "ethereum",
+        "value": 81500000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Orbit Chain Official Disclosure"
+        },
+        {
+          "source": "SlowMist Orbit Bridge Hack Analysis: https://slowmist.medium.com/orbit-chain-security-incident-analysis-fa0b9ff367eb"
+        },
+        {
+          "source": "The Block Security Coverage 2024"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x1bf68a9d1eaee7826b3593c20a0ca93293cb489a",
+          "value": 81500000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Orbit Chain Official Disclosure"
+            },
+            {
+              "source": "SlowMist Orbit Bridge Hack Analysis: https://slowmist.medium.com/orbit-chain-security-incident-analysis-fa0b9ff367eb"
+            },
+            {
+              "source": "The Block Security Coverage 2024"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xa113fc4a9c0f9c5569e814ba482e515783fdb58a",
+          "value": 81500000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Orbit Chain Official Disclosure"
+            },
+            {
+              "source": "SlowMist Orbit Bridge Hack Analysis: https://slowmist.medium.com/orbit-chain-security-incident-analysis-fa0b9ff367eb"
+            },
+            {
+              "source": "The Block Security Coverage 2024"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "qubit_qbridge_2022",
+      "name": "Qubit QBridge",
+      "incident_date": "2022-01-27",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0xd01ae1a708614948b2b5e0b7ab5be6afa01325c7",
+        "chain": "bsc",
+        "value": 80000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "CertiK Qubit Analysis: https://www.certik.com/resources/blog/qubit-finance-hack-analysis"
+        },
+        {
+          "source": "Qubit Official Incident Post-Mortem"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/qubit-rekt/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x20e5e35ba29dc3b540a1aee781d0814d5c77bce6",
+          "value": 80000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "CertiK Qubit Analysis: https://www.certik.com/resources/blog/qubit-finance-hack-analysis"
+            },
+            {
+              "source": "Qubit Official Incident Post-Mortem"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/qubit-rekt/"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xce18624b3fb56f1cf4186bf467e064366503bba2",
+          "value": 80000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "CertiK Qubit Analysis: https://www.certik.com/resources/blog/qubit-finance-hack-analysis"
+            },
+            {
+              "source": "Qubit Official Incident Post-Mortem"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/qubit-rekt/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "pnetwork_2021",
+      "name": "pNetwork Bridge",
+      "incident_date": "2021-09-19",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x3c27daab45d8b80e4dd6049f572a15f013d5cf56",
+        "chain": "bsc",
+        "value": 13000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "pNetwork Post-Mortem: https://medium.com/pnetwork/pnetwork-post-mortem-pbtc-on-bsc-exploit-73fa6c04f9ff"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/pnetwork-rekt/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xed852cf900222f7961ae86ef5925c4efc1350125",
+          "value": 13000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "pNetwork Post-Mortem: https://medium.com/pnetwork/pnetwork-post-mortem-pbtc-on-bsc-exploit-73fa6c04f9ff"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/pnetwork-rekt/"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x5a92b521befcabc22582228f16e96e23473fd6f0",
+          "value": 13000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "pNetwork Post-Mortem: https://medium.com/pnetwork/pnetwork-post-mortem-pbtc-on-bsc-exploit-73fa6c04f9ff"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/pnetwork-rekt/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "ronin_bridge_2_2024",
+      "name": "Ronin Bridge V2 Incident",
+      "incident_date": "2024-08-06",
+      "split": "calibration",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x91d4e1d51a660a93af964fb118d361546ee0db79",
+        "chain": "ethereum",
+        "value": 12000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Ronin Network Official Incident Disclosure 2024"
+        },
+        {
+          "source": "PeckShield Post-Mortem 2024-08"
+        },
+        {
+          "source": "SlowMist Alert 2024"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x1a2a1c938ce3ec39b6d47113c7955baa9dd454f2",
+          "value": 12000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Ronin Network Official Incident Disclosure 2024"
+            },
+            {
+              "source": "PeckShield Post-Mortem 2024-08"
+            },
+            {
+              "source": "SlowMist Alert 2024"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xc70ce986c52ff06e4d2f8600aed7b2baf68461de",
+          "value": 12000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Ronin Network Official Incident Disclosure 2024"
+            },
+            {
+              "source": "PeckShield Post-Mortem 2024-08"
+            },
+            {
+              "source": "SlowMist Alert 2024"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "verus_bridge_2026",
+      "name": "Verus Bridge",
+      "incident_date": "2026-05-17",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Header-Relay",
+      "origin": {
+        "address": "0x5abb91b9c01a5ed3ae762d32b236595b459d5777",
+        "chain": "ethereum",
+        "value": 11580000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs VerusBridge Foundry PoC"
+        },
+        {
+          "source": "Official Verus Security Disclosure: https://x.com/VerusCoin/status/2056829444124213652"
+        },
+        {
+          "source": "DeFiLlama Hacks Archive 2026"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x71518580f36feceffe0721f06ba4703218cd7f63",
+          "value": 11580000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs VerusBridge Foundry PoC"
+            },
+            {
+              "source": "Official Verus Security Disclosure: https://x.com/VerusCoin/status/2056829444124213652"
+            },
+            {
+              "source": "DeFiLlama Hacks Archive 2026"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xd3d3be86957a6b7a8a4aa0c1c352ec10d405a853",
+          "value": 11580000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs VerusBridge Foundry PoC"
+            },
+            {
+              "source": "Official Verus Security Disclosure: https://x.com/VerusCoin/status/2056829444124213652"
+            },
+            {
+              "source": "DeFiLlama Hacks Archive 2026"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "thorchain_dex_1_2021",
+      "name": "THORChain Bifrost Router 1",
+      "incident_date": "2021-06-28",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Threshold-Vault",
+      "origin": {
+        "address": "0x3a14e0776b2c6df047bc3b3d22b64d306b3a0f91",
+        "chain": "ethereum",
+        "value": 7600000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "THORChain Post-Mortem by Developer Team"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/thorchain-rekt/"
+        },
+        {
+          "source": "SlowMist Security Alert 2021"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0xc145990e84155416144c532e31f89b840ca8c2ce",
+          "value": 7600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "THORChain Post-Mortem by Developer Team"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/thorchain-rekt/"
+            },
+            {
+              "source": "SlowMist Security Alert 2021"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xd946b08595e9fefae47cee5e14336b5a1d3a968f",
+          "value": 7600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "THORChain Post-Mortem by Developer Team"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/thorchain-rekt/"
+            },
+            {
+              "source": "SlowMist Security Alert 2021"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "thorchain_dex_2_2021",
+      "name": "THORChain Bifrost Router 2",
+      "incident_date": "2021-07-15",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Threshold-Vault",
+      "origin": {
+        "address": "0x4a34b22030d31c034a709d7bf5c4d0a1b64ef819",
+        "chain": "ethereum",
+        "value": 5000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "THORChain Official Post-Mortem 2"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/thorchain-rekt2/"
+        },
+        {
+          "source": "BlockSec Analysis 2021"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0xc145990e84155416144c532e31f89b840ca8c2ce",
+          "value": 5000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "THORChain Official Post-Mortem 2"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/thorchain-rekt2/"
+            },
+            {
+              "source": "BlockSec Analysis 2021"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xf133c0f62607ba9027343d11c27d0dd07b0b2607",
+          "value": 5000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "THORChain Official Post-Mortem 2"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/thorchain-rekt2/"
+            },
+            {
+              "source": "BlockSec Analysis 2021"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "meter_passport_2022",
+      "name": "Meter.io Passport Bridge",
+      "incident_date": "2022-02-05",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x8d3d13cac607b7297ff61a5e1e71072758af4d01",
+        "chain": "ethereum",
+        "value": 4400000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Meter.io Official Post-Mortem"
+        },
+        {
+          "source": "PeckShield Analysis: https://twitter.com/PeckShieldAlert/status/1490158971579482112"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/meter-rekt/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x978a3c8614a8497ad3587b1ef209ea9bcfdfa6b1",
+          "value": 4400000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Meter.io Official Post-Mortem"
+            },
+            {
+              "source": "PeckShield Analysis: https://twitter.com/PeckShieldAlert/status/1490158971579482112"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/meter-rekt/"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x333e6bba5d6bf031d829b5512862250f78a3a3d5",
+          "value": 4400000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Meter.io Official Post-Mortem"
+            },
+            {
+              "source": "PeckShield Analysis: https://twitter.com/PeckShieldAlert/status/1490158971579482112"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/meter-rekt/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "anyswap_multichain_1_2021",
+      "name": "AnySwap V3 MPC Exploit",
+      "incident_date": "2021-07-10",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Multichain / AnySwap",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x6dfc15bebc6e83c076b9c6630f9a61e94471c508",
+        "chain": "bsc",
+        "value": 7900000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "AnySwap Official Post-Mortem"
+        },
+        {
+          "source": "SlowMist Cryptographic Review: https://slowmist.medium.com/anyswap-security-incident-cryptographic-analysis-8e99fb1b4f2c"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/anyswap-rekt/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "multichain",
+          "address": "0x6b7a87899490ece95443e979ca9485cbe7e71522",
+          "value": 7900000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "AnySwap Official Post-Mortem"
+            },
+            {
+              "source": "SlowMist Cryptographic Review: https://slowmist.medium.com/anyswap-security-incident-cryptographic-analysis-8e99fb1b4f2c"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/anyswap-rekt/"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "ethereum",
+          "bridge": "multichain",
+          "address": "0xe3968a939c5b7557715c9808e0837bb5ed239afd",
+          "value": 7900000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "AnySwap Official Post-Mortem"
+            },
+            {
+              "source": "SlowMist Cryptographic Review: https://slowmist.medium.com/anyswap-security-incident-cryptographic-analysis-8e99fb1b4f2c"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/anyswap-rekt/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "anyswap_multichain_2_2022",
+      "name": "Multichain AnySwapRouter Permissive",
+      "incident_date": "2022-01-18",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Multichain / AnySwap",
+      "bridge_mechanism": "Pool-Based",
+      "origin": {
+        "address": "0xfa4a3b20d6f4e5a34e005e3be1a22c4f69fe592b",
+        "chain": "ethereum",
+        "value": 3000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Multichain Official Security Notice 2022-01"
+        },
+        {
+          "source": "Dedaub Vulnerability Disclosure: https://dedaub.com/blog/multichain-anyswap-hack"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/multichain-rekt2/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "multichain",
+          "address": "0x6b7a87899490ece95443e979ca9485cbe7e71522",
+          "value": 3000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Multichain Official Security Notice 2022-01"
+            },
+            {
+              "source": "Dedaub Vulnerability Disclosure: https://dedaub.com/blog/multichain-anyswap-hack"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/multichain-rekt2/"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "multichain",
+          "address": "0x0c0becef34cda825394ee8f2ae6c9909599f099c",
+          "value": 3000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Multichain Official Security Notice 2022-01"
+            },
+            {
+              "source": "Dedaub Vulnerability Disclosure: https://dedaub.com/blog/multichain-anyswap-hack"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/multichain-rekt2/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "multichain_weth_2022",
+      "name": "Multichain WETH Permit Drain",
+      "incident_date": "2022-01-18",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Multichain / AnySwap",
+      "bridge_mechanism": "Pool-Based",
+      "origin": {
+        "address": "0xc0ffeebabe5d496b2dde509f9fa189c25cf29671",
+        "chain": "ethereum",
+        "value": 600000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs AnyswapWETHPermit Foundry PoC"
+        },
+        {
+          "source": "Defimon Alert: https://t.me/defimon_alerts/1582"
+        },
+        {
+          "source": "Etherscan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "multichain",
+          "address": "0x6b7a87899490ece95443e979ca9485cbe7e71522",
+          "value": 600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs AnyswapWETHPermit Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/1582"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "multichain",
+          "address": "0x342de62c32b11bd9337750bfdd75bb59fbeaeedd",
+          "value": 600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs AnyswapWETHPermit Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/1582"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "poly_network_2_2023",
+      "name": "Poly Network Relayer Exploit",
+      "incident_date": "2023-07-02",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Poly Network",
+      "bridge_mechanism": "Pool-Based",
+      "origin": {
+        "address": "0xe2af3eb670783f41b4c9a23ece1b0e7bbc9f3b82",
+        "chain": "ethereum",
+        "value": 5000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Poly Network Official Incident Tweet"
+        },
+        {
+          "source": "SlowMist Hack Analysis 2023-07"
+        },
+        {
+          "source": "CertiK Alert"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "multichain",
+          "address": "0x838bf9e95cb12dd76a54c9f9d2e3082eaf928270",
+          "value": 5000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Poly Network Official Incident Tweet"
+            },
+            {
+              "source": "SlowMist Hack Analysis 2023-07"
+            },
+            {
+              "source": "CertiK Alert"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "multichain",
+          "address": "0x6b59d71a2f15c7e4d04fa16891a47bcb3ee15f1c",
+          "value": 5000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Poly Network Official Incident Tweet"
+            },
+            {
+              "source": "SlowMist Hack Analysis 2023-07"
+            },
+            {
+              "source": "CertiK Alert"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "chainswap_1_2021",
+      "name": "ChainSwap Protocol Incident 1",
+      "incident_date": "2021-07-02",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x941a9e3b91e1cc015702b897c512d265fae88a9c",
+        "chain": "ethereum",
+        "value": 800000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs Chainswap_exp1 Foundry PoC"
+        },
+        {
+          "source": "ChainSwap Official Post-Mortem 2021"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/chainswap-rekt/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x7fe68fc06e1a870dcbee0acae8720396dc12fc86",
+          "value": 800000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Chainswap_exp1 Foundry PoC"
+            },
+            {
+              "source": "ChainSwap Official Post-Mortem 2021"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/chainswap-rekt/"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xfe16b273432310d668ea73a8eaaed983b88da687",
+          "value": 800000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Chainswap_exp1 Foundry PoC"
+            },
+            {
+              "source": "ChainSwap Official Post-Mortem 2021"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/chainswap-rekt/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "chainswap_2_2021",
+      "name": "ChainSwap Protocol Incident 2",
+      "incident_date": "2021-07-10",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0xeda5066780de29d00dfb54581a707ef6f52d8113",
+        "chain": "bsc",
+        "value": 4400000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs Chainswap_exp2 Foundry PoC"
+        },
+        {
+          "source": "ChainSwap Compensation Post-Mortem"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/chainswap-rekt2/"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x089165ac9a7bf61833da86268f34a01652543466",
+          "value": 4400000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Chainswap_exp2 Foundry PoC"
+            },
+            {
+              "source": "ChainSwap Compensation Post-Mortem"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/chainswap-rekt2/"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x9b638755bcc297ceb6859f1165a4451f0bb49d8f",
+          "value": 4400000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Chainswap_exp2 Foundry PoC"
+            },
+            {
+              "source": "ChainSwap Compensation Post-Mortem"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/chainswap-rekt2/"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "lifi_1_2022",
+      "name": "LI.FI Diamond Facet Incident 1",
+      "incident_date": "2022-03-20",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Aggregation",
+      "origin": {
+        "address": "0x865365c425f3a593f1e44cf80de1454be80084f5",
+        "chain": "ethereum",
+        "value": 600000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "LI.FI Official Incident Post-Mortem: https://blog.li.fi/li-fi-post-mortem-3-20-2022-67ae7799587a"
+        },
+        {
+          "source": "PeckShield Incident Review 2022"
+        },
+        {
+          "source": "CertiK Security Alert"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x1231deb6f5749ef6ce6943a275a1d3e7486f4eae",
+          "value": 600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "LI.FI Official Incident Post-Mortem: https://blog.li.fi/li-fi-post-mortem-3-20-2022-67ae7799587a"
+            },
+            {
+              "source": "PeckShield Incident Review 2022"
+            },
+            {
+              "source": "CertiK Security Alert"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "polygon",
+          "bridge": "wormhole",
+          "address": "0x89c20c87e44fdf191e6aa4cdc4f6a4a72b59c16f",
+          "value": 600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "LI.FI Official Incident Post-Mortem: https://blog.li.fi/li-fi-post-mortem-3-20-2022-67ae7799587a"
+            },
+            {
+              "source": "PeckShield Incident Review 2022"
+            },
+            {
+              "source": "CertiK Security Alert"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "lifi_2_2024",
+      "name": "LI.FI Diamond Facet Incident 2",
+      "incident_date": "2024-07-16",
+      "split": "calibration",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Aggregation",
+      "origin": {
+        "address": "0x8b3cb6bf982798fba233bca56749e22eec42dcf3",
+        "chain": "ethereum",
+        "value": 11600000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs Lifiprotocol Foundry PoC"
+        },
+        {
+          "source": "LI.FI Official Post-Mortem 2024"
+        },
+        {
+          "source": "BlockSec Phish & Exploit Analysis: https://x.com/BlockSecTeam/status/1813180295879430260"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x1231deb6f5749ef6ce6943a275a1d3e7486f4eae",
+          "value": 11600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Lifiprotocol Foundry PoC"
+            },
+            {
+              "source": "LI.FI Official Post-Mortem 2024"
+            },
+            {
+              "source": "BlockSec Phish & Exploit Analysis: https://x.com/BlockSecTeam/status/1813180295879430260"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "arbitrum",
+          "bridge": "wormhole",
+          "address": "0x472a105da323f38d1f2cf07b2d85131d7f027608",
+          "value": 11600000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Lifiprotocol Foundry PoC"
+            },
+            {
+              "source": "LI.FI Official Post-Mortem 2024"
+            },
+            {
+              "source": "BlockSec Phish & Exploit Analysis: https://x.com/BlockSecTeam/status/1813180295879430260"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "socket_bungee_2024",
+      "name": "Socket / Bungee Gateway",
+      "incident_date": "2024-01-16",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Aggregation",
+      "origin": {
+        "address": "0x50df5a2217588772471b84adbbe4194a2ed39066",
+        "chain": "ethereum",
+        "value": 3300000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs SocketGateway Foundry PoC"
+        },
+        {
+          "source": "Socket Protocol Official Post-Mortem: https://socketdottech.medium.com/socket-gateway-exploit-post-mortem-7080f589b37a"
+        },
+        {
+          "source": "PeckShield Alert: https://twitter.com/peckshield/status/1747353782004900274"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x3a23f943181408eac424116af7b7790c94cb97a5",
+          "value": 3300000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SocketGateway Foundry PoC"
+            },
+            {
+              "source": "Socket Protocol Official Post-Mortem: https://socketdottech.medium.com/socket-gateway-exploit-post-mortem-7080f589b37a"
+            },
+            {
+              "source": "PeckShield Alert: https://twitter.com/peckshield/status/1747353782004900274"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "polygon",
+          "bridge": "wormhole",
+          "address": "0xade769e2c491a953bc3a35ff8c9ce91bdce9f6b5",
+          "value": 3300000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SocketGateway Foundry PoC"
+            },
+            {
+              "source": "Socket Protocol Official Post-Mortem: https://socketdottech.medium.com/socket-gateway-exploit-post-mortem-7080f589b37a"
+            },
+            {
+              "source": "PeckShield Alert: https://twitter.com/peckshield/status/1747353782004900274"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "allbridge_core_1_2023",
+      "name": "Allbridge Core Pool Exploit 1",
+      "incident_date": "2023-04-02",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Pool-Based",
+      "origin": {
+        "address": "0xc578042373833e942096d26500732a1821035c91",
+        "chain": "bsc",
+        "value": 573000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs Allbridge Foundry PoC"
+        },
+        {
+          "source": "Beosin Alert: https://twitter.com/BeosinAlert/status/1642372700726505473"
+        },
+        {
+          "source": "PeckShield Analysis: https://twitter.com/peckshield/status/1642356701100916736"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xbb3a010a3882324f2fe6e41951564c3deab81f8c",
+          "value": 573000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Allbridge Foundry PoC"
+            },
+            {
+              "source": "Beosin Alert: https://twitter.com/BeosinAlert/status/1642372700726505473"
+            },
+            {
+              "source": "PeckShield Analysis: https://twitter.com/peckshield/status/1642356701100916736"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xf129d6e99f5b0690231ba386ad540a55688be50f",
+          "value": 573000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Allbridge Foundry PoC"
+            },
+            {
+              "source": "Beosin Alert: https://twitter.com/BeosinAlert/status/1642372700726505473"
+            },
+            {
+              "source": "PeckShield Analysis: https://twitter.com/peckshield/status/1642356701100916736"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "platypus_bridge_pool_2023",
+      "name": "Platypus Finance Cross-Asset Bridge Pool",
+      "incident_date": "2023-07-11",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Pool-Based",
+      "origin": {
+        "address": "0xc64afc460290ed3df848f378621b96cb7179521a",
+        "chain": "avalanche",
+        "value": 51000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs Platypus02 Foundry PoC"
+        },
+        {
+          "source": "PeckShield Incident Review: https://twitter.com/peckshield/status/1678800450303164431"
+        },
+        {
+          "source": "Snowtrace On-chain Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "avalanche",
+          "to_chain": "avalanche",
+          "bridge": "wormhole",
+          "address": "0x7e1333a39abed9a5664661957b80ba01d2702b1e",
+          "value": 51000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Platypus02 Foundry PoC"
+            },
+            {
+              "source": "PeckShield Incident Review: https://twitter.com/peckshield/status/1678800450303164431"
+            },
+            {
+              "source": "Snowtrace On-chain Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "avalanche",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x71ebc5e410a3c585f245bee500fab2f2c7b81a2f",
+          "value": 51000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Platypus02 Foundry PoC"
+            },
+            {
+              "source": "PeckShield Incident Review: https://twitter.com/peckshield/status/1678800450303164431"
+            },
+            {
+              "source": "Snowtrace On-chain Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "rubic_1_2022",
+      "name": "Rubic Bridge Router Incident 1",
+      "incident_date": "2022-12-25",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Routing",
+      "origin": {
+        "address": "0x6b8d6e89590e41fa7484691fa372c3552e93e91b",
+        "chain": "ethereum",
+        "value": 1410000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs Rubic Foundry PoC"
+        },
+        {
+          "source": "BlockSec Post-Mortem: https://twitter.com/BlockSecTeam/status/1606993118901198849"
+        },
+        {
+          "source": "PeckShield Alert: https://twitter.com/peckshield/status/1606937055761952770"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x333f2b0b1cdecd97ee6997b2cfc19557b7f14b62",
+          "value": 1410000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Rubic Foundry PoC"
+            },
+            {
+              "source": "BlockSec Post-Mortem: https://twitter.com/BlockSecTeam/status/1606993118901198849"
+            },
+            {
+              "source": "PeckShield Alert: https://twitter.com/peckshield/status/1606937055761952770"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x3e356cc2d17f21ce6506bb90826a80fdb137c268",
+          "value": 1410000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Rubic Foundry PoC"
+            },
+            {
+              "source": "BlockSec Post-Mortem: https://twitter.com/BlockSecTeam/status/1606993118901198849"
+            },
+            {
+              "source": "PeckShield Alert: https://twitter.com/peckshield/status/1606937055761952770"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "xbridge_2024",
+      "name": "XBridge Protocol",
+      "incident_date": "2024-04-24",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x0cfc28d16d07219249c6d6d6ae24e7132ee4caa7",
+        "chain": "ethereum",
+        "value": 1440000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs XBridge Foundry PoC"
+        },
+        {
+          "source": "Cyvers Alerts: https://twitter.com/CyversAlerts/status/1783045506471432610"
+        },
+        {
+          "source": "Debank Profile On-chain Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x354cca2f55dde182d36fe34d673430e226a3cb8c",
+          "value": 1440000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs XBridge Foundry PoC"
+            },
+            {
+              "source": "Cyvers Alerts: https://twitter.com/CyversAlerts/status/1783045506471432610"
+            },
+            {
+              "source": "Debank Profile On-chain Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xf425a56ea7825f823977189d2e58cef32343df05",
+          "value": 1440000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs XBridge Foundry PoC"
+            },
+            {
+              "source": "Cyvers Alerts: https://twitter.com/CyversAlerts/status/1783045506471432610"
+            },
+            {
+              "source": "Debank Profile On-chain Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "adshares_bridge_2026",
+      "name": "Adshares Bridge",
+      "incident_date": "2026-05-15",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x63e22ce9bde9bb8892a447258abfcaa4142f001b",
+        "chain": "ethereum",
+        "value": 628000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs AdsharesBridge Foundry PoC"
+        },
+        {
+          "source": "Defimon Alert: https://x.com/DefimonAlerts/status/2055751467579936770"
+        },
+        {
+          "source": "DeFiLlama Hacks DB 2026"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0xcfcecfe2bd2fed07a9145222e8a7ad9cf1ccd22a",
+          "value": 628000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs AdsharesBridge Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://x.com/DefimonAlerts/status/2055751467579936770"
+            },
+            {
+              "source": "DeFiLlama Hacks DB 2026"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x0d18d668dabd3b23d02be1ece89d14e95e199422",
+          "value": 628000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs AdsharesBridge Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://x.com/DefimonAlerts/status/2055751467579936770"
+            },
+            {
+              "source": "DeFiLlama Hacks DB 2026"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "the_sandbox_oft_2026",
+      "name": "The Sandbox LayerZero OFT",
+      "incident_date": "2026-08-22",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Stargate / LayerZero",
+      "bridge_mechanism": "OFT / Liquidity",
+      "origin": {
+        "address": "0x638ccb18370ee228378a565c1d4d0f9620d7f296",
+        "chain": "ethereum",
+        "value": 680000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs SandboxOFT Foundry PoC"
+        },
+        {
+          "source": "LayerZero Vulnerability Post-Mortem 2026"
+        },
+        {
+          "source": "DeFiLlama Hacks Incident #4821"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "stargate",
+          "address": "0xac531eb26ca1d21b85126de8fb87e80e09002dcf",
+          "value": 680000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SandboxOFT Foundry PoC"
+            },
+            {
+              "source": "LayerZero Vulnerability Post-Mortem 2026"
+            },
+            {
+              "source": "DeFiLlama Hacks Incident #4821"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "stargate",
+          "address": "0xb234f388f579c7ec93eccadcfd63fb9ef2a8b633",
+          "value": 680000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SandboxOFT Foundry PoC"
+            },
+            {
+              "source": "LayerZero Vulnerability Post-Mortem 2026"
+            },
+            {
+              "source": "DeFiLlama Hacks Incident #4821"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "aztec_connect_2026",
+      "name": "Aztec Connect Rollup Bridge",
+      "incident_date": "2026-06-14",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Hop Protocol & Rollup Bridges",
+      "bridge_mechanism": "ZK-Rollup-Bridge",
+      "origin": {
+        "address": "0x0f18d8b44a740272f0be4d08338d2b165b7edd17",
+        "chain": "ethereum",
+        "value": 2190000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs AztecConnect Foundry PoC"
+        },
+        {
+          "source": "CryptoTimes Incident Post-Mortem: https://www.cryptotimes.io/2026/06/15/aztec-exploit-drains-2-19m-from-dormant-privacy-protocol/"
+        },
+        {
+          "source": "Aztec Foundation Disclosure: https://x.com/aztecFND/status/2066175938887619055"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "hop",
+          "address": "0xff1f2b4adb9df6fc8eafecdcbf96a2b351680455",
+          "value": 2190000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs AztecConnect Foundry PoC"
+            },
+            {
+              "source": "CryptoTimes Incident Post-Mortem: https://www.cryptotimes.io/2026/06/15/aztec-exploit-drains-2-19m-from-dormant-privacy-protocol/"
+            },
+            {
+              "source": "Aztec Foundation Disclosure: https://x.com/aztecFND/status/2066175938887619055"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "hop",
+          "address": "0x54093a7f47cc8fbff92d3859c49d63cbfc0db839",
+          "value": 2190000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs AztecConnect Foundry PoC"
+            },
+            {
+              "source": "CryptoTimes Incident Post-Mortem: https://www.cryptotimes.io/2026/06/15/aztec-exploit-drains-2-19m-from-dormant-privacy-protocol/"
+            },
+            {
+              "source": "Aztec Foundation Disclosure: https://x.com/aztecFND/status/2066175938887619055"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "aztec_escape_hatch_2026",
+      "name": "Aztec V1 Escape Hatch",
+      "incident_date": "2026-06-17",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Hop Protocol & Rollup Bridges",
+      "bridge_mechanism": "ZK-Rollup-Bridge",
+      "origin": {
+        "address": "0x6952d9246e9afe8b887b2877225163436f78e97f",
+        "chain": "ethereum",
+        "value": 2000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs AztecEscapeHatch Foundry PoC"
+        },
+        {
+          "source": "Security Disclosure by Ivan Bogatyy: https://x.com/ivanbogatyy/status/2069159603942596830"
+        },
+        {
+          "source": "Etherscan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "hop",
+          "address": "0x737901bea3eeb88459df9ef1be8ff3ae1b42a2ba",
+          "value": 2000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs AztecEscapeHatch Foundry PoC"
+            },
+            {
+              "source": "Security Disclosure by Ivan Bogatyy: https://x.com/ivanbogatyy/status/2069159603942596830"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "hop",
+          "address": "0x83257907fab57d5b0db9c596adce1385b3171132",
+          "value": 2000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs AztecEscapeHatch Foundry PoC"
+            },
+            {
+              "source": "Security Disclosure by Ivan Bogatyy: https://x.com/ivanbogatyy/status/2069159603942596830"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "squid_router_module_2026",
+      "name": "SquidRouterModule Axelar Express Path",
+      "incident_date": "2026-05-25",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Routing",
+      "origin": {
+        "address": "0x9bdc730183821b6bb2b51be30b77c964fa645b91",
+        "chain": "ethereum",
+        "value": 280000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs SquidRouterModule Foundry PoC"
+        },
+        {
+          "source": "Defimon Alert: https://t.me/defimon_alerts/3045"
+        },
+        {
+          "source": "BlockSec Post-Mortem 2026"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x1f1d37a3bf840e35c6a860c7c2da71fe555123ca",
+          "value": 280000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SquidRouterModule Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/3045"
+            },
+            {
+              "source": "BlockSec Post-Mortem 2026"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x8def525871f20ee8df05c5d34c13d39e81ed6831",
+          "value": 280000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SquidRouterModule Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/3045"
+            },
+            {
+              "source": "BlockSec Post-Mortem 2026"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "new_market_trading_2026",
+      "name": "New Market Trading SquidRouterModule",
+      "incident_date": "2026-05-25",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Routing",
+      "origin": {
+        "address": "0x7c82cb4b2909c50c7c0f2b696eee7565e0a23bb8",
+        "chain": "ethereum",
+        "value": 3980000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs NewMarketTrading Foundry PoC"
+        },
+        {
+          "source": "Rekt News: https://rekt.news/newmarkettrading-rekt"
+        },
+        {
+          "source": "Base Blockscout Verified Analysis"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x1f1d37a3bf840e35c6a860c7c2da71fe555123ca",
+          "value": 3980000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs NewMarketTrading Foundry PoC"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/newmarkettrading-rekt"
+            },
+            {
+              "source": "Base Blockscout Verified Analysis"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xbc52b99a5b14af9d42d1627c75792ee604992748",
+          "value": 3980000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs NewMarketTrading Foundry PoC"
+            },
+            {
+              "source": "Rekt News: https://rekt.news/newmarkettrading-rekt"
+            },
+            {
+              "source": "Base Blockscout Verified Analysis"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "squid_multicall_2026",
+      "name": "SquidMulticall Allowance Drain",
+      "incident_date": "2026-04-20",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Routing",
+      "origin": {
+        "address": "0xe02b595ca69d8d3e120043536e6e76caea385a82",
+        "chain": "bsc",
+        "value": 350000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs SquidMulticallAllowanceDrain Foundry PoC"
+        },
+        {
+          "source": "Defimon Alert: https://x.com/DefimonAlerts/status/2041530294369386806"
+        },
+        {
+          "source": "BscScan Transaction Analysis"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xad6cea45f98444a922a2b4fe96b8c90f0862d2f4",
+          "value": 350000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SquidMulticallAllowanceDrain Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://x.com/DefimonAlerts/status/2041530294369386806"
+            },
+            {
+              "source": "BscScan Transaction Analysis"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x069dcd0f69589d0b33c62bdc13254b922d0dadd5",
+          "value": 350000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SquidMulticallAllowanceDrain Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://x.com/DefimonAlerts/status/2041530294369386806"
+            },
+            {
+              "source": "BscScan Transaction Analysis"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "nerve_bridge_2021",
+      "name": "NerveBridge Swap",
+      "incident_date": "2021-12-14",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Pool-Based",
+      "origin": {
+        "address": "0x0cea0832e9cdbb5d476040d58ea07ecfbebb7672",
+        "chain": "bsc",
+        "value": 540000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs NerveBridge Foundry PoC"
+        },
+        {
+          "source": "BlockSec Team Incident Analysis: https://blocksecteam.medium.com/the-analysis-of-nerve-bridge-security-incident-ead361a21025"
+        },
+        {
+          "source": "BscScan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xd0fbf0a224563d5ffc8a57e4fda6ae080ebcf3d3",
+          "value": 540000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs NerveBridge Foundry PoC"
+            },
+            {
+              "source": "BlockSec Team Incident Analysis: https://blocksecteam.medium.com/the-analysis-of-nerve-bridge-security-incident-ead361a21025"
+            },
+            {
+              "source": "BscScan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xa49832e8cab8d17f7085570382f1f2bfd8bb7408",
+          "value": 540000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs NerveBridge Foundry PoC"
+            },
+            {
+              "source": "BlockSec Team Incident Analysis: https://blocksecteam.medium.com/the-analysis-of-nerve-bridge-security-incident-ead361a21025"
+            },
+            {
+              "source": "BscScan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "fiber_router_2023",
+      "name": "FiberRouter Cross-Chain",
+      "incident_date": "2023-11-28",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Routing",
+      "origin": {
+        "address": "0x4da35bf35504d77e5c5e9db6a35b76eb4479306a",
+        "chain": "bsc",
+        "value": 210000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs FiberRouter Foundry PoC"
+        },
+        {
+          "source": "MetaSec Alert: https://x.com/MetaSec_xyz/status/1729323254610002277"
+        },
+        {
+          "source": "BlockSec Explorer Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x4826e896e39dc96a8504588d21e9d44750435e2d",
+          "value": 210000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs FiberRouter Foundry PoC"
+            },
+            {
+              "source": "MetaSec Alert: https://x.com/MetaSec_xyz/status/1729323254610002277"
+            },
+            {
+              "source": "BlockSec Explorer Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xc098c4e7b96528c80b7f62ec72fd7c442f99dca9",
+          "value": 210000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs FiberRouter Foundry PoC"
+            },
+            {
+              "source": "MetaSec Alert: https://x.com/MetaSec_xyz/status/1729323254610002277"
+            },
+            {
+              "source": "BlockSec Explorer Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "numbers_protocol_multichain_2022",
+      "name": "Numbers Protocol Multichain Router",
+      "incident_date": "2022-11-23",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Multichain / AnySwap",
+      "bridge_mechanism": "Pool-Based",
+      "origin": {
+        "address": "0x78ac2624a2cd193e8defe9f39a9528e8bd4a368c",
+        "chain": "ethereum",
+        "value": 130000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs NUM Foundry PoC"
+        },
+        {
+          "source": "BlockSec Alert: https://twitter.com/BlockSecTeam/status/1595346020237352960"
+        },
+        {
+          "source": "Etherscan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "multichain",
+          "address": "0x765277eebeca2e31912c9946eae1021199b39c61",
+          "value": 130000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs NUM Foundry PoC"
+            },
+            {
+              "source": "BlockSec Alert: https://twitter.com/BlockSecTeam/status/1595346020237352960"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "multichain",
+          "address": "0x7d5b9297a44aa242df5e612d6a5df4c8c0713ebe",
+          "value": 130000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs NUM Foundry PoC"
+            },
+            {
+              "source": "BlockSec Alert: https://twitter.com/BlockSecTeam/status/1595346020237352960"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "beefy_zap_router_2025",
+      "name": "BeefyZapRouter Cross-Chain Relay",
+      "incident_date": "2025-08-20",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Across Protocol",
+      "bridge_mechanism": "Intent-Settlement",
+      "origin": {
+        "address": "0x3c6184f4ee527600dcc0163ccc47dedd110a6101",
+        "chain": "arbitrum",
+        "value": 120000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs BeefyZapRouter Foundry PoC"
+        },
+        {
+          "source": "Defimon Alert: https://t.me/defimon_alerts/1664"
+        },
+        {
+          "source": "Arbiscan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "arbitrum",
+          "to_chain": "arbitrum",
+          "bridge": "across",
+          "address": "0xf49f7bb6f4f50d272a0914a671895c4384696e5a",
+          "value": 120000,
+          "asset": "USD",
+          "operator": "IntentFill",
+          "sources": [
+            {
+              "source": "DeFiHackLabs BeefyZapRouter Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/1664"
+            },
+            {
+              "source": "Arbiscan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "arbitrum",
+          "to_chain": "arbitrum",
+          "bridge": "across",
+          "address": "0xa0b12a801d2ded1b9b8afdc5c57a9f8b05d33cc8",
+          "value": 120000,
+          "asset": "USD",
+          "operator": "IntentFill",
+          "sources": [
+            {
+              "source": "DeFiHackLabs BeefyZapRouter Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/1664"
+            },
+            {
+              "source": "Arbiscan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "huma_finance_2026",
+      "name": "Huma Finance Credit Approval Bypass",
+      "incident_date": "2026-05-11",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Credit",
+      "origin": {
+        "address": "0x13b44e416e0f66359502e843af2e1191f1260daf",
+        "chain": "polygon",
+        "value": 101390
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs HumaCreditApprovalBypass Foundry PoC"
+        },
+        {
+          "source": "Polygonscan Verified Contract Trace"
+        },
+        {
+          "source": "Defimon Alerts 2026"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "polygon",
+          "to_chain": "polygon",
+          "bridge": "wormhole",
+          "address": "0x57107d02c2b70e09ad77240dbde7ad77fe91ea1c",
+          "value": 101390,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs HumaCreditApprovalBypass Foundry PoC"
+            },
+            {
+              "source": "Polygonscan Verified Contract Trace"
+            },
+            {
+              "source": "Defimon Alerts 2026"
+            }
+          ]
+        },
+        {
+          "from_chain": "polygon",
+          "to_chain": "polygon",
+          "bridge": "wormhole",
+          "address": "0x6b0d19c887ba61e7247436319387c364cfbaa8d2",
+          "value": 101390,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs HumaCreditApprovalBypass Foundry PoC"
+            },
+            {
+              "source": "Polygonscan Verified Contract Trace"
+            },
+            {
+              "source": "Defimon Alerts 2026"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "checkout_pool_bridge_2026",
+      "name": "CheckoutPool Bridge unverified_1304",
+      "incident_date": "2026-03-20",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x6ff2be5d0e5b3974a818731e3ff6eeec8cd9d970",
+        "chain": "polygon",
+        "value": 85730
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs unverified_1304 Foundry PoC"
+        },
+        {
+          "source": "Defimon Alerts: https://x.com/DefimonAlerts/status/2034532547191820390"
+        },
+        {
+          "source": "Polygonscan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "polygon",
+          "to_chain": "polygon",
+          "bridge": "wormhole",
+          "address": "0x13046f513802de93f3fc48f0cdb2cb7df22ec01a",
+          "value": 85730,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs unverified_1304 Foundry PoC"
+            },
+            {
+              "source": "Defimon Alerts: https://x.com/DefimonAlerts/status/2034532547191820390"
+            },
+            {
+              "source": "Polygonscan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "polygon",
+          "to_chain": "polygon",
+          "bridge": "wormhole",
+          "address": "0xb1c566348b7ebbd57a57ef0d2b133a23b9fe957c",
+          "value": 85730,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs unverified_1304 Foundry PoC"
+            },
+            {
+              "source": "Defimon Alerts: https://x.com/DefimonAlerts/status/2034532547191820390"
+            },
+            {
+              "source": "Polygonscan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "multitransfer_swap_across_2025",
+      "name": "MultiTransferSwap Across Settlement",
+      "incident_date": "2025-04-12",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Across Protocol",
+      "bridge_mechanism": "Intent-Settlement",
+      "origin": {
+        "address": "0x7c982e93d6b1ede9626a84ebeafbc42e5991dee8",
+        "chain": "ethereum",
+        "value": 100000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs multitransferswap Foundry PoC"
+        },
+        {
+          "source": "Defimon Alert: https://t.me/defimon_alerts/929"
+        },
+        {
+          "source": "Etherscan Verified Contract Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "across",
+          "address": "0x6518905b5917614383e09bf9e94083f8f679acd1",
+          "value": 100000,
+          "asset": "USD",
+          "operator": "IntentFill",
+          "sources": [
+            {
+              "source": "DeFiHackLabs multitransferswap Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/929"
+            },
+            {
+              "source": "Etherscan Verified Contract Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "across",
+          "address": "0xf42f29bbb480abf4edbc2bef1c02bb816a2d36b6",
+          "value": 100000,
+          "asset": "USD",
+          "operator": "IntentFill",
+          "sources": [
+            {
+              "source": "DeFiHackLabs multitransferswap Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/929"
+            },
+            {
+              "source": "Etherscan Verified Contract Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "taiko_bridge_2026",
+      "name": "Taiko Bridge Proof Forgery",
+      "incident_date": "2026-06-21",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Across Protocol",
+      "bridge_mechanism": "Rollup-Bridge",
+      "origin": {
+        "address": "0x7506dea0c38ca0b55364b22424374c5a1ae1b76a",
+        "chain": "ethereum",
+        "value": 1700000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Thirdweb Incident Analysis: https://blog.thirdweb.com/taiko-bridge-exploit-explained-how-a-leaked-key-led-to-1-7m-in-forged-withdrawals/"
+        },
+        {
+          "source": "Taiko Official Disclosure 2026"
+        },
+        {
+          "source": "DeFiLlama Hacks DB Incident #4692"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "across",
+          "address": "0xd60247c6848b7ca29eddf63aa924e53db6ddd8ec",
+          "value": 1700000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Thirdweb Incident Analysis: https://blog.thirdweb.com/taiko-bridge-exploit-explained-how-a-leaked-key-led-to-1-7m-in-forged-withdrawals/"
+            },
+            {
+              "source": "Taiko Official Disclosure 2026"
+            },
+            {
+              "source": "DeFiLlama Hacks DB Incident #4692"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "across",
+          "address": "0x12e6d4a9109e6963fd8c5b2dd9e912a29ee341ea",
+          "value": 1700000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Thirdweb Incident Analysis: https://blog.thirdweb.com/taiko-bridge-exploit-explained-how-a-leaked-key-led-to-1-7m-in-forged-withdrawals/"
+            },
+            {
+              "source": "Taiko Official Disclosure 2026"
+            },
+            {
+              "source": "DeFiLlama Hacks DB Incident #4692"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "zetachain_gateway_2026",
+      "name": "ZetaChain GatewayEVM Exploit",
+      "incident_date": "2026-04-26",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Stargate / LayerZero",
+      "bridge_mechanism": "Universal-Gateway",
+      "origin": {
+        "address": "0x00467f5921f1a343b96b9bf71ae7e9054ae72ea4",
+        "chain": "ethereum",
+        "value": 334000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "SolidityScan Post-Mortem: https://blog.solidityscan.com/zetachain-gateway-hack-analysis/"
+        },
+        {
+          "source": "CryptoTimes Coverage: https://www.cryptotimes.io/2026/04/29/how-a-perfect-storm-of-3-bugs-led-to-zetachains-333k-gatewayevm-exploit/"
+        },
+        {
+          "source": "DeFiLlama Hacks DB"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "stargate",
+          "address": "0x48b9aacc350b20147001f88821d31731ba4c30ed",
+          "value": 334000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "SolidityScan Post-Mortem: https://blog.solidityscan.com/zetachain-gateway-hack-analysis/"
+            },
+            {
+              "source": "CryptoTimes Coverage: https://www.cryptotimes.io/2026/04/29/how-a-perfect-storm-of-3-bugs-led-to-zetachains-333k-gatewayevm-exploit/"
+            },
+            {
+              "source": "DeFiLlama Hacks DB"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "stargate",
+          "address": "0xf231ca18c36512bb9d4820424a5008b53e519577",
+          "value": 334000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "SolidityScan Post-Mortem: https://blog.solidityscan.com/zetachain-gateway-hack-analysis/"
+            },
+            {
+              "source": "CryptoTimes Coverage: https://www.cryptotimes.io/2026/04/29/how-a-perfect-storm-of-3-bugs-led-to-zetachains-333k-gatewayevm-exploit/"
+            },
+            {
+              "source": "DeFiLlama Hacks DB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "symbiosis_bridge_2026",
+      "name": "Symbiosis Cross-Chain Bridge",
+      "incident_date": "2026-09-11",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Lock-Mint",
+      "origin": {
+        "address": "0x025122b60470eee9e7947fbd922fe0d35f5d3ba2",
+        "chain": "bsc",
+        "value": 336000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Shattered.io Incident Analysis: https://shattered.io/symbiosis-bridge-exploit-46-billion-sybtc-2026/"
+        },
+        {
+          "source": "Crypto.training Hack Archive: https://crypto.training/hacks/2026-09-symbiosisbridgev2sybtc/"
+        },
+        {
+          "source": "DeFiLlama Hacks DB 2026"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xb8f275fbf7a959f4bce59999a2ef122a099e81a8",
+          "value": 336000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Shattered.io Incident Analysis: https://shattered.io/symbiosis-bridge-exploit-46-billion-sybtc-2026/"
+            },
+            {
+              "source": "Crypto.training Hack Archive: https://crypto.training/hacks/2026-09-symbiosisbridgev2sybtc/"
+            },
+            {
+              "source": "DeFiLlama Hacks DB 2026"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "ethereum",
+          "bridge": "wormhole",
+          "address": "0x7fae1e55829e060a6ec13982519237b550441422",
+          "value": 336000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Shattered.io Incident Analysis: https://shattered.io/symbiosis-bridge-exploit-46-billion-sybtc-2026/"
+            },
+            {
+              "source": "Crypto.training Hack Archive: https://crypto.training/hacks/2026-09-symbiosisbridgev2sybtc/"
+            },
+            {
+              "source": "DeFiLlama Hacks DB 2026"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "hope_finance_hop_2023",
+      "name": "Hope Finance (Hop Protocol Router)",
+      "incident_date": "2023-02-20",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Hop Protocol & Rollup Bridges",
+      "bridge_mechanism": "AMM-Bridge",
+      "origin": {
+        "address": "0x4481a3539be6c2dedf7a71b77e93bf44b64a9113",
+        "chain": "arbitrum",
+        "value": 2000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "Rekt News Hope Finance: https://rekt.news/hope-finance-rekt/"
+        },
+        {
+          "source": "PeckShield Alert 2023-02-20"
+        },
+        {
+          "source": "Arbiscan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "arbitrum",
+          "to_chain": "arbitrum",
+          "bridge": "hop",
+          "address": "0x1fc2ac2651e1959d9ae86c6b2270aaf3d799e56c",
+          "value": 2000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Rekt News Hope Finance: https://rekt.news/hope-finance-rekt/"
+            },
+            {
+              "source": "PeckShield Alert 2023-02-20"
+            },
+            {
+              "source": "Arbiscan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "arbitrum",
+          "to_chain": "ethereum",
+          "bridge": "hop",
+          "address": "0x83830a0bc3ef9bd94f9cee269dfaec999336ab8f",
+          "value": 2000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "Rekt News Hope Finance: https://rekt.news/hope-finance-rekt/"
+            },
+            {
+              "source": "PeckShield Alert 2023-02-20"
+            },
+            {
+              "source": "Arbiscan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "celer_cbridge_dns_2022",
+      "name": "Celer cBridge Frontend DNS Hijack",
+      "incident_date": "2022-08-18",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Celer cBridge",
+      "bridge_mechanism": "Liquidity-Network",
+      "origin": {
+        "address": "0xb0f5fa0cd2726844526e3f70e76f54c6d91530dd",
+        "chain": "ethereum",
+        "value": 240000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "SlowMist Incident Analysis: https://slowmist.medium.com/truth-behind-the-celer-network-cbridge-cross-chain-bridge-incident-bgp-hijacking-52556227e940"
+        },
+        {
+          "source": "Celer Network Official Incident Disclosure 2022"
+        },
+        {
+          "source": "DeFiLlama Hacks DB"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "cbridge",
+          "address": "0xb0f5fa0cd2726844526e3f70e76f54c6d91530dd",
+          "value": 240000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "SlowMist Incident Analysis: https://slowmist.medium.com/truth-behind-the-celer-network-cbridge-cross-chain-bridge-incident-bgp-hijacking-52556227e940"
+            },
+            {
+              "source": "Celer Network Official Incident Disclosure 2022"
+            },
+            {
+              "source": "DeFiLlama Hacks DB"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "cbridge",
+          "address": "0xca8cabdef75b52e9d1acb363c4700f7184dba442",
+          "value": 240000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "SlowMist Incident Analysis: https://slowmist.medium.com/truth-behind-the-celer-network-cbridge-cross-chain-bridge-incident-bgp-hijacking-52556227e940"
+            },
+            {
+              "source": "Celer Network Official Incident Disclosure 2022"
+            },
+            {
+              "source": "DeFiLlama Hacks DB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "nst_layerzero_oft_2023",
+      "name": "NST LayerZero OFT Simple Swap",
+      "incident_date": "2023-06-02",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Stargate / LayerZero",
+      "bridge_mechanism": "OFT / Liquidity",
+      "origin": {
+        "address": "0x3bb7a0f2fe88aba35408c64f588345481490fe93",
+        "chain": "polygon",
+        "value": 150000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs NST Foundry PoC"
+        },
+        {
+          "source": "Polygonscan Transaction Trace"
+        },
+        {
+          "source": "Author writeup by eugenioclrc"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "polygon",
+          "to_chain": "polygon",
+          "bridge": "stargate",
+          "address": "0x3bb7a0f2fe88aba35408c64f588345481490fe93",
+          "value": 150000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs NST Foundry PoC"
+            },
+            {
+              "source": "Polygonscan Transaction Trace"
+            },
+            {
+              "source": "Author writeup by eugenioclrc"
+            }
+          ]
+        },
+        {
+          "from_chain": "polygon",
+          "to_chain": "polygon",
+          "bridge": "stargate",
+          "address": "0x9c29d0c55e5906c7bc7ffcf9eb6a8738b62849a0",
+          "value": 150000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs NST Foundry PoC"
+            },
+            {
+              "source": "Polygonscan Transaction Trace"
+            },
+            {
+              "source": "Author writeup by eugenioclrc"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "saturn_layerzero_oft_2024",
+      "name": "SATURN LayerZero OFT Exploit",
+      "incident_date": "2024-05-18",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Stargate / LayerZero",
+      "bridge_mechanism": "OFT / Liquidity",
+      "origin": {
+        "address": "0xc468d9a3a5557bff457586438c130e3afbec2ff9",
+        "chain": "bsc",
+        "value": 100000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs SATURN Foundry PoC"
+        },
+        {
+          "source": "BscScan Contract Code and Trace"
+        },
+        {
+          "source": "DeFiLlama Hacks DB"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "stargate",
+          "address": "0x9bdf251435cbc6774c7796632e9c80b233055b93",
+          "value": 100000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SATURN Foundry PoC"
+            },
+            {
+              "source": "BscScan Contract Code and Trace"
+            },
+            {
+              "source": "DeFiLlama Hacks DB"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "stargate",
+          "address": "0x04ed992f95ac5912fcdb37288bf8ce4ca6055bbf",
+          "value": 100000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SATURN Foundry PoC"
+            },
+            {
+              "source": "BscScan Contract Code and Trace"
+            },
+            {
+              "source": "DeFiLlama Hacks DB"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "sinstake_zombie_oft_2025",
+      "name": "SinstakeZombie LayerZero OFT",
+      "incident_date": "2025-06-25",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Stargate / LayerZero",
+      "bridge_mechanism": "OFT / Liquidity",
+      "origin": {
+        "address": "0xc49f2938327aa2cdc3f2f89ed17b54b3671f05de",
+        "chain": "bsc",
+        "value": 50000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs SinstakeZombie Foundry PoC"
+        },
+        {
+          "source": "Defimon Alert: https://t.me/defimon_alerts/1319"
+        },
+        {
+          "source": "BscScan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "stargate",
+          "address": "0x7314729d691fd074dbba03ca3c6ef3be61b31d34",
+          "value": 50000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SinstakeZombie Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/1319"
+            },
+            {
+              "source": "BscScan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "stargate",
+          "address": "0xe5f620d202b3d388ae64705552941c2fb97b8ff5",
+          "value": 50000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs SinstakeZombie Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/1319"
+            },
+            {
+              "source": "BscScan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "mim_spell_stargate_2023",
+      "name": "MIM Spell Stargate Cross-Chain",
+      "incident_date": "2023-06-20",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Stargate / LayerZero",
+      "bridge_mechanism": "OFT / Liquidity",
+      "origin": {
+        "address": "0x9d4fd681aacbc49d79c6405c9aa70d1afd5accf3",
+        "chain": "ethereum",
+        "value": 17000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs MIMSpell Foundry PoC"
+        },
+        {
+          "source": "Hexagate Analysis: https://twitter.com/hexagate_/status/1671188024607100928"
+        },
+        {
+          "source": "Etherscan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "stargate",
+          "address": "0xa5564a2d1190a141cac438c9fde686ac48a18a79",
+          "value": 17000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs MIMSpell Foundry PoC"
+            },
+            {
+              "source": "Hexagate Analysis: https://twitter.com/hexagate_/status/1671188024607100928"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "arbitrum",
+          "bridge": "stargate",
+          "address": "0xbdf3f7e3d03bd818b0ba9bc9d32874a0935028e9",
+          "value": 17000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs MIMSpell Foundry PoC"
+            },
+            {
+              "source": "Hexagate Analysis: https://twitter.com/hexagate_/status/1671188024607100928"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "bankroll_stack_plus_oft_2025",
+      "name": "Bankroll Stack Plus OFT",
+      "incident_date": "2025-06-20",
+      "split": "test",
+      "is_public_two_source": true,
+      "bridge_family": "Stargate / LayerZero",
+      "bridge_mechanism": "OFT / Liquidity",
+      "origin": {
+        "address": "0x172dca3e72e4643ce8b7932f4947347c1e49ba6d",
+        "chain": "ethereum",
+        "value": 12234
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs BankrollStackPlus Foundry PoC"
+        },
+        {
+          "source": "Defimon Alert: https://t.me/defimon_alerts/1301"
+        },
+        {
+          "source": "Etherscan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "stargate",
+          "address": "0x7b3611b0affc27d212a68293831d3b55354b802f",
+          "value": 12234,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs BankrollStackPlus Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/1301"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "ethereum",
+          "bridge": "stargate",
+          "address": "0xc5bc890d598e47ed1ca97fc3ce69ba216d742500",
+          "value": 12234,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs BankrollStackPlus Foundry PoC"
+            },
+            {
+              "source": "Defimon Alert: https://t.me/defimon_alerts/1301"
+            },
+            {
+              "source": "Etherscan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "bankroll_network_oft_2024",
+      "name": "Bankroll Network OFT",
+      "incident_date": "2024-09-22",
+      "split": "calibration",
+      "is_public_two_source": true,
+      "bridge_family": "Stargate / LayerZero",
+      "bridge_mechanism": "OFT / Liquidity",
+      "origin": {
+        "address": "0x4645863205b47a0a3344684489e8c446a437d66c",
+        "chain": "bsc",
+        "value": 240000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs Bankroll Foundry PoC"
+        },
+        {
+          "source": "Phalcon Security Analysis: https://x.com/Phalcon_xyz/status/1838042368018137547"
+        },
+        {
+          "source": "BscScan Transaction Trace"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "stargate",
+          "address": "0x564d4126af2b195ffaa7fb470ed658b1d9d07a54",
+          "value": 240000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Bankroll Foundry PoC"
+            },
+            {
+              "source": "Phalcon Security Analysis: https://x.com/Phalcon_xyz/status/1838042368018137547"
+            },
+            {
+              "source": "BscScan Transaction Trace"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "stargate",
+          "address": "0x7ae53500d69ab6f538ea97e17066274cf440e770",
+          "value": 240000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs Bankroll Foundry PoC"
+            },
+            {
+              "source": "Phalcon Security Analysis: https://x.com/Phalcon_xyz/status/1838042368018137547"
+            },
+            {
+              "source": "BscScan Transaction Trace"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "fortress_loans_bridge_2022",
+      "name": "Fortress Loans Chainlink Bridge",
+      "incident_date": "2022-05-09",
+      "split": "train",
+      "is_public_two_source": true,
+      "bridge_family": "Validator-Threshold Hubs",
+      "bridge_mechanism": "Cross-Chain-Oracle",
+      "origin": {
+        "address": "0xa6af2872176320015f8ddb2ba013b38cb35d22ad",
+        "chain": "bsc",
+        "value": 3000000
+      },
+      "ground_truth_sources": [
+        {
+          "source": "DeFiHackLabs FortressLoans Foundry PoC"
+        },
+        {
+          "source": "CertiK Incident Analysis: https://www.certik.com/resources/blog/k6eZOpnK5Kdde7RfHBZgw-fortress-loans-exploit"
+        },
+        {
+          "source": "PeckShield Alert: https://twitter.com/PeckShieldAlert/status/1523489670323404800"
+        }
+      ],
+      "hops": [
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x00fcf33bfa9e3ff791b2b819ab2446861a318285",
+          "value": 3000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs FortressLoans Foundry PoC"
+            },
+            {
+              "source": "CertiK Incident Analysis: https://www.certik.com/resources/blog/k6eZOpnK5Kdde7RfHBZgw-fortress-loans-exploit"
+            },
+            {
+              "source": "PeckShield Alert: https://twitter.com/PeckShieldAlert/status/1523489670323404800"
+            }
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0xd96db6ea51affd458449e6f80af48c6aebf3720f",
+          "value": 3000000,
+          "asset": "USD",
+          "operator": "Lock",
+          "sources": [
+            {
+              "source": "DeFiHackLabs FortressLoans Foundry PoC"
+            },
+            {
+              "source": "CertiK Incident Analysis: https://www.certik.com/resources/blog/k6eZOpnK5Kdde7RfHBZgw-fortress-loans-exploit"
+            },
+            {
+              "source": "PeckShield Alert: https://twitter.com/PeckShieldAlert/status/1523489670323404800"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "benign_addresses": [
+    "0x6906773463f767d022574e9589d276ef6f2f0de4",
+    "0x16cc13a97dcec363523c2761e270e8469c6acab1",
+    "0x04f0b029a167ad60d61844b5202f6982f9c9fa3c",
+    "0x6d403808662effe5199aa2530c4d54d8e2a25fd5",
+    "0xcfdaa8caa231f56d9dc917487186fd011e006a99",
+    "0x0cb131457909241fc1a1843fb7c4dd06e8d92893",
+    "0xd342f466ef41c44270a2a268dff4ee2dccbdf586",
+    "0x679e046ac83e585a3ba8d8b5d20b3a37462334b6",
+    "0x8bc3274d57b83e19f92d71a634739bdb748b4c6b",
+    "0x0f2706d647ddf7de224ef935a0709e5a5d512bbe",
+    "0xf7bff8b8d1f7a808582a392eed2b1e5c74ee513b",
+    "0xd4e661386130dcf9cea327d282e6602ac9901e1c",
+    "0x7a9cf527e785ab8a7c97643e514748d1745c362f",
+    "0x01c490aebb031a7c733eb4c3caed5503f3868fff",
+    "0x6db10ac4740c1dec3e40ce08dd809bb94ced99f9",
+    "0x8a2d4c845d008a5586039c48f875d8fe3e8d3abe",
+    "0x6e63d2d7078e2a158ebbcb421e60c44d50a7129d",
+    "0xf73933fde7ae3e171162900570e9710567b7419d",
+    "0xb3ad6a034aaffa690ebd8ebe88cebf8ba9320d2a",
+    "0xf9e9f76c4b08b342e6dd7c8c0b82f32ed75d2ae2",
+    "0x9cf6f20309b8f518e96d5c56f765bdb9e1356314",
+    "0x55db10a2e3a9674aaca40fe520a29c71dfed56fc",
+    "0x2174a5ce245ddf0f26adae2cd248490906fa463f",
+    "0x38a175060f06c78f6767f68b0ae70726335ace1e",
+    "0xc1095262eee15934bd2f24c51a23ba90e8200408",
+    "0x9af4f2a3acdd17af86c47a9f6b3b55c67f5bcc57",
+    "0x195112e9f7942cbfd0b75b597a37d3bad11d5886",
+    "0x0b0c596ec0f3a007d1f98ca36df42c0591f7c25c",
+    "0x6a44d0b26c92dab0e09c122fe1646e86063658a4",
+    "0xf5bcc0b84ab2de2ec7efc5a65a6c75a109ac3388",
+    "0xf00007693407a6e549cd0aafd61b0139b756d93a",
+    "0x49fe9feeea02436e1bef4960061352b0f9ff46f6",
+    "0x4e210b5e94e4665eb7987c1983bf6fce0923ae93",
+    "0xd5596967ed82f2fb31251345e32fc2019ed0e196",
+    "0xb3fa2694546f2feeb8209db135075c127850d0c7",
+    "0xedcfaad3b4a26fffbd08275a18f89184b176b77c",
+    "0xb453286392795b1585a8896f0b993df08374a3d2",
+    "0x933e26e964419ef47aa962e1824bdfc683b43646",
+    "0x31c44591ebcc3133ecf0300cdefc12a9106d8668",
+    "0x302fec4d2fcc34d83eeb37d3c909fdae7ec7f986",
+    "0x2c2a97d18a0de83fa8ce04d202fbbd8352df33bd",
+    "0x4758beec1b8084bbb4147cc6013a6c031782cc26",
+    "0x9ed5c0c45e2573e33bf3bf5a05a37c48ad4218b5",
+    "0xd94663b063c48cf510999037028357514d148f4c",
+    "0x17dfeadab8a6b07cf2e907ee6e848b1836c4b50c",
+    "0xaec93065c084b7425ab19e8267e514db5d3f1e1d",
+    "0x6781d54a5c1bd6d56c8ad17036885cc2928fc30d",
+    "0x9b0031478a5187cc235787604e285c5ad80969dc",
+    "0x2c090c67af41dad9589c3eb2e85bf98732ccb3e2",
+    "0xca68ab93e7e68568268df4c8f44d4b4e4bdc8bb8",
+    "0x77f885610245b99ec376dd9bca96603cd6f2645f",
+    "0x407a6bae7d34d7f8e924a44dae38aee3acf8dcea",
+    "0x3354cf7058ac2282262b5275d84b2bc844878cf5",
+    "0x6dc99da074c24a3be0748b176945366cac3e0881",
+    "0x08c37fa5ea1770d1567f588c214ce03415f0a658",
+    "0x9905f0647136877b4686e7efba1a4efe85a114b2",
+    "0x1659b3174a62f06b10d1d3ebf83a72b927bb319c",
+    "0xbcb63e302c989c2c767092781037c9936b660a52",
+    "0x79bbd815e6a011f1018b8300a03a752334bbf83b",
+    "0x154bda871e331cb6bba86a27eafb049166232a00",
+    "0x285dd67ff34da437d90ded38742d9a19adceae20",
+    "0x5bc1b58182669083b6e72b79c0311e0eda783fcc",
+    "0x5745f3adc2b9f930fd172a10d9fa397696844d0b",
+    "0x32f84ad326fc05babadc31662cca61c3735f073b",
+    "0xd3eadf0381b044e6d496a78733de5c8f18ea95d1",
+    "0xdeeea5c2ed33698a0a2e038b4318c8a52dd68d83",
+    "0x7776acf63f766c35173e4c9851e41f5809d6d66a",
+    "0xa31ba33967a53c99df38a873d37cfdf62827401b",
+    "0xbaef1d950ab44e6421d2f094b1848edc4c276828",
+    "0xfc5cb11c553940ea5e1eb3ee784a58a16cc9a5a5",
+    "0x45eafc065197dd075b3765c7014dc6817ef02879",
+    "0xbc20f19b860e9973d6f719a33938c969b48939a3",
+    "0x18acc71f71f318f4786659ded8d8de227e2d77d2",
+    "0xc8eebd1c96ac44e1f468efcd4981b7aa3d490420",
+    "0x71ba7bbac9db88cb15dd7f8bf766dc253743922c",
+    "0x9f082be723ac95657866bd5ee7102050ca6fd94a",
+    "0x3628a60cb17ffd585ff640c5a95e0930a1d25f7b",
+    "0x08241ce6eabd6b9ed207dd5d912784674851a602",
+    "0xabbbf09d18a11b4ab2db9bb61a31b3b2f32ea90f",
+    "0x00c2795bd3137c84a4886cc4267f738bd430653f",
+    "0x8338a180ff40d09ad78aa025464763ccc0853b93",
+    "0xbe792f9416a920414f592b0372533eacbe266034",
+    "0x43b3d4e8d54f64694ba11952bcbe9736ac619f2a",
+    "0xfe1ff6c23b699b9b95af379cf04af650c15809ca",
+    "0xe6ee25236c5e02bec335215386eaf00243166f83",
+    "0xbbeb86c27a2c2d85cac44142796dfda89d9e0ac2",
+    "0x6bf34a7b7f5621c2a21d320669e7f5f8a40479e3",
+    "0xae9f6ad7b4bef707356d7e4976d8f0d46c1b2902",
+    "0xfb162626cb67a0bebf6452c1e1e996962f4a1d5a",
+    "0xa8e9ca7bc79bf30ed9ad901a0f62a4ca8f22db15",
+    "0x17210f3463249388f901a2e2d029f72cb3263cb3",
+    "0x7afbcdd5fbb3bc4d8529771db93980edfe75e2ee",
+    "0x16e080ad157f2837d0733e7e3ddc14623bf216af",
+    "0xedcc6caa12669d5f720a8e06775cb90f3ff075c0",
+    "0x37b3979077b39692fec55edee89c256febfc3deb",
+    "0x77ac39e78dd847f21d8aa466b454861fa52ff247",
+    "0x230ab51ffdce4f585c82ffbd467e0a39701ff41b",
+    "0x7bb08d1633a857a836745b8e563f8dc9554b7a61",
+    "0xd1297e8ecfaa5c1b97db6a6393e57058ec79bb01",
+    "0x6f9e631e9b5254266766350c4691782174ab5327",
+    "0x11181b138ca6a0ab369fb79a70a333a6b387a578",
+    "0xe70c83f49030bde761aad73cde153e3b0a46dee8",
+    "0x42aa657fb03047840fc8da04c160fcfa3a28f3a2",
+    "0x43e39f193b55ff7233389911655b07da1d4f39dd",
+    "0xc37c5247a2e33eb0ad99ce7b24cb2bb4ce4623b7",
+    "0x1ee44234ff2e3704bf0e85b0dfbdbb6ce45dd481",
+    "0x5f37ac6a23145a5fd1a6ac99588f92b6269180ca",
+    "0x016ea670a9309b22a51caac3381cf983a4e20e98",
+    "0x2b5b849aced357d5cefedd68be26ebc4efeb994f",
+    "0xa4358ac1f8adb7393f0a76f8b5aff9499f270d83",
+    "0x599a91af59a1f3f53ae56b271a248804777d3ed1",
+    "0x03b38e7606101ecf7e3b3df06f864b9199076cbf",
+    "0xaf7d9324507a05d28934d140ac3b9256fcb9b5ed",
+    "0x0d21c382e38b5b84d713f772563116f5e4104590",
+    "0x83795acc5612790c39c97269778e8708fce67862",
+    "0xf6f501c7b419d75bc9edde4d6c861d61b2b71aa6",
+    "0x2836ad21ad0b86724b3868ec1879fd535d3322e6",
+    "0x9bf4297a3d5d153969f92cb90f0f2c9153de4d84",
+    "0x4710c3b607326f8c35f63c678c2c94733c363179",
+    "0xf5b1044e5fbcbcb060ff1bf83cacd9f5046723e2",
+    "0x9604a0798a1ed1c2c300283a2c9eddb9ff6901e2",
+    "0x775ca482e428ebd270f71ed0f9891ca5b26b3b4d",
+    "0xad1331ff9dd981dc8bf9d8aa2aad0265127a21f4",
+    "0x3270730e73bc106195cece639a1ec4152bf8640f",
+    "0x7b953d343e10de9a084e9578fbd99f743b5da1ee",
+    "0x3d273fac33f35799960df94d90a59cb573ae282e",
+    "0xe1cd122744e376288b6d005175a83bc032638eb7",
+    "0x99169a5567dd8559f1a4fce50736e7ff49b620d7",
+    "0x0778d7caa9f4685e63160be2c65bb73063f4d620",
+    "0xadac47c4dff2aad3752e48f5a225c42bcfaece01",
+    "0x03de150bce726d1b9d37081c1184ea7327afedb7",
+    "0x4ca72d1938f7e47d0f41828d851e3b91d62b6174",
+    "0x8012c55f97c38de396d74834792c8177f409900b",
+    "0x88c1943729791409ed5e327b5f31e7a585847bfe",
+    "0xcdb0268bfdb97100a89ef7a87868440abca1ab0a",
+    "0x66b041eaf29a0cfd9586dd3ba3502d49cc36d273",
+    "0x2cee9b61178421930079f256b560408debec0de2",
+    "0x7d2c222dba9a62a59709f112696d0708cb0e0df8",
+    "0x56c43bcb3e6e1bebe6cbd44015b2f9f5baffa3c2",
+    "0xc81fa60e517b32ddea76349d437625d19ec0169d",
+    "0x143471893d2ff29767496337b041c5b2fb78279f",
+    "0x911d99adc89d4ac0ed5a386d3e982eb17de744d8",
+    "0x560b16d96822b9d9296aee009fe8932252b8c0af",
+    "0x8a20cbaa0cd1b738c1b679644b5f82afa77f8c61",
+    "0x0aad7398abe7cd9c1b799b511a0c9ff0adc0f546",
+    "0x1f31d3d2a1114962e13e2d4ad1d339f8d1f82062",
+    "0xac044a50549119a515d952401c547601071ba623",
+    "0x194917bc0e30c7ae216e69cb5cd30ce640f9f251",
+    "0x968545e32a946a30525f6103126933c00fe7994f",
+    "0x791030d88bfa837dad60ca54a2d48f3602b8436c",
+    "0xcde19b83cf133d6859c6f7bb702a245e55c358ae",
+    "0x4d15e002043de19369a02e23e69f636cba5acb20",
+    "0x743bd82b5de030a802429f95553ae3599ff40f57",
+    "0xa9a4dccec760fa89e5068e161153192be38c6b83",
+    "0xe1ecaee3f5e8e4bbaf46144691afaaa2ecc5aa83",
+    "0xd31386062b1231e54e9d55d5afa32c0ac7d193fc",
+    "0xba7b3277a00e94f9446cf25f4eeaa9b6d36d7976",
+    "0x0914fdc31925a725d6a4d8f27155aa02c24a6da2",
+    "0x7097430a5616d3cad7945c1c4a8ac7e45a8dd169",
+    "0x586a892fc4c7869455d584f5d3885a2b795322e6",
+    "0xe9ed97ccf01a8b2e683bcfbf11a7015bc4a6af4b",
+    "0xa1527c5e7e2b3c2e2b9d314ad888fc21173d07d5",
+    "0xa5f7610d13d09bedd2e9a6a7cc95168a1b13bb9d",
+    "0x0cf550616404af6981b3d337c04aa29e777cbae2",
+    "0xda30b4ee5471697c33b7fe679b68c282f811a1dc",
+    "0xbd6451af4df268a10ddf95e3565be8c8dcf57ab9",
+    "0x16dacb53da3f3f4514c04db63313e29a1946548e",
+    "0xd3c7f1df4f17aa81d62bacac945e1ce5312308c0",
+    "0x1b65fe2a846bd6d0d6485d4df15edf393791aa17",
+    "0x360a52d53f1fa3eb174beab1012db1d487936763",
+    "0x4cccb9159aefac314d9fa358e3b6cf2ad020b0af",
+    "0x7d11035f7c00e689aa17e89accfd411c508222f6",
+    "0xe89ea5062bbb21ad8bc41882251d06ab481386e2",
+    "0xa29ce8f582a75890004f4b0cc20bb880cb041cd9",
+    "0x8291ef2fda934825abdb039724cfea7f3d4ddbf4",
+    "0x1139c76b6fbe8f8894a6ee00876025230eba8d0c",
+    "0x849dc27832c630e05f643e6f0ea6896c11efc444",
+    "0x58686eb6a1dc90536350039d7fb5b8cac5e3867b",
+    "0x93172b0c1e9b3cbec9303495be6beae2399a6f0e",
+    "0xdeab8461f58e0c548a873b54660463ea0d7875d2",
+    "0xa7c87b1964d5cc70ae8a670bd2b7c54cd32591a2",
+    "0x34bba3773266ba8827b429d3cdc7ddd9c7faedea",
+    "0x6a11d6cd6ecbf06da9607df01bb09e9bb429f1ad",
+    "0x73c83d36f79b1107ed9894940819b8a89c1b091a",
+    "0x8b8b4b54662aaa03642a6d4d23697b2b924ba042",
+    "0x7be7cd91474342e65c7d42dfcfd3156ea371e055",
+    "0x13191c0749a4887550b1cd4d96f1954ffc5811e7",
+    "0x566f414b5f9fdb0d2c17e701db978104b5ae671b",
+    "0xb02f2280b20f1a6d96f5bd777b9b078221406161",
+    "0xfa5149be2f6564c439d6f067f729e5dfb9b3e425",
+    "0x938bc0beaf4f7566c1671cdf612e907c941eada2",
+    "0x84354ae54b8608a101b0840072b54c981accc341",
+    "0x392c5aba526286bf52bc00447bc7b64192db9a03",
+    "0x48a59c9d254a0ea962e4e241012f94f912119d2f",
+    "0xd7b3520e1144e7cb3e768a531b79849b4ada72b4",
+    "0x763b8c3957baf763d09be8413ab3731f2a748c2d",
+    "0x8af4e47e17a3a42dadeaab63a9d1f7f928e9d92a",
+    "0x93e81496b2500ecef655156728f0d905a451ffae",
+    "0xc55544d28f607b0cbcd72569a14f844eb3b007df",
+    "0x5c2eece55e95a5fca5f80e80a89d48ef4e028c0f",
+    "0xae4425c03982e103f43b3895a57fc17335d19ebd",
+    "0x1ea42387875ba44a7310c93f27648982aa9d9a75",
+    "0x4ac6b0e0ae9f9138523bf262cf745c61f9d47f5b",
+    "0xba9cb23bd07e5df20029aebd3087121550f9cc8f",
+    "0x85ab056967774f9c02fc97a4a53656640ceeb4f0",
+    "0x2c0a488eea94da46ad6260d497c07752cec6c84c",
+    "0x49df4651c795878e769cc5b4dfea84c3bbf941b5",
+    "0x536a0e819b9c7f4c1ec313db3298919cf7f49008",
+    "0xf2d465c8557a8d9cd1da0eb8100bb968ca8859bb",
+    "0x1590122e7dbfb132d2e935ea27bdf8406e8520ec",
+    "0xc5eba15b37d5dc0f9ff27722e0de3e6a5ebf2272",
+    "0xc3a8e99bc85917c75f053a447ea11a1b48649f38",
+    "0x6b67ab6059aeb6356cf463663b59688e67800cc4",
+    "0x1750334ca9d8a6b47ef269c8f25163883286dd31",
+    "0xc795d389f76b7fe0b8f8a6a3643310b8caa1e323",
+    "0x004bab3ed8fb3a84c35b6b913e050004bed9c065",
+    "0x2e067db8dd903bd09767e1e88a5aa3fd24a780be",
+    "0x7337ab5e44fc50893e94e654f67a5cfb716e45bf",
+    "0xfeeef25bd10d08532db4a3349a94a43e015cbef6",
+    "0xcff0a1a7f35587a4c25727dbe0309a939eca73b4",
+    "0xfd67d8505a89ee2f9cfa180af1af577f1be35ab2",
+    "0x18cee7c270523f0806d3f0a7552c76ebcb3b8258",
+    "0x6f5d1adb60d50bcdcb7613f73bca621a6146c617",
+    "0x654fd9045ea44abdb985fece0d412928ca9bddb2",
+    "0x9b6b2633b4d7a07b55ab3fca81bad6fdbf662666",
+    "0xd407d8f32837bc91adc24ce9c7c9aba1d4cec1b7",
+    "0x7ca41987cbd5826467113b51ed426e5fd73f9945",
+    "0xa3a87ea260aa8427725c868a11a649845b56cc71",
+    "0x72543127e9628916240c5fda80bbba673973ad3b",
+    "0xf17197fa297887a737dc4335f94881ae751d99e3",
+    "0xa4d0bc7b9562aae3cef93f5d1916b933044bf2bb",
+    "0x35e44bfbdba3812c0c296215c656c673c3361dd5",
+    "0x47df04e579e996e67d87984c20c1d3e3dc824600",
+    "0xc58e4cd6af97712857f1878a95000bd8993a8120",
+    "0x06e850a4968210523dd4c5e57e5748019e187e90",
+    "0x0c64c7867ce4d63a94d4201d419372e6f921ccd2",
+    "0x28d7ccf560e155a37daa4bd691395265d28dcd80",
+    "0x852935a8404888211785033e3b3aefe63f992985",
+    "0xb29f523aa15090bdd4c7b44283785bc493001d37",
+    "0x96fd1f8fc5608ce95113bfdc930af8e914d244a0",
+    "0xe997af1ed5f1daa680201d52f71310bb4b729f3e",
+    "0x6b0aef57979a7591d78a8be6bfaf22e248d06c41",
+    "0x564eaca83f6d51b4cb74b2f0b5a9938f4e5a9562",
+    "0xb0fddcc02d44d2b1b85769a2b7f1fb681e067a63",
+    "0x691f9071bf36799b6b24b643a092bc19cf2b4939",
+    "0x03bdc85184cd6ac27596e94430b35226f3ed8225",
+    "0x6dc39c29e4cab01012bf9409dc64b1730a17b85f",
+    "0x31d63f4aec85e173770bcd88a44f3cde38aa2f28",
+    "0x8fc2a9d5c2766011c4bad9158ba0cd758caa9c09",
+    "0x7d04ae3af7e916ec71abaa9acedc27c0757e3cf8",
+    "0xe14cfab7db80f3a65aeb04de128323408ac6502d",
+    "0xa8cf8401b63d8a94b79a5df9be2d55e4cb42304d",
+    "0x16c4f16927015993be1ce3aee3903b1d4bcb1241",
+    "0x90cbb1883c88bc902da183d44ea845576129c0c5",
+    "0xfa62dbc4c113dce0dd8de1c57af0eb08be223a93",
+    "0x63212d272eebe8d729c2b437283964276d366d13",
+    "0xdbc0a8da8845c8cb37169b533f9cf5218550308a",
+    "0x361d34e20288b20d6d9db9de9e2c51d9fc59cccd",
+    "0x32827114fc832ac80092fec29b214fbe82f85ef7",
+    "0x8a12a353fdf136ab00dddbb55c267d3b6a36812a",
+    "0xe0676fb62d0d541c0de2cd0807953d024ab5a58c",
+    "0x1914b773327af2e480fdbeba0799d766c2313116",
+    "0x5c5550332b39cefab7265c8c5899046eaa507854",
+    "0x63ce6d15fa29281851c1d75c24e28d828083fb68",
+    "0x42d245cb308570ae7cca4dafc6a87e5ff69a70c2",
+    "0x3d4bf609a9ea37cc833703ee79dc4bfebf9edd53",
+    "0x689dba16eb97034d76d1fe741f1af3479f16ee0e",
+    "0x51d3699ceaf79300c929aada9861bc356b0bf6d3",
+    "0xd89070b8fbe3d4632893a2e35e4cdf697d086027",
+    "0x7f2cd1dac39c6fcd6c86a38e9486953e889fe17b",
+    "0x9d3297ebed7c358fa90a44a3c2ec6d195c63f49f",
+    "0x533ab6139539cf42a992968aa9eb52119c88c41a",
+    "0x17a952694515e3483f574cf64c672a3f2454ba14",
+    "0xca2fe81d435b201542872966ce1c28638b908677",
+    "0x044dc65d3d09db3715cc0372db7ced4860b760da",
+    "0xf35d3ac3c5fadba2e4da0157414d30d09b463941",
+    "0x5e2398232d4fd4220b871b4903d06c8c4c0df6ad",
+    "0x478d8c325e930d1692246963732f4ce71145c789",
+    "0xdf3b50e2489806992f6ceea0f6512e0b6ba2656b",
+    "0xa89f6f03a6e6b38eb3ad2cc3ac8ad87dc0f6c6c1",
+    "0xcef290c29b61410686098f83e67d98bcace22a2f",
+    "0x85d6ca9a1115164d4881d9d2d725dc3ca637cf9c",
+    "0x95a83e7587aec676d05d2bc93af50c378e50b64f",
+    "0x319d73f5c1b5140e9c956e12f033a7f3fac64181",
+    "0x7a29fe50efe3a2812211578da646d9f0ebfe2dfb",
+    "0x2cf4876aa00d5460efba98d095997a03b195292a",
+    "0x7e13ef23dc8e10d8f715e7dd6400b93dd9606b53",
+    "0xb17d647becca5d4f703cf708c1b71d15d804f2d5",
+    "0xba4572e9c0daed39e0aa7f9614f286ef21d27965",
+    "0xda0a7e1d39f76af3e6327c6c05a3b7282e143353",
+    "0x731b41f81164537f8c4a64e3fc5605af48002c29",
+    "0x4be3575b407a01e582dd4e8c39f25cd4df84faf1",
+    "0xc02edf62086d85273ffa446d40f00fcd559ea99b",
+    "0xbe5dc97cd5d0a235bea3998a28531f23afae33c5",
+    "0xfeb271ef21ae33a123f06a1a44ca4147d20bd680",
+    "0x9c41e88a0add342e66b8607f05ab92b056900c31",
+    "0x4895a6d61ec6a4b0e5026bb57eb6974628f47e88",
+    "0x3c25079f063d79b5be71a98115d5b2f2349add4a",
+    "0x48574cfcd78b181000455f100518d98cf7a08f2a",
+    "0x7dc6ec19ee13c41715122245c62c67056d8b96cb",
+    "0x46a373700bf07f6310ee7044eed0a881dc3f62b6",
+    "0xe6acfe7c8e01711b4f390aa401311d8b10763704",
+    "0x649b0e866d052118af92ba8d9fb53df848b90185",
+    "0x2ad2024a9d19fe8d61c357942921757437c6c8bf",
+    "0x8c1c33e7e0e7fec2163a11ef8907a2ccf38ad5a8",
+    "0x0ea8a124f188292ccc3f84eaf65ea159cd7c9119",
+    "0xfab3febe79b47aef3ac318b04d8e2e111882b0ae",
+    "0xf4cf6fbe9adcd19145e46bb2b7da6191e559550a",
+    "0x70e837e990343dd45ca443073ca562f95c1909ef",
+    "0xda1b9a8e486e4cbfa2e95dcd4d1228f953df18b1",
+    "0x0e156f55779d9563f1d78ae18fa86e42335e40a1",
+    "0xe62e936fa32bc831d03c762013134e0d128812db",
+    "0xaf551b138767b5997bd6314c2054c5e995049cb6",
+    "0xf81bad1be1699a54add04ab27820ec70a41b1457",
+    "0xf196dd6c35b48aa5ab27cfa49bc3bd760b139596",
+    "0xc6aa9017a48aac905758384ddb67501235f56d79",
+    "0x802aca5c3979e3c98c90035eb1b8d40bc2dfc5c4",
+    "0xa8fb74be273eedc52d4e1d9ef14968cf76e73775",
+    "0xf5369398924656f104c6330f7605c9566774cd12",
+    "0x234d8739a6ef3e7fceaa1357eec38ce831f3bf9a",
+    "0x0c508ae88f7a62e3528e8126a84cb7e3b38a9564",
+    "0xf62d13b170d3badddebd0c4e3a8c3f7174f1b761",
+    "0x094bbae8a3751eb1fee32948329210857a3c380a",
+    "0xf4f2ac821a65d51e7406fe40a98252276d813af9",
+    "0x46026c1954071ea7402538dd63faa2d145349cf2",
+    "0x55ddd1b6a7e7285b35cf82c6aaa213c40a30ee09",
+    "0x7d53b35844c1e4687f4d1394ff27dc4e683bbf68",
+    "0xc6e1f6fbbc789eab45c01bbdd883a15bb38ee3e6",
+    "0x1c966b191853d5afebdbc96610503b7ce9823fad",
+    "0x034c402b0630795edd03d6501a3f87d6550c3946",
+    "0x472d975baa2424041c4c54a3771cee4050a6a1a9",
+    "0x2ddb6d600b731ec483b0c479d0fc9d9df2c54c05",
+    "0xef74c37097b4b5dd7e15394f8e50ffbda9fd51a7",
+    "0x8ae8e6b5fe93c28f92b956a8b2529ca4d860195c",
+    "0x82f6f6cb7f1005ccc89e0b98e64b8cbe553db40e",
+    "0xba9e7b8969829c5f14bfb9185c99d9ff9eccf265",
+    "0x309a154a8a747d72624fec99c0ec402af0b355ce",
+    "0xcb81668d5b877ded5468170b53382808125c1942",
+    "0x843d44b9139dd348dd12ccd9de4df09355b1fe57",
+    "0x68c326578feb42610be84d3d00177577601ffbc5",
+    "0xf7bd8a5d761caa002ce0db18f9917c23406b4fec",
+    "0xe1a26e03ee9e300bc01a43d5a7f0c5194ac7f295",
+    "0x5bd6c35980c6fdc105272ed94e5fddf8c4489a1a",
+    "0x66d899c3d50b9ff434502440b750f8a7507e0d10",
+    "0xd0a740fc60392e366b4042cfa78a03820d411fe6",
+    "0x190203d57a37cd99f508a29d18b5fce51be5087c",
+    "0x4f572a5dfafdab468de7c4d17db49432a2547412",
+    "0x638a32006a9b8aab386c58d223f32db5f75f13f7",
+    "0xaf26bc6eb3e5f0fa95a821ef2ccb2a6d4c297522",
+    "0x8794706293caff0d024b832cc99b5f499d9efaa6",
+    "0x4ecd3237ecc081f7d1d32d44eb389c93ddc8499a",
+    "0xb9d7a5045ce10c18ffde9d0b06f5dd3e48ae9a9a",
+    "0xcdd1ce2c9e24fb46cb1330d4cfe2bdeea17e3ab0",
+    "0xb349b6f26573527d7e6520e7208cc36eae170b7c",
+    "0x57388c5a58b0e9fd4b7ae8dc34e6153afb8a1d16",
+    "0x1c1e374aeca494283980cac4c9db34236997ae51",
+    "0x1702026b4b24e6f6828952c0d6d2fffbb62e5af0",
+    "0x0590a1c586bbad69dcbe413d4ff979538ee5b2f9",
+    "0xabd7a604a390569f60df0bb6bdffff20ba35362c",
+    "0xd799e0c97e582d446b4e3a23b36d81d2b521a1f4",
+    "0x6476df8baea3cdc2e3741cffec476713a24493de",
+    "0x2ff5818ac27b39206ae6ba87753b2a91b02392a6",
+    "0xcfd8562cd30e28cfa1835b7e66836901adb4b7cb",
+    "0xfe82bee6ba70167f4e68b4934a4878e430a4aa94",
+    "0xcb50097ebeee4117ad805b3e80f047d679c9276f",
+    "0xfadab707ce6717347566251f2a225695ba143401",
+    "0x9696488e6f0d02bcd4c78d366093b510efa69c4e",
+    "0xd807aacc06c2236f47733654f5d1e6193ef4eab6",
+    "0xf86a41efbfaa1310dcc3c28dcd651aa15e2df0ef",
+    "0xb906232a2782aea645f93a1ba90610795bf48b58",
+    "0xe6c69efd0aad17c70851d48cc7eff1db5927c228",
+    "0x94aed97a423270959ad55fc07ac943eb369e1210",
+    "0xbc7d10f6653ff25e6a293679117d0bf98e375833",
+    "0xbc512dcddcf2df42b7bb243caba72e2dd2da27a2",
+    "0x64d3007bc3beef6348fa6b5989f5d0beaff56b77",
+    "0xb6f41e1d8cc929c2bbfa179de3b380bffd69987f",
+    "0x846a5bb327b7a51da0ed86939a629a06af65300d",
+    "0x37d84609102d7a569555955507ae940a2b72fdf9",
+    "0x59e019154d5ab7eda608c2ee8ad64c0159e4bff2",
+    "0x12e2d565dd5aa552ab487d613c379a00176cf294",
+    "0xab3420efac67e1035fa62e6e7a3d04b4fc3bac38",
+    "0xa84f74fde48e050f94d8b61a7bf6f6bdcb1b7cf4",
+    "0x1c43849f8ad3338ae50d74790b7d7d55aca205e4",
+    "0x9bbe57b6382f1346a3f8b6693a2c5380f189b1e9",
+    "0xd8a59047a03b07fb30e45d37fd2c43bd94c6e691",
+    "0x6048d263cbf5377ad582baa368e3888cc2b7d20a",
+    "0x7f9e1806fbbd43a61440eec470f94f87a4f6dd6e",
+    "0x919cd533919af22f82f3aa9fd3ff0a616de9319d",
+    "0x950bc9dd0191a230c6def9046da829e77f2709bb",
+    "0x9dca1ac1dcee72ce363c95941427480755f9af0d",
+    "0xe90c351744d6444c18f95f6b690d3cd5a5adb93c",
+    "0xabc47b02cac2689dab25647b1c980da19b3e5b12",
+    "0x46bce4bd28cc7868a2e9e61010bfdc60361d2597",
+    "0x3f7b5ec91069a17cadc75eaec58f9bdc073e6f33",
+    "0xbe96eddf2b419db93e592e2e796b7c25de6939f9",
+    "0xfe48d7c9d6ce6028cf68c479c2462e942956c2b6",
+    "0xe41c5c70c3dcb1d2d65090035b276286f8f92cf7",
+    "0xb0398b4083ed51a9a54b26b0d82a401a1c65462b",
+    "0xe08cdbc9724a6b890f5e60bb6e9ea06bcb5f9f4c",
+    "0xa31ddb0ce05a685e9db54905496d0519af4f80e7",
+    "0x361a602b56fd7708e794c8f1369dcec25359009b",
+    "0x1dc2bc4fcab8a00dcbeb9594bcbe274ee1800e9a",
+    "0xe69d9d90d6547d80c84a57b19a6723d8402e8d3b",
+    "0x6f19e7c18410e79414fb2ab8019a29ea838c1d81",
+    "0x97d9497b441cd6afca3f2d3dacedb6de15d1ef3a",
+    "0xfc0a2d6ceb63851cc8647525cce9938498a511aa",
+    "0x277e6f8d6a7abd6b16b71e692fcf2b22b449bcc5",
+    "0xff45629a7cc4de7480626e9ba9f9cd4fb5aa09f7",
+    "0xaa2ab80024f6d9f8374593cb9b0c49b12176863f",
+    "0x7737628fcd6fddf944283059267899d99385dd82",
+    "0x4205a905c6377d16ee33e8521ef8a50d01820ae0",
+    "0x30298c17b37359bac870a262a509509010b6afd8",
+    "0x4c400134d153d78ff94e4da347e3d8442360af73",
+    "0xbd87b5a4a6e74c9acc955e6d3ee7ebb738439fc8",
+    "0xc4ef23e239c2de3a413f4ae625d899902e2498ec",
+    "0xdebae8edb598e3a787a67a2cb57138b68e6213df",
+    "0x18c2b136411f08d6cb426724de5a26232f804969",
+    "0xc3a8fa30a3783e86de59f57938ab68d86834231a",
+    "0xc09fdf9306319f4b311ff1b9ebb2dd53de2c4006",
+    "0x354c939054356d2abece1cc0fe93dce24e31fbff",
+    "0xbed8c7e74da1d28c96c551a40c7dba9e0403ffbb",
+    "0x81fc164657719a1aaca63bedb019d5ba9f32d935",
+    "0x6dc1d1c3c2e19453242c39cef7142bcc7acc1474",
+    "0xb6dbc463232cbdeab2bec72375d595a471a75442",
+    "0xc1e7e9cd62d26104788bd317eb9420075910250c",
+    "0x75e178ce174cd56ded234b2bae323c1ed2e2d23b",
+    "0xc6178ed0f554c6218905d3620463505f738fca37",
+    "0xfb902eca5f23dcc2fa9a21dfd5077007f0a97306",
+    "0x35c5f45a3d28c5170bd071544ad2ac6866814cf2",
+    "0x2606bfbbdf608dd3a8d0b30e4e530d023d7ecaf9",
+    "0xc2db9a5b0cb3e6cb1cbcf72ae8d9fcd3a8101c60",
+    "0xef732be6c2941f76d116187dec4b0f8ec267226f",
+    "0xed166883a72c7069038a8e3c8f00bd794116a0ed",
+    "0xd46d11308b6a9578ebe6bb15f3c6cd0d26c2831a",
+    "0x987e5182eacada0bcc9d786cd94457d7136fee5b",
+    "0x102353745fdf7898a8bd88a1da41df7f84341026",
+    "0xa5755db082babc62da47865e59968225f8040e24",
+    "0xaca4fbb8be9d89354708d1249ab7525af188275f",
+    "0xe27f95135b160bc9ff0694f6de37be1a8faed44f",
+    "0xeee92b74956fe068295512395ef3f098991f9d8c",
+    "0xb05e8ef17fbce8af88c1191f7ac2ad4cd7baa853",
+    "0x8df60ecc83e8e2aa8433f831e9e6e3e63dae7c67",
+    "0xd37afe3c9a549802c6003848bf8a0a2e1aef8387",
+    "0x988c50c19f95c73cc1e8f2cf2b862c58d8b432f6",
+    "0xe2267cfdc46564f18e2302f7ac333b7ce2dbf165",
+    "0x54592d59512807e12a5aa31fe6fccdc9fb5ac660",
+    "0xe0e8ace2c84a9cb67005fefd8c4cbefe5d8765e9",
+    "0x429f6cc837ee27e1ae165ede2dc1f2e354f1e8b2",
+    "0xfb71f34221c0d232db29f818cf08c670248b1365",
+    "0x4d90d1ccc138c12557587c7bb741bd364605b90a",
+    "0x2daa2cab75e8c1abb6468aa477d6545fae213923",
+    "0x7f2c2d6e3a145bee7711bb04b81c4919df387b00",
+    "0x2fd990c9f3685f5fc5278300218c6e7252a4c194",
+    "0x8eeb475c9eded72337a5d2e1cbd60e8eddd866b9",
+    "0x2f2330490ac0a27dc32710d2c0fa9587af9c0d2c",
+    "0x1a6e0325e2f2e3b22f33d1173f278672b140c02f",
+    "0xb44450caa031f2272c782366664e4e41ce13dd80",
+    "0xef8fb891d726ad3014c6733a0b0ec94cd4b2f105",
+    "0xe6ef503767a4261df40d2e4fa36288443d96bd9e",
+    "0x6e2ba7a4b36d35eb289fc7ff834dd650a6c37ac8",
+    "0x64b54bda0d89ca45a3df319dcb00eb1ba67388d9",
+    "0x7e8f2cfcbc1f1a83c5e65084290dfc35586827f9",
+    "0x2b99b43c8aef51e01b28ee8bb5c37d5ee7d5d19b",
+    "0x26c784a17c51798026484e6f55e1f61bcd29a9b7",
+    "0x55bea298fe85f386f0fdbaccef1416340fd060f4",
+    "0x8d02c8ef4a4b4acc3aa723036bec8d8feb324d99",
+    "0x725dc20cfd25ecc0313bbe89cbe8167889d01da3",
+    "0x8dc7067a40a08aaee37d7c6ac070e2f48998e2d5",
+    "0x9053f2059a7a9a92540069a6184f6331d5d812a7",
+    "0xe8af2661646ebf68d2f2f00df3f6daa5f59a7bd2",
+    "0x770d8533b111ab7b155c4748b3c575b5f2366154",
+    "0x5a67a0aca5d0de3c834ca7d7e7d9feebb399b705",
+    "0xec90ad9674fcdc6bfb8036859bc0e8ad8ce2f597",
+    "0x189937367a11d5c67738c95e38b7506a3873161a",
+    "0x46f406584b20d6baa68fd72f06cfe5a7022e3564",
+    "0xa8b5c59b49a7185e12c29ccac7230fda1377a54b",
+    "0x302245cda86843621e4effdd11f458e604b94ba2",
+    "0xdd22fd6ecab107d4a8e9fc91a11faf9413008bc9",
+    "0xd67676d0001e101f68b48f21343aa684aa5214df",
+    "0x4fedf4e514f47e579d056037f9371d4b04b1e741",
+    "0xb5940bd694f6dcfd44fca774fd94fe62af054d53",
+    "0x93ed26341fcaf4b5f256601d227759e77c517d52",
+    "0x318a7dcb5ccbea3f944f2eb7d47b7f32374c16e9",
+    "0x5fa36859d3362e50c4e52f227f1ed7e4fc13f81e",
+    "0x367368a20e2569214f0364a172a9ed3c520e1235",
+    "0x0892967296586f6e0365aaa66817832dee1ebda1",
+    "0x7cbde5a5b5c22df44b96ab6c9cae061abb7d0a92",
+    "0xe07bcfbe5127d19af46f5a14373083e6430efaf0",
+    "0xe8da71d14a4c9e4c7f241efa9ddd3de32eaac6bd",
+    "0x7a38c46fc952c315c02033a7c8625f1e497c4440",
+    "0x0af94f6a1dd20bce487a7ad0600b75e4dce7c52e",
+    "0x101386981e2db42a1e407890a8b44d4081dc016c",
+    "0xae08348b0009ecec5678360ed9b4f94cd05fd766",
+    "0x0c532bb0bad249868536b9c1a326824255a159a6",
+    "0x292a61860e6f661abc2cab9cd05e4e12aa71a6be",
+    "0xfb0dccee32f5b453518ca26904a67ee83bb2ece4",
+    "0x209421999bfc749fb9f4d2e54b46ed8941b2a4dc",
+    "0x56ab8b3943b67e193638bf3318eb092d686bf1a7",
+    "0x9b57a1b03d2307f01137e34b2e02268095f9e6cf",
+    "0x20f1b72e08c38d0b23831854ee53a7b70633e8e7",
+    "0xc62f683b54f530e5e414294086013174599c5c5a",
+    "0x84aaf75bce631d8a570bc18a1f449891766260e3",
+    "0x22d704dcaa2fd8c9ec646aa421c70828e4907b2d",
+    "0x99f233a0010c94877c7ed75e75eb4b17a5747a4e",
+    "0x6747871d91c4084eb61a15ca21f912956367d5cc",
+    "0xb6aed0cc637a45abc583f260b5c3d5fbbe5f5c7b",
+    "0xb8300816f1b3e99ec2696b4b2b06f0cd7e504fb8",
+    "0x286c21e8fec7dbb9369074622065df9bff3146a1",
+    "0x6db57df02ab27ffa6d5991d294512d873c01e341",
+    "0x32ea0a5d4872b1359f15b7ac9660e9bdf55e90e0",
+    "0x9d1d65050ec7987a4166194a3115a7ae72b58cd7",
+    "0xcca2ff153388476229e881bef9a101be04969f02",
+    "0x7a7f4161ef1a718e9b7e105e5d20245a060e00d9",
+    "0x7ce17ed9bd5159c012ccb85c66e3ef180ce9ce88",
+    "0x24d0d391997b7b7e95183c923d99e58531671b23",
+    "0x7c353fca3c20abcb05ddf003ca08e448dc03949b",
+    "0x01bee5db90e3c650bd12b2ba6211b70be9ad201c",
+    "0x254ce05343ef438b66ee907981c87a5ce0e7e7ef",
+    "0xa4bae2be4a1dabe1803bdbc124338302d97b9b03",
+    "0xf93058858c113f8422cc7b7eaa76de485c7929e3",
+    "0x8b8ac67532e7cb41c1d8e0a358f2d67cfaa8e3aa",
+    "0x32778c24345725d15914744bb79361ff8f5b9f00",
+    "0x55c8838029310e4a3bf1cae64c3eac8877a20744",
+    "0x517e6665e67a554a2649974ff0392e5f8497c110",
+    "0x8bab25ba8a3aa32308189aca92299df9d4cec74b",
+    "0x6e322d4b419b51dfc1cd460230d74a9369d25342",
+    "0x7f031e6fa8fcb9cb296aa9e60e317e0fe39c6a7e",
+    "0x9bd07ae92fec7a104dd0eb0495078c0d7ca61073",
+    "0x61bcbf18fe02aeb8f04368970d4025a0f9c68d61",
+    "0x69dc0be2bc5fafa1966d48636c9feab500183d07",
+    "0x68e29845e47da7f96dd2ebb10d4ed7ed21ce0dc4",
+    "0xea854d70a85e49a9196274393b15ec66446a6f2a",
+    "0xf37adc69797f7934c21b0cb1c80b5fd149c230bf",
+    "0x30215e1d531b8228c3c5ed4d9ba8a2bccf4d5d99",
+    "0x785ee0b30ac7ae3299beb9cca97e2153a8f9776c",
+    "0x6379ad24d78171bab1967af9e7fe4b659b0b241e",
+    "0xf3ab56d52303bc348bf3ab6319080547e03c3cfc",
+    "0x1c8288594d53fbd71d2cd984d4cf93f93aea4442",
+    "0x963981746526cd917af2c50cd9eace6fd93dc38d",
+    "0x39e597fbecfbba00327a9d960357925afccea25c",
+    "0x8415e2f09cc5cf84e2020d7eb1ef3a946d506315",
+    "0xefb93a10e6c5f97022b85b1ea80ed71f726fc3cb",
+    "0x2e3febf0504241befe5f93a746f48c47f67d4571",
+    "0x1338aeeb09543aba39b7eb5f64a35b9493099cd3",
+    "0x37aa866acd111bef1c3458e1cd55fbf392e92c77",
+    "0x1fd136c87a30c280d7c93ef1b7952a940f942c8a",
+    "0xa2873e67972112b7a6ecdcbdb0dee95329721487",
+    "0x59e691ac3311c303d4f525e5c84cc5c7cc6a1999",
+    "0x51db8aca0a2434eee133604b1b60d6b58147b222",
+    "0x6a688dd315e5a6f0211327ad8c3e21227952400f",
+    "0xea72a987d85837e4b6f17b847a11dda972839a33",
+    "0x3406f3c9fc4f1c13a318c879ad13ac0e961cf880",
+    "0x4d7caf5dca0ad03b3d3571bb9e887b6e6fcb452b",
+    "0xc79d7d2070f1e75479655e3958432fb907767428",
+    "0x77e9d09dc64330a09534f6966ad10e144af14618",
+    "0xabc51be993edb6c480251aff148e5fc85caad683",
+    "0xaece7d9077f9db91519c3d950fec91c09002f484",
+    "0xb14006890da150c0bcd5a068414c1b95135da55c",
+    "0xc50b5cffddcd31eb4f3baeb3c2b7a062212107bc",
+    "0x8f42bd142d50d7d54478dd299717e6dcb6729bc6",
+    "0xc418eb16bad0135ab3e43afb5a9183c2199cc32c",
+    "0xc6eafdfb5e1bd6f869fee994b3cba1d9ab2ed762",
+    "0x3a7b027d6a2967a6afb761c3f2d7c5c80bfddd9d",
+    "0xc12ad4bdb10fe366e9c55cdb7c545e7bf8d9d402",
+    "0x66728a402732ab86b8b50e95e7890cd0bd83110d",
+    "0xf559bd96ce3f06457c6cdc374eedb811adff9f45",
+    "0x9e971cae1f8c5e835533aab76196835853bf9ed3",
+    "0xf2abe62127344641c629482a752298206ff332da",
+    "0x2afcc26f8385722948dbc2aa3a3d72499b2e9bbc",
+    "0x52de626c5a6819739d363e7b94582a0885433a8d",
+    "0xc9c8fda908050360d449a16ee54237a8287b4029",
+    "0x648bb45ceb9663fbc4b760cb1b4549c8a1df1c8e",
+    "0x3b12af3aa7cf1ebf09adf6fb19cbab746155474d",
+    "0xd203192f96596d04b995e783e7c52f2e81ac1d68",
+    "0x8a73bab73b7e988f1074bd6b8cafc8d68f3a7408",
+    "0xf078b36157843de0708183038fb9bed592ce452d",
+    "0x3e913296e2face41060e57fd7ec64917a80e66c9",
+    "0xc4d3c6a0b319779681e0f13b3f119cfc7f1b52d8",
+    "0x4b902bcdeeea86795cb2d518dbc78d85551bf702",
+    "0x406664416207c7c8106bbf67373bc7133350e3a2",
+    "0xe051f3cdf369b6cf995449d982a8469c0bb63376",
+    "0x224b0302d093fafd395a03062c4aa5be4cbae95f",
+    "0x8f540379468e87a55f16ecd56a3702082c476df2",
+    "0xf9b25f3ef57a0781e19cf88763d512c401f0cf8d",
+    "0x0d32e2c4dd1c21f3dce04a3105874bb67d3f0333",
+    "0x8b1bd7cae8a35858fdef622116495315cb2a1350",
+    "0x58427866520e85ac2b457e221d0995d01109b6bf",
+    "0xa6794c3f0b37305375d3307047cabb242429daae",
+    "0xde7b69fcabc4c38601d3ecade880112bffc49acf",
+    "0xe634e3b562a843495d8eff92524f1a7f1ef7e10c",
+    "0x6e682473c8aa02c7a15f6bcb21a0f658568cd03f",
+    "0xd013762d203958011abdd09ff0a0527875806c2b",
+    "0xbc400bcc2aae1a248dad093ebf22573cb3a120cb",
+    "0x67728fcba2afc98e06823e2c9aadcc7004bc89c9",
+    "0xfabea6023812bdda00815cebf8d2240f559e5cc6",
+    "0xe439da6feeb2a84f4683def1dc584def0ced990a",
+    "0x24f641984ebc1871a5d285dc0f716de6e2e771b4",
+    "0x52f024e947cde471992f775261301af5f79b388c",
+    "0x307fdaffd12fcdf1acd2012abba94b3d076f669a",
+    "0x48ff1c14b050ac082ce7ee495aa11120b493ebd0",
+    "0x7fa22e5e8cf4d4e7651a1d9b6c7a9a239463b5cb",
+    "0xcaab1fbe8cd966a8752135fa3ec134aeca2b9f83",
+    "0x2c033453bf2bd362efcc4dfd88f7d6001cf8cb97",
+    "0xfbbb0d136795a432e85538e60222be6b741e485e",
+    "0x5b32ef21d8780e6b9ccafbf5242589c303112c1e",
+    "0x1d50617ff05609ff74a7a2349865638a625249d4",
+    "0x1319f742c2c77d8127612fc3c71945785e9e8165",
+    "0xca6051239bf60ad919de490eb5576026716d3bf4",
+    "0xbf5be1e901e2a7f020b509e045e6a58eba4f82d6",
+    "0x0ca58a071264cf5f8eb05038d9bd3a173d7a567d",
+    "0xe01be2e59d8499b6ff3050be199abbfa8d5c6e82",
+    "0xc5526c95bef691b105170ebefe4c65168fe9406c",
+    "0xfaa276aa5dfebfdd978d597f1a1b2c1449bd2c78",
+    "0x24faa3047a51549ae55da9ed3b8916f3358c6ede",
+    "0x8fa6551b33da9e627511902fab6fa7dc0d040f50",
+    "0x2deee2cca8a02a542825e2dfc87c034c1f97e247",
+    "0x31af289224ec51622a6a75eb9f2882014a171b1e",
+    "0x436675ae0fe316b5fa90a5ffcaecdfe7b72e25fb",
+    "0xedcbea43468ede554aaba6d62bf6de5524d65aa1",
+    "0x7ff284d0d561864bb3c7071ed7b361d33a146c62",
+    "0xd2b2f152955ae9c7391aeb47f83b3588d4b4cecd",
+    "0x0c822e4fff9c7b305be6e241b62c424cc61fd101",
+    "0x21f0fc85c0f7d4ebd3fafd09df84592bab6c789e",
+    "0x9c1524b5bc20b21425cc2ad8d3f0bcb0f32383b7",
+    "0x63fcca4341b17e5c57337f56aa11cdd4bb8ca6b0",
+    "0x3007178cb6d686c74077143b2d715180b169e561",
+    "0x021cfe465f0d15544c1d57fcef938e043308f28f",
+    "0x9a32563ed3d386c6d58104eb4683c37d002a58c8",
+    "0xfacc28ea37c6d114fca50b2c309a18673ecb6199",
+    "0x3b9d2d3ab5c6eae736ca05377be6d3793cd35b19",
+    "0xae97a62ebadf4920ec2ba596a122e068ee0e44ca",
+    "0xb81e0f110ac729c4b79cd85f81c69b0af2f33e67",
+    "0xd3ada2131ec70c9c11500ee834bd1ec8a54dae8f",
+    "0xf0abe479a07ca63e0e471ea677bd33ab293e0ced",
+    "0xcb939d4157b5ee49bec6c1a3bd77cc0a28cc30f9",
+    "0x09b426c22adc4fad0d73c21406a939041b471efb",
+    "0xe0d1a298364286f68d9664138e4c0dcb67596c4c",
+    "0x330dae2b1471cac29fdd751f4744a5d91f3e5878",
+    "0xda7727be33c65b6d64aa7cded41a5243d6b30122",
+    "0x4178fdb7e20819bb2263e80fe8320df536da4399",
+    "0xc646d62ba68d75a82e68d0d9adeb1d4c3d32a548",
+    "0xa0748c5342b260e4fb12a7757dbd455b4285b602",
+    "0xe73f8b11ef08dee2ff6233cc8b94332879425f7b",
+    "0x32723c279b0b38eff8c1e6ad7602eff330a31918",
+    "0xbe38817fe9de6612307e1827c2f453b1891a80ec",
+    "0x834360e3bf21c56208d06db5aaaad63eddcfaf9a",
+    "0xe39e88f1a0f7341c06b8579a6aa08b5a665a90cf",
+    "0x71f815ef4514cb9baf121bea1f79a4d7200cf9e2",
+    "0xbe333f7091d3f6be701afd3daca688f291fcfb56",
+    "0x03ad04dddf6d95757efd0eb10dfdafcc87a399d5",
+    "0xc30d0f4fba274d21b4a69f33ebc670c83f82e9d2",
+    "0xe2afdc7286e8da29d6040131df937333e053a058",
+    "0xb1260ce0fdcf0c740dab8756f38628d3bb2a117d",
+    "0xe5945bb6e468dbabba9268cd2083efb7ae2decee",
+    "0x91ff1d41681cafc04e505bdc7435b9ff71596203",
+    "0x1ff9302ac36a668888d85c48fa66312b8fb09d0f",
+    "0x2674db6136d0b6fd4573218cf09ce86b6cb5bde5",
+    "0x881c4d8ad5dfa32dd91adb55722e3fab4d1a2c02",
+    "0xf6c50f61efb3207b4330defd06c1fa450c1f75c5",
+    "0xa7276f54f3850757936d3ac3b4195ae726cb77ef",
+    "0x69291fe3de916720c29760e0f00f05eb545eb621",
+    "0x6c5811257a946177baf1a9aa812d0db87bf5c1c4",
+    "0x69f448eeb9f430f5a405296a82b75ae5dee1cbf8",
+    "0xce2f507b6ca3165daceffc4da4fd07c6d0d8cc0d",
+    "0xe8c5cfafb1e9cd13ba7c9b522ad9c840223397a9",
+    "0x1e0b9c73252ddece41bf8c19635e3738dff927f0",
+    "0x2fa7a857cbeb47acd4f79a6faee53d70f3eaf530",
+    "0x07e69281552f0ee6301acb47f2389aedb47a5326",
+    "0xdfae0aebb6ff88a012c7fd6c5672ef04099d2774",
+    "0xa33e3d5acdd9b3858459345e4162e550edd7ffb0",
+    "0x47dc100e2980692b38f1ff605fdee4255682dd50",
+    "0xa00fe012dc2040a3c3373827624bb28dbb69792e",
+    "0x9ea9d0744a013466385c565ca3c684133b2b17b0",
+    "0x32f733b51ee334e53e5037bffdddb0de73553b32",
+    "0x9df48bdb834aea4d37501885a2723d3085f060b2",
+    "0xa5e71c2c69c057fe6672e0d4fb6af82f07f2c5cf",
+    "0xe6d4c2ae5d910e9825268564a7424ea7129028de",
+    "0xbfae95b99a468eacc106d32753f3965c2b0f6d88",
+    "0xbc714cf14259365aa3233e12c884f46a34c74469",
+    "0x994290bef76763ecc5114b07e01111999c781d10",
+    "0xeffd07538de6572cf461125302158740c0a523e3",
+    "0xc9246ed66f47863b844b0b31fdb1667b4b0d2d79",
+    "0x3f15dace13ec35e14a603261c9c312e31380c460",
+    "0x098b27492785f28bbe451c5ece8af18500cfb4a6",
+    "0x2785c628132b353814e0d3db744e78e90d7ca359",
+    "0x72e76b90cabded053f57491800dc3c345cde309c",
+    "0x2383df7a084eba9a97a2dc1a731b357d44d6c687",
+    "0x7a6b2de3d84e502fb045f8ed71f5a6b8d97b008b",
+    "0xdb7e5d20a23e76b53a4105efbd3b0a6ca30b08e2",
+    "0x24fad83173497137d471ea17b32d1c39a4339439",
+    "0xae71a4295adfbfc82be6de1237a2aa1755c8f9c7",
+    "0xaede0e9ce2a685c068052aa7dd669f283e1d4e94",
+    "0x89ec9a0f5b048e3c43a7e70f2f2afe2c6e393191",
+    "0x594b8f2794d4a19e1ff373e56099483cb4129fb3",
+    "0x64c6d4c576aa0cbaee1d644bce549eeb93af4b47",
+    "0xc0b98f151245af951a098f4ef7cad3315cf2f90b",
+    "0x3622dabea59fab0dcfa93cd13b479fc14d6dd677",
+    "0x4731709ce2020d959b177ebfdc907e7ba24c9fc5",
+    "0x0b48278c8f74e8435d05e25d34ecf81fb7baa562",
+    "0x9242788dc7d0a642176b387fb646fdef77242aa4",
+    "0xbcbd44e7f83e1c9ff56e6cb693588186ded1e22a",
+    "0xec61aa613e762aec8480d4c6ed3b86d227e6091f",
+    "0x9b3a45695a511d9eb8d45162b6a809cc3a21f32f",
+    "0xa5da23252f50d0ef3615388292f8d965dc658451",
+    "0x655ff99dd5364265819bdf547fd438dc743855f0",
+    "0x47ebbcb11de328dadb7b7437dc699215df316180",
+    "0x008957ff5374ebd1d238739a2d382d1ab17b6aee",
+    "0x945faef1aeb7c003e7cb1d584f97cf4b22ffffcf",
+    "0xf3ad4851ae08c2e740dba4c48b23c03591c53d1f",
+    "0xae8fd5b223af6ee25c95ef6f733919abdcb77e96",
+    "0xac18a4d48dcc3b7b4e020b6938bdbf7243bd927e",
+    "0x5f15a5ec516605950c0a5f3706170924928fe728",
+    "0xd29619adbb25b1f3395c70d7e13409dd05aeb0ac",
+    "0xd8a9ce9b14028461c178136313ec3d735674ebc0",
+    "0x586211fa2db691e731a0a757a4b0a716fa6646e4",
+    "0xdee3342d2a0593adaa4469d2ab7cc44f2ad2e63e",
+    "0x8e0c64dd856653ace44c2b8b6ebe99ba9bd3e85d",
+    "0xb46b2defbee4bf94324515e0513cf6713b07e642",
+    "0x2c21a000096a407b6d859e3eec9d954ee0b7eb07",
+    "0x1eb3f0ecd510a6695eb765783ae577946db4f9c4",
+    "0x4a22ff1a8b61dde87273c095260a3b456d44e5fc",
+    "0x3bf92827faa87e7fd66f6b21899d1c78d1805515",
+    "0x03ead0759fd8b22e8eac343852f92c4839fd2edf",
+    "0xee4f8a33081808d8325cbd12a235f9803a80606b",
+    "0x11e3b3a464ffa9a38a035c17437a6c1baa625408",
+    "0xc70eb19293b25b5c68ed4095203c4b42a0146bbb",
+    "0xdb3d40a798af2ae3127ca22300fb3bb02c74e6b1",
+    "0xaf41b7f0ed8cc2b71a2c8833c00314e8f25d061b",
+    "0x977d8633c2d5383637ab8bffb21f5153b9501aa7",
+    "0xcaf8a29405f7026f714aeb21545e5db77cff2f8e",
+    "0x21592c3e3a6e482b4957b33d53bc5b51aea32c74",
+    "0x869931710157d81f428e6af25e56b4248f1dc3d7",
+    "0xd62e22d5ed95e23090b18d132f5fa0b0ddb0953b",
+    "0x27ad069f81fc047afc8049cacc7910eb425c374c",
+    "0xe83891968f0f5a189a08cf8b3780a620cf040526",
+    "0x807ac87ebfaefc3ca44962d4f9cb58cda03bf2ab",
+    "0xf7e8ac5465a8eb38f8cf2430196433176a76ddb5",
+    "0xd2692f66b2510f93510b95fee57f9f0aaad5553e",
+    "0x54bfa34760bed360594df5393aae6c383fb811f2",
+    "0xfd80094a64c6bd0b7283cf938a7b0c735b7f1779",
+    "0x99caa4eefeff11630f307a891dc7b9f53c53df55",
+    "0xb6736981a4b3740f31ba5f95b076959d5ed34163",
+    "0x658797b43ddeef977897a8ade5dcb3a0066a5488",
+    "0x46b59e2770cbc04e4aa368bcc8b01740dbb985ee",
+    "0xbaa07b6fcc9fdc82cb7917af1da25d0e5dd9ff3e",
+    "0xe8f42dd9a72096ba83686c8c3af5868ec411a946",
+    "0xef60f77b7254fabba35dd4aa4bd215418f4b41b2",
+    "0xd4b38f3aa92a1ba5489a7cd29203b14796310835",
+    "0xaae5560e9422b062392e345e4c61c0ae9803da4f",
+    "0x3098bab0b42c403b811f72bd6d0541a5255e2575",
+    "0x52bb1d33463df282b988d7cde4a57c5c825269bc",
+    "0x891828b9909417051c41ddfbcdc930bb02792fd4",
+    "0x4ac1d51dcd83eaeb2d4b3e9311face3cc20f54db",
+    "0xedd05fff6b7ae9d62db70593cbc6fdbc86cdd7d7",
+    "0x47d19decbb5023cd899fcb899a0afd4f96bf413d",
+    "0xca250f4c71a2a302107e65567a08517c72b957f6",
+    "0xf9698465f9beaf56b11aae3efc34b077f2e33576",
+    "0x047485743f2162f7fa1f8ee96c9d28ba0fb0ef93",
+    "0xcd4efaf63a096533c259814e898aed5472216569",
+    "0xb6b8bc0df9827e6ec5ba635334e981aa52f9b946",
+    "0xc3f01f0a3176063a07c40e1cf7baff06af91fc76",
+    "0xabb8c1394ab8e6bacc6313d11b60351ab08f61dd",
+    "0x47a3d5c8a05d2736c0f0ec57de14af99a1b47868",
+    "0x4c124a5dcc77624104e2b3f69da8f8a14daf6a4e",
+    "0xca93b5529c681b593752273d25b2552e0c149a27",
+    "0x56395e7fbc8c64e3d4eac0ac12122406fa353266",
+    "0xe5e14abeee4372af4ca55781d03d53e0e9fc718f",
+    "0xf52566781bd179efde63cd0d438538b1401dd7d3",
+    "0x38c859d59649cad6d2ca3ad39391eb9335b015bf",
+    "0xeeb16d849d238e55b0807437021741baf7125fdf",
+    "0x029d9f987f6cbea59bc6c21b477a129a4c3e976e",
+    "0x453e386035081e557fb6c27fbbbf779300fa84c2",
+    "0x61dadb97619711951f3c4f5a063be55dbe88ce46",
+    "0xd961bd158192510c03ef29d928d91464a5087529",
+    "0x21797de65662128ee94501e2041686af8b792117",
+    "0x3f53c019582824952f529d143299ebf450078468",
+    "0x09780e2d63e437936b96f1226afaf10d5258d521",
+    "0x649a79e098c804e44a91db6ce3665dca66c834e1",
+    "0xdbfd9e63b308ae00e744e4cf2a06bcf4186b2767",
+    "0xb31002a00a2ce7fee80605ac971038d8ec0b01d6",
+    "0x2311c013a8924576de728c0baaf2dab3a221e7e1",
+    "0x604bfdda753044bd3a22f7c9dfb3401d1e8e10c7",
+    "0x284ad8bd8c5c2732040f1214ec3e4139e69d38f0",
+    "0xead6002e3ba64b8e601d46af7a9325d1102d8c64",
+    "0xe71ea16d2ecfa4668b849432656e303749e525cf",
+    "0x56b205fe579a2b0cbe4ce812610d945eeec90ad1",
+    "0x3c8d1283bf09e7e9411d3f1d669f8a6c3a496416",
+    "0x9594853d2add7e50158dee0cd363a091ebd393f3",
+    "0x9bd11f318f63e6d6b03f6437d19a4430624ee2fe",
+    "0xb3202d204db130fa22041463b1ba42a1f8e2e4f1",
+    "0xbf0fc112a4798f981d8f61d2112ec62305c68d0a",
+    "0xe58fd52b7ad76b6b3caf5082b6f7138c0dddc1e5",
+    "0x5cc1971948e9a1c38c2d5c71338834ef4d887402",
+    "0x0d1e9b59c2872d90266d48dafa9832bc08a32b9f",
+    "0x449c5a3ea3fdb92f767688e79f6ad8b0fca4cd79",
+    "0x26a04f6ad6dc7756453855628053b7a746ea36ba",
+    "0xa1d93765dbceb51f72e9195ec81e15c3ffa148ef",
+    "0xe122775e1fe653d6f142ac77e10c6d11b223f312",
+    "0x5fd6db5c424cf9a1edb3e0180d6b8bb7991deda0",
+    "0xa4a3199df2c36c2960b03fecc426a25c4eb7135d",
+    "0xabdf44b80fea6faba673f9719575a0f09d38a195",
+    "0x4adad570a3e94717558d441a6d9c6b21c62036c4",
+    "0x3cf3bdbd6538738fc890aaa97f58c8b286741153",
+    "0x852185eb93b3e347ccf0f2076d9740e6d954a3ca",
+    "0x02dc4ec4886f237991303ba0fa7af9b333cd14cb",
+    "0x71e99c3ebbe36106e75a0727f030735a8ff3dcc6",
+    "0xcb2b25aa92a3e0ad82a12921b1caa68e125503b6",
+    "0x95073683d2bcb438663a14b1fa0b3ef41a1831e0",
+    "0x38eb05530ba82f94c2b087a8b1903d295734caec",
+    "0x44115d4c114de5a14e436413d08ea4c41df4cb2f",
+    "0x1dbfc788aae85948170d3752ae378413fb0d5273",
+    "0x488d28c0f5921735a206b36ba6275203c2c8c769",
+    "0x7b8729cf25a12e81f638e9e5c3de05681b4b322d",
+    "0xfbb5aab1c3875c5d24ccd1b620bbd92a915e282d",
+    "0x81ee274465c9dc45f0657480e915c69a64268bc8",
+    "0x542f2485d4f51207c0441512fc5baaef66d193f0",
+    "0x686b4c1fc34044e75cd8c9aa7614dc256d3793e1",
+    "0x1a2fc86cf4e562e947de39bf0693d6d63872c999",
+    "0x04bb5f699cb83748e1d7c706d9a3d7a35eb637ed",
+    "0xd6cf2be4754e1d839cc7ec3796ecca29cba0b1ec",
+    "0xd591d56b842eb47c4eb32d56e9a43aa8e658bcfc",
+    "0x909e80c2dcd775fc94d5412f8b6f63b90b154198",
+    "0x98f595c57b4e2e97fe9d1e7918501df3cbbcf61f",
+    "0x529cd543cdbb2e286a2b6f07e5579e2a9c39dd64",
+    "0x34bdc27da643222631cbac656812027fa16ee721",
+    "0x62a24668ec20559a327d15685fc2cbb002c10803",
+    "0xe8e66e36c58c7682e55cafccc26291c27bd337b9",
+    "0xe3163f5d2718f5c500bf32e7d1af5ed902c88797",
+    "0xeb19d810856e23d375ecd2655a39677b45338e9d",
+    "0x88cbcc3c91ac0be65a7b612d9647d0c6dd1e5481",
+    "0x8193db9a3bb7b8ba3c74757e6080aced7108f16d",
+    "0xc93649df4b02c1a41182e14d33755dd80a6f9c35",
+    "0x1b29a6ae647cfaf3f567422e44215e33872312c0",
+    "0x693f9703f113a8e686dd478d481840a8cf4a7d98",
+    "0xaad39a907f713128170916c1e069b47c1affb28f",
+    "0xcdfa8b11840915a6a0a54bf1d4f5835416bc5d9f",
+    "0xf0496e6782e9768735bed3366e951c69034e720a",
+    "0xfa863372ebe769cb9ecdc0ededf734649478add7",
+    "0xbed199b514874a377ec4a40b246722322b2f5b62",
+    "0x5cd24ec5ca331c899b8cb5b2fe732169bd4dc433",
+    "0xb36df15f64689f8c709b6728c431b386173aacd2",
+    "0x696653d7ffe02f1164fca8d7e99729b3888a8f37",
+    "0x3ef105dd07a6a4f4adac352e75b8af612c207d59",
+    "0x998cec584af55b69a16c82cc852d3d3f57822a31",
+    "0xb7a598f74825bc4483fb7f03032242727be95bbc",
+    "0xf7f91553ed9a4cffa64c0f3caebc55457adbaee9",
+    "0x7c4f5554830aaaf572025c6ad7319aff2de7a4c7",
+    "0x8384a01d54f37048bee94fb5fed86f57c4fa8444",
+    "0xa776d90d1ed731aa0bd9b1bab736ee2bae7aa1b5",
+    "0x1fbaffc7aa1f34d0883d650d8ac18adddf1eca7b",
+    "0x00235e6541950de72e1c9d982ea37091cb1577c8",
+    "0x590e9c10a4b374749f421bb68c3d4ac5cefc6d5b",
+    "0xa6037347d488fde3fe8e6a9797cce73f463c7004",
+    "0xf42d862214445f66ac0d971bdeade149dcd2ce4d",
+    "0x6778557a053daa2db72b28bbdbd1dc2c14efd8ad",
+    "0x0ddf69a61d99d5422b8a5e08f3476d530a6a70b4",
+    "0xf1f11a40211a67df340db2ec57aaa9a2a865869a",
+    "0xb25e46cf50a35b016b0fd54270b0046a1ba13bc7",
+    "0xccb872629dc2f79feb4b3976c2690ac27765c65b",
+    "0xaffb0a224ae6938513f8219d5848aaf42993aabf",
+    "0xaa967f3b50b5f02b2d4cd73168288acca4463141",
+    "0x105da5c24fec7d0fa03a5ae59ad2e5ada64554ee",
+    "0x9e2abede7a7c0e72cd0adfbf4b05ff8706cd55f9",
+    "0xadc11d4debb6cf24a8d4c504c7a3cbeb9c2323fa",
+    "0xe72f244337b67519024ca46f10ee9f7c798cafbb",
+    "0x462ddf87b5b41f9180193abe7b6caef4d8b9fb19",
+    "0x3db21d44e3b59dc00e8c9318535bed1decf0b514",
+    "0xfb1de8a31a8c8a72380d806ee7c640b2e6062cb8",
+    "0xe34f7a5697d6351b17a8b0b87a05207abdcaf590",
+    "0x8c7c4c9425c85d836a5b74e647721146133791d1",
+    "0x8122ca0893a4bdf1d02d0bb26176114627dc3e81",
+    "0xe92084f7c7e9a4afba7c1d1a64559a9937326dc7",
+    "0xd0bf92b9e42e417cfea3f28e915f6d0a220db7d4",
+    "0xf2018a5b555acacb83016e157426295edaf580ed",
+    "0x7f10c587cdcdab3540e707783d36db3d8bd1c658",
+    "0x9ce6f7700b1dc0eac1e99865e326130801b68552",
+    "0x2934a15c11ecf06a7f1b2aa76d5cfbccceda6606",
+    "0x49fa31749353ca21584466da97f9b177add13bfa",
+    "0xea758358fc4f5227561b58def1add3c90dca63af",
+    "0xfba7fa89a94a32db1b9220d703d7330a50debd77",
+    "0x69b21328208eae96a70c9e18509a5543df5a1463",
+    "0xffb4635a1460a43442fc98deca9b6e7f61c92aa7",
+    "0xaad5d9f9637f626f3a890af897a0c48a5eb78eb7",
+    "0x029830bfb6d4c05d4c3ffe913371957452b75c11",
+    "0x7c93d773dc842a1b3efa1d558a2ca7f7c425a9c0",
+    "0x8c6fbf054b6c5d4154e6f40c07fe939a54a3699a",
+    "0xa46f74b7709296199ac8db55c8644207539f5e93",
+    "0x6cc7dda2508c6a9435b6fa04762984a46bfd0f05",
+    "0x6a81c5e3cf8f0a2dc502acb1d25500cefe7e0555",
+    "0x0cf70a5eb07e179614116d6557a9adea0898f937",
+    "0xa36994aec070902a2f999477000eae982eb0645f",
+    "0x1e7824d391aab24d67530971b14ab013d7b6cb30",
+    "0xc40e93fab2bf0d23f61a58816bc06663ccf54421",
+    "0xf8311512ed215269733cb002e7136da0ff0caff6",
+    "0x8d44fb3886dba9fa663885d3986d71aae8929510",
+    "0xf8f7da06c2cabf47fc535879d4880b15326e0b4d",
+    "0xbe51d09e8a94ae1fd57033cf9b9e2a7b8d148605",
+    "0xcb0636d56fb090045b03a46bc38e2008af992245",
+    "0x055c2903b5bc34cd4909cade40c0537cde07683e",
+    "0xfbb3700b44213f564ce5f28d080f7ab79be55751",
+    "0x443434c983f8d4b7dd52ce55bbfa9544e03c2ce3",
+    "0x14f7555b273f462b737e0c8547c0483a29a9d807",
+    "0xce016d88b0f060b46719f889183e571668b615c1",
+    "0xe62e3663800a65b28d0e75a1bdd768085789304b",
+    "0x1dd3c5b7a03dedef86b6538cbe178af3d499253e",
+    "0xd0152dff850919412544bbcd5c9dc3514090be05",
+    "0xc3a126025e39810cc56dde6484f787d2ef02b34e",
+    "0xb69b1d831174abde33f336008c75254247c03a95",
+    "0xfdb7e989a5be6c1efcf4276a42b386307d99fdfd",
+    "0xd5c3f432138c0cad6e2882efdc8497ceab4b35f0",
+    "0x67c3ebbc262103e55fd002d812bb4f6a147817fa",
+    "0xde9851350d554b6a503a7d9ef38b51c25835961d",
+    "0x52f415580f906ca9cdcdd12e01d8200ae801d7a6",
+    "0xef129e4c3983da9feb16dd820ae57847d01aca56",
+    "0xb100cb3cb94bd659bb7267dad8074a007b915973",
+    "0xe629745a955a157fcc488bae2f5185a0048f4af2",
+    "0x5d9eda31a2b070b2e2276ce14b6061ee55a99cc8",
+    "0x767b0d82207f6f5ddb525ab6f5b0333c43c90b1c",
+    "0x597a25338dce362e89b9e21e69b54bcd31dd361a",
+    "0xb09d152c2fcd8699680cdcf7d9c4a1053ff58d9e",
+    "0x9b21e7ad8534d020c80f059896fcb6d576074997",
+    "0xedfd4dcf1ff7f28a4d459c01ec6c65afa31e0d82",
+    "0x2699c3eafa6b55a2effa825157960eee04e513c1",
+    "0x53c4f730d18ae5cb91ebb9373341f8aee6fae9fe",
+    "0x20557c8f5641784978c65c90524bfcd6a43590d2",
+    "0x313ad365f5b4a70b21b7ea2d06eff7e7b790bff3",
+    "0xc2a3841395603634e830a254e691c849a3cbc2d6",
+    "0x007b68b8efe622125acda1a7311f669849e3135b",
+    "0x1786bf1158d79ef7ac09d3a907c61904e84de05e",
+    "0x42c54d65b70da5050fdab5839dcdc16d474807c8",
+    "0x2e837ecbe497ae34f60d6e01357d7f0a8d462e98",
+    "0x0defeee892fd3771f15d0e940fbc8c76ec958824",
+    "0xb65a800ea90f0778130fae11d6487b3c2b17c96a",
+    "0x6ecc1bb20f4bcb8d59fdf22f0a4b88b04972d4e6",
+    "0xfedc31c3667064af89c322eb46344ae574658a16",
+    "0x5bd34bb2fbafc56a872a8da44c75bcb3098d8c87",
+    "0xdbea7efdb81b2fbf1ef5d94c37a16afac5b47558",
+    "0x2d1881f79e7b24c08129887d3d97aead7bfd5eab",
+    "0xff27d67d0f060206c5d995ea24a096624c767a71",
+    "0x642423242c9e59c70784da323b41846204a6f983",
+    "0xcdbfe8f5a98ea8a2fcb51584738b04a740345891",
+    "0x97e4ddc2ae2690f2a4f7fcc1d91ffa89df007269",
+    "0xf0e00df6a008b960eca9280d757f36fd6813772d",
+    "0x6ed773b41c73c689f79c268131be8c060ac6ca0c",
+    "0x6fd3e01a74da3d21c399a7fbcbd7c2d526e23b20",
+    "0x3c303e45ebbe93a43d27e9c397696d23693d8b6a",
+    "0x8d2e19c73ea16ae4d711a8884c3c0ffb9d3aa14e",
+    "0xdca63aef57c4c2701cd21485004705f59c0726e6",
+    "0xf13e94347493866e42ff3ae98f2c79b42cb14e7f",
+    "0xdd18941cdec8de6f71573acf2ab73d3c83a500b0",
+    "0x52f44d003a91d5ffee18858f70c808bded7baff9",
+    "0x7a1808f522a4af7f2aed848443297289f59a4c82",
+    "0xef65a2a219c68f8d880ff6916b9b47feb7c1c72e",
+    "0x7710f748a76ae544e94b8ad71d6b1ec49934eb34",
+    "0xb09370eb1b6eec3228d87ba2c7744027ecd0a19e",
+    "0x54a5875b042b242c398fd9d68096bda76a28c3de",
+    "0x985b2c1a9c9564c23a6b4a569c4a0c44885e238d",
+    "0x929015b5f1fee07b4bcffe44399b11582c49d752",
+    "0x8f65313e3356dc94bcf1765e57c35e5f465fb7f4",
+    "0x67a7198ad00eb568ce2b288a48b7bb626feb64d2",
+    "0x4650db94213fb0856b5009cd66353a1e86c6cf57",
+    "0x50cd66d370a888b91680300af23fc6948bfa6fcf",
+    "0xf00a09c72a77fc2b6e0b9ec4a8d137aede8b4db0",
+    "0xedaac52a8ab5b6a86274199d1b926b57967a43ba",
+    "0x75952254db25df6efb6d9958b46c8e58490ef1f3",
+    "0x30bb67f81283a4e826245f020ad1ece2206480ff",
+    "0x93cc95242b2382b443931d3ce349b3c85e29f80c",
+    "0xef4077c7e7090f41c0d05728ef610516cf4246cc",
+    "0x8be1ee42341c68ff0d3ca4556903b061919ee91d",
+    "0xa54b67ebda303445075dcabc16392af8614c52ea",
+    "0x534a06374afe75b1a019e871956c25ef10fc4456",
+    "0xa54388f1f75f09fd3562eedfebb2366bbb40876a",
+    "0x9c18c0f67382e314b8344c9df7e35690fec8fd21",
+    "0x80f4fe324a98422f4d7fd801a732a3814f229202",
+    "0x0729ccd28ea157641f86bcc212a637ce5e178712",
+    "0xa3934b403b79656f45a183888ef7ef2ffdff5ff9",
+    "0x2536cf1e81b6b6d2430e4a56010ce90f83063caf",
+    "0xf47ad81dc845be9a4f437b1e678b965b4cabdb32",
+    "0xf9a8f88b9a7a9f6f3bf9c7d9434c67ae4ac51934",
+    "0x667c79576b44f508451f35036a6332ad5ea875b8",
+    "0xd636e7adaa5804c07a6bd05b15391377e24846e6",
+    "0xbab101c7ac9d69f1b840f3e5af4b1e20a6d87683",
+    "0x2e0f813f0445c76d737bd1f2a3cbb9210d8ffb5d",
+    "0x8133c476264630b0d2175557846162b6f469c4fd",
+    "0x38c4a8938d0dbcdc4a446a1ea365f2da73f29284",
+    "0xc111c3dff4fac3f0827a7f37b72eb4ecd2875c7d",
+    "0x091bf2d4eb0c63c76edf556b5a0c98ebf233291e",
+    "0x2fd99b4bec96782440255ee7d2ce7f0ba77f100a",
+    "0x3dcb35df1ef22857050cafd8731a349145f4f0a1",
+    "0x61e3c60b85fd745d8c764a9ebe6ebceb5d16c639",
+    "0x56e16b9fb3d8c4a8b84f01e1e76cb26c4b24940d",
+    "0x2bf5af04700a3eaa52f436f8b8205a1cf38f7c71",
+    "0xd31e5f25ae91eddffbf562f7acc395a407c961f3",
+    "0xf43857134471dcfb03e01bcb0960cb9b3ebd197e",
+    "0xcd99dbd141bc49092349760a9a8a5ae5d1c96b9b",
+    "0x515a7a8cd2c7253980f324f77a151d3583753b98",
+    "0xdc03a08cd190802158761f5ff683d859b488c746",
+    "0x45bbb87a180fd28bf39d2dc67966fa74e4eaa8a4",
+    "0x5ce84e251ccaf6e8e5e0109c73210b344f0650e7",
+    "0x0b13755f80f1eb96b9c24874c1ce2bd52ab20391"
+  ]
+}

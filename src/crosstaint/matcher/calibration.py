@@ -1,134 +1,88 @@
-"""Platt calibration for calibrated probability estimates."""
+"""Platt calibration for bridge event matcher scores."""
 
 from __future__ import annotations
 
-from typing import Optional
+import logging
+from typing import Any
 
 import numpy as np
-from scipy.optimize import minimize
+import torch
+import torch.nn as nn
+from sklearn.linear_model import LogisticRegression
+
+
+logger = logging.getLogger(__name__)
 
 
 class PlattCalibrator:
-    """Platt scaling for calibrated probability estimates.
-
-    Fits sigmoid parameters a and b on validation set to minimize
-    negative log-likelihood. The calibrated score is computed as:
-        score_calibrated = sigmoid(a * score + b)
-
-    This provides well-calibrated probability estimates that can be
-    interpreted as true probabilities of match correctness.
-    """
+    """Platt scaling: fit logistic regression on calibrated outputs to produce well-calibrated probabilities."""
 
     def __init__(self) -> None:
-        """Initialize the Platt calibrator."""
-        self.a: Optional[float] = None
-        self.b: Optional[float] = None
-        self.fitted: bool = False
+        self._model: LogisticRegression | None = None
+        self._fitted = False
 
-    def fit(
-        self,
-        scores: np.ndarray,
-        labels: np.ndarray,
-        verbose: bool = False,
-    ) -> None:
-        """Fit Platt scaling parameters on validation data.
+    def fit(self, raw_scores: list[float], true_labels: list[int]) -> None:
+        if len(raw_scores) < 2 or len(set(true_labels)) < 2:
+            logger.warning("Insufficient data for Platt calibration (n=%s unique_labels=%s)", len(raw_scores), len(set(true_labels)))
+            self._fitted = False
+            return
+        X = np.array(raw_scores, dtype=np.float64).reshape(-1, 1)
+        y = np.array(true_labels, dtype=np.int32)
+        try:
+            self._model = LogisticRegression(C=1.0, solver="lbfgs", max_iter=1000)
+            self._model.fit(X, y)
+            self._fitted = True
+        except Exception as e:
+            logger.warning("Platt calibration failed: %s", e)
+            self._fitted = False
 
-        Minimizes negative log-likelihood:
-            -sum(y * log(p) + (1-y) * log(1-p))
-        where p = sigmoid(a * score + b)
+    def calibrate(self, raw_scores: list[float]) -> list[float]:
+        if not self._fitted or self._model is None:
+            return raw_scores
+        X = np.array(raw_scores, dtype=np.float64).reshape(-1, 1)
+        try:
+            calibrated = self._model.predict_proba(X)[:, 1].tolist()
+            return calibrated
+        except Exception:
+            return raw_scores
 
-        Args:
-            scores: Array of raw matcher scores in [0, 1]
-            labels: Array of binary labels (0 or 1)
-            verbose: If True, print optimization details
-        """
-        if len(scores) == 0 or len(labels) == 0:
-            raise ValueError("Scores and labels arrays cannot be empty")
+    def is_fitted(self) -> bool:
+        return self._fitted
 
-        if len(scores) != len(labels):
-            raise ValueError("Scores and labels must have the same length")
 
-        eps = 1e-7
-        scores = np.clip(scores, eps, 1 - eps)
+class TemperatureScaling:
+    """Temperature scaling: single-parameter calibration by dividing logits by a learned temperature."""
 
-        def negative_log_likelihood(params: np.ndarray) -> float:
-            """Compute negative log-likelihood for given parameters."""
-            a, b = params
-            logits = a * scores + b
-            p = 1 / (1 + np.exp(-logits))
+    def __init__(self) -> None:
+        self._temperature = 1.0
+        self._fitted = False
 
-            p = np.clip(p, eps, 1 - eps)
+    def fit(self, logits: list[float], true_labels: list[int]) -> None:
+        if len(logits) < 2:
+            self._fitted = False
+            return
+        best_temp = 1.0
+        best_nll = float("inf")
+        for temp in np.linspace(0.1, 5.0, 100):
+            scaled = [l / temp for l in logits]
+            nll = _binary_cross_entropy(scaled, true_labels)
+            if nll < best_nll:
+                best_nll = nll
+                best_temp = temp
+        self._temperature = best_temp
+        self._fitted = True
 
-            nll = -np.mean(
-                labels * np.log(p) + (1 - labels) * np.log(1 - p)
-            )
-            return nll
+    def calibrate(self, logits: list[float]) -> list[float]:
+        if not self._fitted:
+            return logits
+        return [1.0 / (1.0 + np.exp(-l / self._temperature)) for l in logits]
 
-        initial_params = np.array([1.0, 0.0])
 
-        bounds = [
-            (0.01, 100.0),
-            (-10.0, 10.0),
-        ]
-
-        result = minimize(
-            negative_log_likelihood,
-            initial_params,
-            method="L-BFGS-B",
-            bounds=bounds,
-            options={"maxiter": 1000},
-        )
-
-        self.a = float(result.x[0])
-        self.b = float(result.x[1])
-        self.fitted = True
-
-        if verbose:
-            final_nll = negative_log_likelihood(result.x)
-            print(f"Platt calibration fit: a={self.a:.4f}, b={self.b:.4f}")
-            print(f"Final NLL: {final_nll:.4f}")
-
-    def calibrate(self, score: float) -> float:
-        """Calibrate a single score.
-
-        Args:
-            score: Raw matcher score in [0, 1]
-
-        Returns:
-            Calibrated probability in [0, 1]
-        """
-        if not self.fitted:
-            return score
-
-        eps = 1e-7
-        score = np.clip(score, eps, 1 - eps)
-
-        calibrated = 1 / (1 + np.exp(-(self.a * score + self.b)))
-        return float(np.clip(calibrated, 0.0, 1.0))
-
-    def calibrate_batch(self, scores: np.ndarray) -> np.ndarray:
-        """Calibrate a batch of scores.
-
-        Args:
-            scores: Array of raw matcher scores
-
-        Returns:
-            Array of calibrated probabilities
-        """
-        return np.array([self.calibrate(s) for s in scores])
-
-    def get_parameters(self) -> tuple[float, float]:
-        """Get the fitted Platt scaling parameters.
-
-        Returns:
-            Tuple of (a, b) parameters
-        """
-        if not self.fitted:
-            raise RuntimeError("Calibrator has not been fitted yet")
-        return (self.a, self.b)
-
-    def reset(self) -> None:
-        """Reset the calibrator to unfitted state."""
-        self.a = None
-        self.b = None
-        self.fitted = False
+def _binary_cross_entropy(logits: list[float], labels: list[int]) -> float:
+    eps = 1e-7
+    total = 0.0
+    for logit, label in zip(logits, labels):
+        p = 1.0 / (1.0 + np.exp(-logit))
+        p = min(max(p, eps), 1.0 - eps)
+        total -= label * np.log(p) + (1 - label) * np.log(1 - p)
+    return total / len(logits)

@@ -1,7 +1,23 @@
-"""Heterogeneous Graph Attention pseudonym resolver."""
+"""Heterogeneous Graph Transformer pseudonym resolver, trainer, and cold-start fallback."""
 
-from crosstaint.pseudonym.model import HGTResolver
-from crosstaint.pseudonym.cold_start import ColdStartFallback
-from crosstaint.pseudonym.trainer import PseudonymTrainer
+from __future__ import annotations
 
-__all__ = ["HGTResolver", "ColdStartFallback", "PseudonymTrainer"]
+from .model import HGTResolver
+from .trainer import HGTrainer
+from .cold_start import ColdStartFallback
+from .dann import (
+    DANNObjective,
+    DomainDiscriminator,
+    dann_lambda,
+    gradient_reversal,
+)
+
+__all__ = [
+    "HGTResolver",
+    "HGTrainer",
+    "ColdStartFallback",
+    "DANNObjective",
+    "DomainDiscriminator",
+    "dann_lambda",
+    "gradient_reversal",
+]

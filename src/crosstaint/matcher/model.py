@@ -1,326 +1,185 @@
-"""Transformer-based bridge event matcher for CrossTaint."""
+"""Bridge event matcher with transformer, bilinear, and MLP scoring variants."""
 
 from __future__ import annotations
 
+import math
+from typing import Any
+
+import numpy as np
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-from dataclasses import dataclass
-from typing import Optional
-
-from crosstaint.types import EventFeatures
-
-
-@dataclass
-class MatcherOutput:
-    """Output from the bridge event matcher."""
-
-    score: torch.Tensor
-    embedding1: Optional[torch.Tensor] = None
-    embedding2: Optional[torch.Tensor] = None
 
 
 class PositionalEncoding(nn.Module):
-    """Sinusoidal positional encoding for transformer input.
-
-    Generates positional embeddings using sine and cosine functions
-    of different frequencies, following 'Attention is All You Need'.
-    """
-
-    def __init__(self, d_model: int = 128, max_len: int = 512) -> None:
+    def __init__(self, d_model: int, max_len: int = 512) -> None:
         super().__init__()
-        self.d_model = d_model
-        self.max_len = max_len
-
         pe = torch.zeros(max_len, d_model)
-        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
-        div_term = torch.exp(
-            torch.arange(0, d_model, 2, dtype=torch.float) *
-            (-torch.log(torch.tensor(10000.0)) / d_model)
-        )
-
+        position = torch.arange(0, max_len, dtype=torch.float32).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2, dtype=torch.float32) * (-math.log(10000.0) / d_model))
         pe[:, 0::2] = torch.sin(position * div_term)
-        pe[:, 1::2] = torch.cos(position * div_term)
-
-        pe = pe.unsqueeze(0)
-        self.register_buffer("pe", pe)
+        if d_model % 2 == 0:
+            pe[:, 1::2] = torch.cos(position * div_term)
+        else:
+            pe[:, 1::2] = torch.cos(position * div_term[:-1])
+        self.register_buffer("pe", pe.unsqueeze(0))
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         seq_len = x.size(1)
-        return x + self.pe[:, :seq_len, :]
+        return x + self.pe[:, :seq_len]
 
 
 class EventEmbedding(nn.Module):
-    """Embeds 5-token event tuple into 128-dimensional space.
-
-    The 5-token event tuple consists of:
-    - selector_embedding (4-dim): hashed to bucket 0-3
-    - topics_embedding (64-dim): hash projection with Tanh activation
-    - value_bracket (1-dim): log10 discretized value range
-    - timestamp_feature (1-dim): hour-of-week normalized to [0, 1]
-    - context_embedding (32-dim): bridge-family lookup table
-
-    Total: 4 + 64 + 1 + 1 + 32 = 102 dimensions
-    Final output is projected to 128 dimensions.
-    """
-
-    def __init__(self, d_model: int = 128) -> None:
+    def __init__(self, input_dim: int, embed_dim: int) -> None:
         super().__init__()
-        self.d_model = d_model
-
-        self.selector_proj = nn.Linear(4, 16)
-        self.topics_proj = nn.Linear(64, 64)
-        self.value_proj = nn.Linear(1, 8)
-        self.timestamp_proj = nn.Linear(1, 8)
-        self.context_proj = nn.Linear(32, 16)
-
-        total_input_dim = 16 + 64 + 8 + 8 + 16
-        self.output_proj = nn.Linear(total_input_dim, d_model)
-        self.layer_norm = nn.LayerNorm(d_model)
+        self.projection = nn.Linear(input_dim, embed_dim, bias=True)
+        self.norm = nn.LayerNorm(embed_dim)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
-        selector = x[:, :, :4]
-        topics = x[:, :, 4:68]
-        value = x[:, :, 68:69]
-        timestamp = x[:, :, 69:70]
-        context = x[:, :, 70:102]
-
-        selector_emb = torch.tanh(self.selector_proj(selector))
-        topics_emb = torch.tanh(self.topics_proj(topics))
-        value_emb = torch.tanh(self.value_proj(value))
-        timestamp_emb = torch.tanh(self.timestamp_proj(timestamp))
-        context_emb = torch.tanh(self.context_proj(context))
-
-        combined = torch.cat(
-            [selector_emb, topics_emb, value_emb, timestamp_emb, context_emb],
-            dim=-1
-        )
-
-        embedded = self.output_proj(combined)
-        return self.layer_norm(embedded)
+        return self.norm(self.projection(x))
 
 
 class BilinearScoringHead(nn.Module):
-    """Bilinear scoring head for computing similarity between event embeddings.
-
-    Takes two 128-dim embeddings and computes a similarity score using
-    a learned bilinear transformation: score = sigmoid(w * (e1 * W * e2 + b))
-    """
-
-    def __init__(self, d_model: int = 128) -> None:
+    def __init__(self, embed_dim: int) -> None:
         super().__init__()
-        self.W = nn.Linear(d_model, d_model, bias=False)
-        self.w = nn.Linear(1, 1, bias=True)
-        self.sigmoid = nn.Sigmoid()
+        self.W = nn.Parameter(torch.randn(embed_dim, embed_dim, dtype=torch.float32) * 0.02)
+        self.bias = nn.Parameter(torch.zeros(1, dtype=torch.float32))
 
-    def forward(
-        self,
-        e1: torch.Tensor,
-        e2: torch.Tensor
-    ) -> torch.Tensor:
-        # e1, e2 shape: [batch, d_model]
-        bilinear = e1 * self.W(e2)
-        bilinear = bilinear.sum(dim=-1, keepdim=True)
-        score = self.w(bilinear)
-        return self.sigmoid(score).squeeze(-1)
+    def forward(self, a: torch.Tensor, b: torch.Tensor) -> torch.Tensor:
+        return torch.sum(a.unsqueeze(1) * torch.t(self.W) @ b.unsqueeze(1).transpose(-1, -2), dim=-1) + self.bias
 
 
 class BridgeEventMatcher(nn.Module):
-    """Siamese network for matching bridge events across chains.
-
-    Uses a transformer encoder architecture to process event sequences
-    and compute similarity scores between event pairs.
-
-    Architecture:
-    - EventEmbedding: projects raw features to d_model dimensions
-    - PositionalEncoding: adds positional information
-    - 4 TransformerEncoderLayers with 4 attention heads each
-    - BilinearScoringHead: computes final similarity score
-    """
+    """Siamese transformer for matching source and destination bridge events."""
 
     def __init__(
         self,
-        d_model: int = 128,
-        n_heads: int = 4,
-        n_layers: int = 4,
-        dim_feedforward: int = 512,
+        embed_dim: int = 64,
+        num_heads: int = 4,
+        num_layers: int = 2,
         dropout: float = 0.1,
+        score_hidden: int = 32,
     ) -> None:
         super().__init__()
-        self.d_model = d_model
-        self.n_heads = n_heads
-
-        self.event_embedding = EventEmbedding(d_model)
-        self.positional_encoding = PositionalEncoding(d_model)
-
+        self.embed_dim = embed_dim
+        self.source_embed = EventEmbedding(embed_dim, embed_dim)
+        self.dest_embed = EventEmbedding(embed_dim, embed_dim)
+        self.pos_encoding = PositionalEncoding(embed_dim)
         encoder_layer = nn.TransformerEncoderLayer(
-            d_model=d_model,
-            nhead=n_heads,
-            dim_feedforward=dim_feedforward,
-            activation="gelu",
+            d_model=embed_dim,
+            nhead=num_heads,
+            dim_feedforward=embed_dim * 4,
             dropout=dropout,
+            activation="gelu",
             batch_first=True,
         )
-        self.transformer = nn.TransformerEncoder(
-            encoder_layer,
-            num_layers=n_layers,
+        self.encoder = nn.TransformerEncoder(encoder_layer, num_layers=num_layers)
+        self.source_cls = nn.Parameter(torch.randn(embed_dim, dtype=torch.float32) * 0.02)
+        self.dest_cls = nn.Parameter(torch.randn(embed_dim, dtype=torch.float32) * 0.02)
+        self.fc_score = nn.Sequential(
+            nn.Linear(embed_dim * 4, score_hidden),
+            nn.GELU(),
+            nn.Dropout(dropout),
+            nn.Linear(score_hidden, 1),
         )
 
-        self.scoring_head = BilinearScoringHead(d_model)
+    def _encode(self, embed_module: nn.Module, x: torch.Tensor, cls_token: torch.Tensor) -> torch.Tensor:
+        B, N, D = x.shape
+        cls = cls_token.view(1, 1, D).expand(B, -1, -1)
+        x = torch.cat([cls, x], dim=1)
+        x = self.pos_encoding(x)
+        x = embed_module(x)
+        encoded = self.encoder(x)
+        return encoded[:, 0]
 
     def forward(
         self,
-        e1: torch.Tensor,
-        e2: torch.Tensor,
-        return_embeddings: bool = False,
-    ) -> MatcherOutput:
-        """Forward pass computing similarity between two event sequences.
-
-        Args:
-            e1: First event tensor of shape [batch, 5, 102]
-            e2: Second event tensor of shape [batch, 5, 102]
-            return_embeddings: If True, include embeddings in output
-
-        Returns:
-            MatcherOutput with score in [0, 1] and optionally embeddings
-        """
-        emb1 = self.event_embedding(e1)
-        emb2 = self.event_embedding(e2)
-
-        emb1 = self.positional_encoding(emb1)
-        emb2 = self.positional_encoding(emb2)
-
-        trans1 = self.transformer(emb1)
-        trans2 = self.transformer(emb2)
-
-        pooled1 = trans1.mean(dim=1)
-        pooled2 = trans2.mean(dim=1)
-
-        score = self.scoring_head(pooled1, pooled2)
-
-        if return_embeddings:
-            return MatcherOutput(
-                score=score,
-                embedding1=pooled1,
-                embedding2=pooled2,
-            )
-        return MatcherOutput(score=score)
+        source_features: torch.Tensor,
+        dest_features: torch.Tensor,
+    ) -> torch.Tensor:
+        source_emb = self.source_embed(source_features)
+        dest_emb = self.dest_embed(dest_features)
+        source_repr = self._encode(self.source_embed, source_emb, self.source_cls)
+        dest_repr = self._encode(self.dest_embed, dest_emb, self.dest_cls)
+        combined = torch.cat(
+            [
+                source_repr,
+                dest_repr,
+                torch.abs(source_repr - dest_repr),
+                source_repr * dest_repr,
+            ],
+            dim=-1,
+        )
+        return torch.sigmoid(self.fc_score(combined)).squeeze(-1)
 
 
-class BilinearBaseline(nn.Module):
-    """Bilinear baseline model without transformer for ablation studies.
+class BilinearScoringMatcher(nn.Module):
+    """Bilinear matcher variant: score = sigmoid(x^T W y + b)."""
 
-    Simpler architecture that directly embeds events and computes
-    bilinear similarity without transformer processing.
-    """
-
-    def __init__(self, d_model: int = 128) -> None:
+    def __init__(self, embed_dim: int) -> None:
         super().__init__()
-        self.d_model = d_model
-
-        self.event_embedding = EventEmbedding(d_model)
-        self.scoring_head = BilinearScoringHead(d_model)
+        self.W = nn.Parameter(torch.randn(embed_dim, embed_dim, dtype=torch.float32) * 0.02)
+        self.bias = nn.Parameter(torch.zeros(1, dtype=torch.float32))
 
     def forward(
         self,
-        e1: torch.Tensor,
-        e2: torch.Tensor,
-        return_embeddings: bool = False,
-    ) -> MatcherOutput:
-        """Forward pass without transformer layers.
-
-        Args:
-            e1: First event tensor of shape [batch, 5, 102]
-            e2: Second event tensor of shape [batch, 5, 102]
-            return_embeddings: If True, include embeddings in output
-
-        Returns:
-            MatcherOutput with score in [0, 1] and optionally embeddings
-        """
-        emb1 = self.event_embedding(e1)
-        emb2 = self.event_embedding(e2)
-
-        pooled1 = emb1.mean(dim=1)
-        pooled2 = emb2.mean(dim=1)
-
-        score = self.scoring_head(pooled1, pooled2)
-
-        if return_embeddings:
-            return MatcherOutput(
-                score=score,
-                embedding1=pooled1,
-                embedding2=pooled2,
-            )
-        return MatcherOutput(score=score)
+        source_features: torch.Tensor,
+        dest_features: torch.Tensor,
+    ) -> torch.Tensor:
+        source_flat = source_features.mean(dim=1) if source_features.dim() == 3 else source_features
+        dest_flat = dest_features.mean(dim=1) if dest_features.dim() == 3 else dest_features
+        score = torch.sum(source_flat.unsqueeze(1) * torch.t(self.W) @ dest_flat.unsqueeze(1).transpose(-1, -2), dim=-1)
+        return torch.sigmoid(score + self.bias)
 
 
 class SiameseMLPMatcher(nn.Module):
-    """3-layer MLP baseline for siamese network comparison.
+    """MLP Siamese matcher using cosine similarity for comparison."""
 
-    Baseline model that uses MLPs to process each event branch
-    and computes similarity via concatenated features.
-    """
-
-    def __init__(
-        self,
-        input_dim: int = 102,
-        hidden_dim: int = 256,
-        output_dim: int = 128,
-    ) -> None:
+    def __init__(self, embed_dim: int, hidden_dim: int = 64) -> None:
         super().__init__()
-
-        self.branch = nn.Sequential(
-            nn.Linear(input_dim, hidden_dim),
+        self.encoder = nn.Sequential(
+            nn.Linear(embed_dim, hidden_dim),
             nn.LayerNorm(hidden_dim),
             nn.GELU(),
             nn.Dropout(0.1),
             nn.Linear(hidden_dim, hidden_dim),
             nn.LayerNorm(hidden_dim),
             nn.GELU(),
-            nn.Dropout(0.1),
-            nn.Linear(hidden_dim, output_dim),
         )
-
-        self.fusion = nn.Sequential(
-            nn.Linear(output_dim * 2, output_dim),
-            nn.LayerNorm(output_dim),
-            nn.GELU(),
-            nn.Dropout(0.1),
-            nn.Linear(output_dim, output_dim // 2),
-            nn.GELU(),
-            nn.Linear(output_dim // 2, 1),
-            nn.Sigmoid(),
-        )
+        self.cos_sim = nn.CosineSimilarity(dim=-1)
 
     def forward(
         self,
-        e1: torch.Tensor,
-        e2: torch.Tensor,
-        return_embeddings: bool = False,
-    ) -> MatcherOutput:
-        """Forward pass with MLP branches.
+        source_features: torch.Tensor,
+        dest_features: torch.Tensor,
+    ) -> torch.Tensor:
+        source_flat = source_features.mean(dim=1) if source_features.dim() == 3 else source_features
+        dest_flat = dest_features.mean(dim=1) if dest_features.dim() == 3 else dest_features
+        source_enc = self.encoder(source_flat)
+        dest_enc = self.encoder(dest_flat)
+        return (self.cos_sim(source_enc, dest_enc).unsqueeze(-1) + 1.0) / 2.0
 
-        Args:
-            e1: First event tensor of shape [batch, 5, 102]
-            e2: Second event tensor of shape [batch, 5, 102]
-            return_embeddings: If True, include embeddings in output
 
-        Returns:
-            MatcherOutput with score in [0, 1] and optionally embeddings
-        """
-        emb1_flat = e1.mean(dim=1)
-        emb2_flat = e2.mean(dim=1)
+def load_matcher_checkpoint(
+    path: str,
+    device: str = "cpu",
+) -> dict[str, Any]:
+    state = torch.load(path, map_location=device, weights_only=True)
+    return state
 
-        feat1 = self.branch(emb1_flat)
-        feat2 = self.branch(emb2_flat)
 
-        concatenated = torch.cat([feat1, feat2], dim=-1)
-        score = self.fusion(concatenated).squeeze(-1)
-
-        if return_embeddings:
-            return MatcherOutput(
-                score=score,
-                embedding1=feat1,
-                embedding2=feat2,
-            )
-        return MatcherOutput(score=score)
+def save_matcher_checkpoint(
+    model: nn.Module,
+    optimizer: torch.optim.Optimizer,
+    epoch: int,
+    best_metric: float,
+    path: str,
+) -> None:
+    torch.save(
+        {
+            "model_state": model.state_dict(),
+            "optimizer_state": optimizer.state_dict(),
+            "epoch": epoch,
+            "best_metric": best_metric,
+        },
+        path,
+    )

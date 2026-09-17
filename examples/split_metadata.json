@@ -1,0 +1,54 @@
+{
+  "version": "1.0.0",
+  "description": "Non-sensitive temporal split metadata for the CrossTaint paper protocol. This file records counts, time windows, seeds, and leakage controls; it does not redistribute incident labels, private addresses, or benign-user pools.",
+  "corpus_counts": {
+    "total_cases": 55,
+    "public_two_source_cases": 47,
+    "restricted_validation_cases": 8
+  },
+  "temporal_split": {
+    "train": {
+      "end": "2024-06-30",
+      "role": "model fitting and synthetic-margin calibration"
+    },
+    "calibration": {
+      "start": "2024-07-01",
+      "end": "2024-12-31",
+      "role": "threshold selection and finite-sample certificate calibration"
+    },
+    "test": {
+      "start": "2025-01-01",
+      "end": "2026-12-31",
+      "role": "held-out reporting"
+    }
+  },
+  "leakage_controls": [
+    "No address appears in more than one split.",
+    "Bridge-family calibration parameters are frozen before restricted validation cases are evaluated.",
+    "Public-only metrics are reported separately from the 55-case aggregate.",
+    "Restricted labels are represented by provenance fields, not redistributed raw paths."
+  ],
+  "reproduction_defaults": {
+    "seed": 42,
+    "num_runs": 10,
+    "rho": 0.81,
+    "threshold": 0.04
+  },
+  "release_boundary": {
+    "released": [
+      "source code",
+      "synthetic generator",
+      "manifest schema",
+      "configuration files",
+      "split metadata",
+      "reproduction scripts",
+      "usage policy"
+    ],
+    "not_released": [
+      "restricted incident labels",
+      "private forensic notes",
+      "benign-user address pools",
+      "trained checkpoints derived from non-redistributable incident labels"
+    ]
+  }
+}

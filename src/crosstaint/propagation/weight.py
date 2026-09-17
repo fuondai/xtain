@@ -1,20 +1,9 @@
-"""Edge weights for taint propagation."""
-
 from __future__ import annotations
-
-from typing import Mapping
 
 import torch
 import torch.nn as nn
 
 from crosstaint.types import EdgeType, IREdge
-
-
-_EDGE_TYPE_ALIASES: dict[str, str] = {
-    "cross_chain_bridge": EdgeType.CROSS_CHAIN_BRIDGE,
-    "intra_chain_transfer": EdgeType.INTRA_CHAIN_TRANSFER,
-    "dex_swap": EdgeType.DEX_SWAP,
-}
 
 
 class EdgeWeightLearner:
@@ -24,17 +13,8 @@ class EdgeWeightLearner:
         EdgeType.DEX_SWAP: 0.80,
     }
 
-    def __init__(
-        self,
-        weights: Mapping[str, float] | None = None,
-        trainable: bool = False,
-    ) -> None:
+    def __init__(self, trainable: bool = False) -> None:
         self.trainable = trainable
-        self._weights = dict(self.DEFAULT_WEIGHTS)
-        if weights:
-            for key, value in weights.items():
-                edge_type = _EDGE_TYPE_ALIASES.get(key.lower(), key)
-                self._weights[edge_type] = float(value)
 
         if trainable:
             self._mlp = nn.Sequential(
@@ -44,7 +24,7 @@ class EdgeWeightLearner:
                 nn.Sigmoid(),
             )
             base = torch.tensor(
-                [self._weights.get(EdgeType.INTRA_CHAIN_TRANSFER, 1.0)],
+                [self.DEFAULT_WEIGHTS.get(EdgeType.INTRA_CHAIN_TRANSFER, 1.0)],
                 dtype=torch.float32,
             )
             with torch.no_grad():
@@ -52,19 +32,11 @@ class EdgeWeightLearner:
         else:
             self._mlp = None
 
-    @classmethod
-    def from_config(cls, propagation_cfg: Mapping[str, object]) -> "EdgeWeightLearner":
-        edge_weights = propagation_cfg.get("edge_weights", {})
-        if isinstance(edge_weights, dict):
-            return cls(weights=edge_weights)
-        return cls()
-
     def get_weight(self, edge: IREdge) -> float:
         return self.get_weight_by_type(edge.edge_type)
 
     def get_weight_by_type(self, edge_type: str) -> float:
         if self._mlp is not None and self.trainable:
-            base = self._weights.get(edge_type, 0.9)
-            weight = self._mlp(torch.tensor([[base]]))
+            weight = self._mlp(torch.tensor([[self.DEFAULT_WEIGHTS.get(edge_type, 0.9)]]))
             return float(weight.item())
-        return self._weights.get(edge_type, 0.9)
+        return self.DEFAULT_WEIGHTS.get(edge_type, 0.9)

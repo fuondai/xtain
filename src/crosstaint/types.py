@@ -1,16 +1,11 @@
-"""
-Type definitions for the CrossTaint intermediate representation.
-"""
-
 from __future__ import annotations
 
 import uuid
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any, Protocol
 
 
 class NodeType:
-    """Node type constants."""
     EOA = "EOA"
     CONTRACT = "CONTRACT"
     BRIDGE = "BRIDGE"
@@ -18,14 +13,12 @@ class NodeType:
 
 
 class EdgeType:
-    """Edge type constants."""
     INTRA_CHAIN_TRANSFER = "INTRA_CHAIN_TRANSFER"
     CROSS_CHAIN_BRIDGE = "CROSS_CHAIN_BRIDGE"
     DEX_SWAP = "DEX_SWAP"
 
 
 class TaintOperator:
-    """Taint operator constants."""
     LOCK = "Lock"
     MINT = "Mint"
     BURN = "Burn"
@@ -34,7 +27,6 @@ class TaintOperator:
 
 
 class BridgeMode:
-    """Bridge mode constants."""
     LOCK_MINT = "lock_mint"
     BURN_MINT = "burn_mint"
     POOL = "pool"
@@ -42,14 +34,12 @@ class BridgeMode:
 
 
 class AddressTag:
-    """Address tag constants."""
     KNOWN_ATTACKER = "KNOWN_ATTACKER"
     MIXER_DEPOSIT = "MIXER_DEPOSIT"
 
 
 @dataclass(frozen=True, slots=True)
 class DecodedEvent:
-    """Canonical representation of a decoded blockchain event."""
     event_id: str
     chain: str
     block_number: int
@@ -67,7 +57,6 @@ class DecodedEvent:
 
 @dataclass(frozen=True, slots=True)
 class IRNode:
-    """Node in the unified intermediate representation graph."""
     node_id: str
     address: str
     chain: str
@@ -83,7 +72,6 @@ class IRNode:
 
 @dataclass(frozen=True, slots=True)
 class IREdge:
-    """Edge in the unified intermediate representation graph."""
     edge_id: str
     source_node: str
     target_node: str
@@ -101,7 +89,6 @@ class IREdge:
 
 @dataclass(frozen=True, slots=True)
 class SyntheticHop:
-    """A single hop in a synthetic cross-chain trajectory."""
     from_chain: str
     to_chain: str
     bridge: str
@@ -113,7 +100,6 @@ class SyntheticHop:
 
 @dataclass(frozen=True, slots=True)
 class SyntheticTrajectory:
-    """A complete synthetic cross-chain trajectory."""
     trajectory_id: uuid.UUID
     hops: tuple[SyntheticHop, ...]
     origin_address: str
@@ -125,7 +111,6 @@ class SyntheticTrajectory:
 
 @dataclass(frozen=True, slots=True)
 class EvalMetrics:
-    """Evaluation metrics for a single run."""
     hop_recall: float
     precision: float
     false_positive_rate: float
@@ -139,7 +124,6 @@ class EvalMetrics:
 
 @dataclass(frozen=True, slots=True)
 class BootstrapCI:
-    """Bootstrap confidence interval for a metric."""
     metric_name: str
     mean: float
     ci_lower: float
@@ -150,7 +134,6 @@ class BootstrapCI:
 
 @dataclass(frozen=True, slots=True)
 class WilcoxonResult:
-    """Result of a Wilcoxon signed-rank test."""
     method_a: str
     method_b: str
     statistic: float
@@ -161,7 +144,6 @@ class WilcoxonResult:
 
 @dataclass(frozen=True, slots=True)
 class BoundEstimate:
-    """Empirical estimate of bounded-mismatch parameters."""
     delta_hat: float
     delta_ci_lower: float
     delta_ci_upper: float
@@ -176,18 +158,7 @@ class BoundEstimate:
 
 
 @dataclass(frozen=True, slots=True)
-class SoundnessCertificate:
-    """Per-case bounded-mismatch certificate metadata."""
-    bound: float | None
-    beta_hat: float | None
-    finite_sample_epsilon: float | None
-    batch_groups: int
-    parameters_loaded: bool
-
-
-@dataclass(frozen=True, slots=True)
 class PropagationResult:
-    """Result of a taint propagation run."""
     case_id: str
     origin: str
     origin_chain: str
@@ -197,25 +168,15 @@ class PropagationResult:
     config_hash: str
     seed: int
     path_count: int
-    soundness_certificate: SoundnessCertificate | None = None
-
-
-class BaselineProtocol(Protocol):
-    """Protocol for baseline methods."""
-    @property
-    def name(self) -> str:
-        ...
-
-    def fit(self, train_data: Any) -> None:
-        ...
-
-    def predict(self, case_data: Any) -> PropagationResult:
-        ...
+    certificate: float | None = None
+    cert_g_hat: int = 0
+    cert_beta_hat: float = 0.0
+    cert_epsilon: float = 0.0
+    cert_ood: bool = False
 
 
 @dataclass(frozen=True, slots=True)
 class SuspectEntry:
-    """Output entry in the final suspect set."""
     address: str
     chain: str
     taint_score: float
@@ -227,7 +188,6 @@ class SuspectEntry:
 
 @dataclass(frozen=True, slots=True)
 class RawEvent:
-    """Raw event from blockchain RPC."""
     event_id: str
     chain: str
     block_number: int
@@ -241,48 +201,22 @@ class RawEvent:
 
 
 class ChainClientProtocol(Protocol):
-    """Protocol for chain clients."""
-    async def get_block_range(self, start: int, end: int) -> list[RawEvent]:
-        ...
+    async def get_block_range(self, start: int, end: int) -> list[RawEvent]: ...
 
 
 class BridgeAdapterProtocol(Protocol):
-    """Protocol for bridge adapters."""
-    def bridge_id(self) -> str:
-        ...
-
-    def bridge_mode(self) -> str:
-        ...
-
-    def source_event_names(self) -> tuple[str, ...]:
-        ...
-
-    def dest_event_names(self) -> tuple[str, ...]:
-        ...
-
-    def is_source_event(self, event: DecodedEvent) -> bool:
-        ...
-
-    def is_dest_event(self, event: DecodedEvent) -> bool:
-        ...
-
-    def decode_lock(self, event: DecodedEvent) -> IREdge | None:
-        ...
-
-    def decode_mint(self, event: DecodedEvent) -> IREdge | None:
-        ...
-
-    def decode_burn(self, event: DecodedEvent) -> IREdge | None:
-        ...
-
-    def decode_release(self, event: DecodedEvent) -> IREdge | None:
-        ...
-
-    def decode_intent_fill(self, event: DecodedEvent) -> IREdge | None:
-        ...
-
-    def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool:
-        ...
+    def bridge_id(self) -> str: ...
+    def bridge_mode(self) -> str: ...
+    def source_event_names(self) -> tuple[str, ...]: ...
+    def dest_event_names(self) -> tuple[str, ...]: ...
+    def is_source_event(self, event: DecodedEvent) -> bool: ...
+    def is_dest_event(self, event: DecodedEvent) -> bool: ...
+    def decode_lock(self, event: DecodedEvent) -> IREdge | None: ...
+    def decode_mint(self, event: DecodedEvent) -> IREdge | None: ...
+    def decode_burn(self, event: DecodedEvent) -> IREdge | None: ...
+    def decode_release(self, event: DecodedEvent) -> IREdge | None: ...
+    def decode_intent_fill(self, event: DecodedEvent) -> IREdge | None: ...
+    def is_pair(self, source: DecodedEvent, dest: DecodedEvent) -> bool: ...
 
 
 EventId = str
@@ -290,7 +224,6 @@ EventId = str
 
 @dataclass(frozen=True, slots=True)
 class PropagationState:
-    """Mutable state maintained during a propagation run."""
     frontier: list
     scores: dict
     predecessors: dict
@@ -298,11 +231,11 @@ class PropagationState:
     terminated: set
     visited_edges: set
     values: dict
+    observations: list = field(default_factory=list)
 
 
 @dataclass(frozen=True, slots=True)
 class SimilarityOutput:
-    """Output from pseudonym resolver similarity computation."""
     node_a: str
     node_b: str
     similarity: float
@@ -312,7 +245,6 @@ class SimilarityOutput:
 
 @dataclass(frozen=True, slots=True)
 class EventFeatures:
-    """Feature vector for a single bridge event used by the matcher."""
     selector_embedding: Any
     topics_embedding: Any
     value_bracket: float
@@ -322,7 +254,6 @@ class EventFeatures:
 
 @dataclass(frozen=True, slots=True)
 class NodeFeatures:
-    """Feature vector for a graph node used by the pseudonym resolver."""
     in_value: int
     out_value: int
     bridge_count: int
@@ -333,7 +264,6 @@ class NodeFeatures:
     node_type: str
 
     def to_vector(self) -> list[float]:
-        """Convert features to a flat list for GNN input."""
         return [
             float(self.in_value) / 1e22 if self.in_value else 0.0,
             float(self.out_value) / 1e22 if self.out_value else 0.0,
@@ -348,7 +278,6 @@ class NodeFeatures:
 
 @dataclass(frozen=True, slots=True)
 class TaintPair:
-    """Labeled source-destination event pair for matcher training."""
     pair_id: str
     source_event_id: str
     dest_event_id: str

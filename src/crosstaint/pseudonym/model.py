@@ -1,323 +1,234 @@
+"""Heterogeneous Graph Transformer (HGT) for cross-chain pseudonym resolution."""
+
 from __future__ import annotations
 
 import math
-from dataclasses import dataclass
-from typing import Optional
+from typing import Any
 
-import torch.nn as nn
-import torch.nn.functional as F
+import numpy as np
 import torch
-
-from crosstaint.types import (
-    EdgeType,
-    SimilarityOutput,
-)
+import torch.nn as nn
 
 
-@dataclass
-class HeteroNode:
-    node_id: str
-    chain: str
-    features: torch.Tensor
-
-
-@dataclass
-class HeteroGraph:
-    nodes: dict[str, list[HeteroNode]]
-    edges: dict[str, list[tuple[str, str]]]
-
-    def node_ids(self, chain: str) -> list[str]:
-        if chain == "global":
-            return [
-                node.node_id
-                for chain_nodes in self.nodes.values()
-                for node in chain_nodes
-            ]
-        return [n.node_id for n in self.nodes.get(chain, [])]
-
-    def edge_pairs(self, edge_type: str) -> list[tuple[str, str]]:
-        return self.edges.get(edge_type, [])
-
-
-class HGTAttention(nn.Module):
-    RELATION_TYPES = (
-        EdgeType.INTRA_CHAIN_TRANSFER,
-        EdgeType.CROSS_CHAIN_BRIDGE,
-        EdgeType.DEX_SWAP,
-    )
-
-    def __init__(self, hidden_dim: int = 256, n_heads: int = 4) -> None:
+class MultiHeadAttention(nn.Module):
+    def __init__(self, embed_dim: int, num_heads: int, dropout: float = 0.1) -> None:
         super().__init__()
-        self.hidden_dim = hidden_dim
-        self.n_heads = n_heads
-        self.head_dim = hidden_dim // n_heads
-        assert hidden_dim % n_heads == 0, "hidden_dim must be divisible by n_heads"
-
-        self.q_proj = nn.Linear(hidden_dim, hidden_dim)
-        self.k_proj = nn.Linear(hidden_dim, hidden_dim)
-        self.v_proj = nn.Linear(hidden_dim, hidden_dim)
-        self.out_proj = nn.Linear(hidden_dim, hidden_dim)
-
-        self.relation_proj = nn.Parameter(
-            torch.empty(len(self.RELATION_TYPES), n_heads, self.head_dim, self.head_dim)
-        )
-        nn.init.xavier_uniform_(self.relation_proj)
-        self.relation_index = {name: idx for idx, name in enumerate(self.RELATION_TYPES)}
-
-        self.dropout = nn.Dropout(0.1)
-        self.scale = math.sqrt(self.head_dim)
+        assert embed_dim % num_heads == 0, "embed_dim must be divisible by num_heads"
+        self.embed_dim = embed_dim
+        self.num_heads = num_heads
+        self.head_dim = embed_dim // num_heads
+        self.scale = self.head_dim ** -0.5
+        self.q_linear = nn.Linear(embed_dim, embed_dim, bias=False)
+        self.k_linear = nn.Linear(embed_dim, embed_dim, bias=False)
+        self.v_linear = nn.Linear(embed_dim, embed_dim, bias=False)
+        self.out_linear = nn.Linear(embed_dim, embed_dim)
+        self.dropout = nn.Dropout(dropout)
 
     def forward(
         self,
-        source_emb: torch.Tensor,
-        target_emb: torch.Tensor,
-        rel_type: str,
+        query: torch.Tensor,
+        key: torch.Tensor,
+        value: torch.Tensor,
+        edge_type: torch.Tensor | None = None,
     ) -> torch.Tensor:
-        batch_size = source_emb.size(0)
-
-        q = self.q_proj(source_emb).view(batch_size, self.n_heads, self.head_dim)
-        k = self.k_proj(target_emb).view(batch_size, self.n_heads, self.head_dim)
-        v = self.v_proj(target_emb).view(batch_size, self.n_heads, self.head_dim)
-        relation_id = self.relation_index.get(rel_type, 0)
-        rel = self.relation_proj[relation_id]
-        k = torch.einsum("bhd,hde->bhe", k, rel)
-
-        attn_scores = (q * k).sum(dim=-1) / self.scale
-
-        attn_weights = F.softmax(attn_scores, dim=-1)
+        B, N, C = query.shape
+        q = self.q_linear(query).view(B, N, self.num_heads, self.head_dim).transpose(1, 2)
+        k = self.k_linear(key).view(B, N, self.num_heads, self.head_dim).transpose(1, 2)
+        v = self.v_linear(value).view(B, N, self.num_heads, self.head_dim).transpose(1, 2)
+        attn_weights = torch.matmul(q, k.transpose(-2, -1)) * self.scale
+        if edge_type is not None:
+            attn_weights = attn_weights + edge_type.unsqueeze(1)
+        attn_weights = torch.softmax(attn_weights, dim=-1)
         attn_weights = self.dropout(attn_weights)
+        output = torch.matmul(attn_weights, v)
+        output = output.transpose(1, 2).contiguous().view(B, N, C)
+        return self.out_linear(output)
 
-        out = (attn_weights.unsqueeze(-1) * v).view(batch_size, self.hidden_dim)
-        return self.out_proj(out)
+
+class HGTRelationUpdater(nn.Module):
+    def __init__(self, embed_dim: int, num_relations: int, dropout: float = 0.1) -> None:
+        super().__init__()
+        self.embed_dim = embed_dim
+        self.num_relations = num_relations
+        self.edge_type_proj = nn.Linear(num_relations, embed_dim, bias=False)
+        self.norm = nn.LayerNorm(embed_dim)
+        self.dropout = nn.Dropout(dropout)
+        self.gru = nn.GRUCell(input_size=embed_dim, hidden_size=embed_dim)
+
+    def forward(
+        self,
+        node_embeddings: torch.Tensor,
+        edge_type_matrix: torch.Tensor,
+    ) -> torch.Tensor:
+        type_emb = self.edge_type_proj(edge_type_matrix)
+        normed = self.norm(node_embeddings + type_emb)
+        dropped = self.dropout(normed)
+        return dropped
 
 
 class HGTLayer(nn.Module):
     def __init__(
         self,
-        hidden_dim: int = 256,
-        n_heads: int = 4,
+        embed_dim: int,
+        num_heads: int,
+        num_relations: int,
         dropout: float = 0.1,
     ) -> None:
         super().__init__()
-        self.hidden_dim = hidden_dim
-        self.n_heads = n_heads
-
-        self.attention = HGTAttention(hidden_dim, n_heads)
-        self.norm1 = nn.LayerNorm(hidden_dim)
-        self.norm2 = nn.LayerNorm(hidden_dim)
-
+        self.attention = MultiHeadAttention(embed_dim, num_heads, dropout)
+        self.relation_updater = HGTRelationUpdater(embed_dim, num_relations, dropout)
         self.ffn = nn.Sequential(
-            nn.Linear(hidden_dim, hidden_dim * 4),
+            nn.Linear(embed_dim, embed_dim * 4),
             nn.GELU(),
             nn.Dropout(dropout),
-            nn.Linear(hidden_dim * 4, hidden_dim),
+            nn.Linear(embed_dim * 4, embed_dim),
             nn.Dropout(dropout),
         )
+        self.norm1 = nn.LayerNorm(embed_dim)
+        self.norm2 = nn.LayerNorm(embed_dim)
 
     def forward(
         self,
-        node_embeddings: dict[str, torch.Tensor],
-        edge_index_by_type: dict[str, tuple[torch.Tensor, torch.Tensor]],
-    ) -> dict[str, torch.Tensor]:
-        updated: dict[str, torch.Tensor] = {}
-
-        for chain, emb in node_embeddings.items():
-            n_nodes = emb.size(0)
-            aggregated = torch.zeros_like(emb)
-            edge_count = torch.zeros(n_nodes, device=emb.device)
-
-            for edge_type, (src_idx, dst_idx) in edge_index_by_type.items():
-                if src_idx.numel() == 0:
-                    continue
-
-                src_emb = emb[src_idx]
-                dst_emb = emb[dst_idx]
-
-                attended = self.attention(src_emb, dst_emb, edge_type)
-
-                edge_count.scatter_add_(0, dst_idx, torch.ones_like(dst_idx, dtype=torch.float))
-                aggregated.scatter_add_(0, dst_idx.unsqueeze(-1).expand_as(attended), attended)
-
-            aggregated = aggregated / edge_count.clamp(min=1.0).unsqueeze(-1)
-
-            aggregated = self.norm1(emb + aggregated)
-            aggregated = self.norm2(aggregated + self.ffn(aggregated))
-            updated[chain] = aggregated
-
-        return updated
+        node_embeddings: torch.Tensor,
+        edge_type_matrix: torch.Tensor,
+    ) -> torch.Tensor:
+        attended = self.attention(node_embeddings, node_embeddings, node_embeddings, edge_type_matrix)
+        updated = self.relation_updater(self.norm1(node_embeddings + attended), edge_type_matrix)
+        ffn_out = self.ffn(self.norm2(updated))
+        return updated + ffn_out
 
 
 class HGTResolver(nn.Module):
-    EDGE_TYPES = {
-        EdgeType.INTRA_CHAIN_TRANSFER,
-        EdgeType.CROSS_CHAIN_BRIDGE,
-        EdgeType.DEX_SWAP,
-    }
+    """Heterogeneous Graph Transformer for cross-chain pseudonym resolution."""
 
     def __init__(
         self,
-        n_layers: int = 3,
-        hidden_dim: int = 256,
-        n_heads: int = 4,
+        num_node_types: int = 8,
+        num_relation_types: int = 16,
+        embed_dim: int = 64,
+        num_heads: int = 4,
+        num_layers: int = 2,
         dropout: float = 0.1,
-        feature_dim: int = 8,
     ) -> None:
         super().__init__()
-        self.n_layers = n_layers
-        self.hidden_dim = hidden_dim
-        self.n_heads = n_heads
-
-        self.input_proj = nn.Linear(feature_dim, hidden_dim)
-        self.layers = nn.ModuleList([
-            HGTLayer(hidden_dim, n_heads, dropout)
-            for _ in range(n_layers)
-        ])
-        self.dropout = nn.Dropout(dropout)
-
-        self.sim_proj = nn.Sequential(
-            nn.Linear(hidden_dim, hidden_dim),
-            nn.GELU(),
-            nn.Dropout(dropout),
-        )
-
-    def forward(self, graph: HeteroGraph) -> dict[str, torch.Tensor]:
-        device = next(self.parameters()).device
-
-        flat_nodes = [
-            node
-            for chain_nodes in graph.nodes.values()
-            for node in chain_nodes
-        ]
-        node_index = {node.node_id: idx for idx, node in enumerate(flat_nodes)}
-
-        if not flat_nodes:
-            return {"global": torch.empty((0, self.hidden_dim), device=device)}
-
-        edge_index_by_type: dict[str, tuple[torch.Tensor, torch.Tensor]] = {
-            et: (torch.tensor([], dtype=torch.long, device=device),
-                 torch.tensor([], dtype=torch.long, device=device))
-            for et in self.EDGE_TYPES
-        }
-
-        features_list = []
-        for node in flat_nodes:
-            if isinstance(node.features, torch.Tensor):
-                features_list.append(node.features)
-            else:
-                features_list.append(torch.tensor(node.features, dtype=torch.float32))
-
-        features = torch.stack(features_list, dim=0).to(device)
-        node_embeddings: dict[str, torch.Tensor] = {"global": self.input_proj(features)}
-
-        for edge_type, pairs in graph.edges.items():
-            if edge_type not in self.EDGE_TYPES:
-                continue
-            valid_pairs = [
-                (src, dst)
-                for src, dst in pairs
-                if src in node_index and dst in node_index
+        self.embed_dim = embed_dim
+        self.node_type_embedding = nn.Embedding(num_node_types, embed_dim)
+        self.rel_type_embedding = nn.Embedding(num_relation_types, embed_dim)
+        self.layers = nn.ModuleList(
+            [
+                HGTLayer(embed_dim, num_heads, num_relation_types, dropout)
+                for _ in range(num_layers)
             ]
-            if not valid_pairs:
-                continue
-            src_idx = torch.tensor(
-                [node_index[src] for src, _ in valid_pairs],
-                dtype=torch.long,
-                device=device,
-            )
-            dst_idx = torch.tensor(
-                [node_index[dst] for _, dst in valid_pairs],
-                dtype=torch.long,
-                device=device,
-            )
-            edge_index_by_type[edge_type] = (src_idx, dst_idx)
-
-        emb = node_embeddings
-        for layer in self.layers:
-            emb = layer(emb, edge_index_by_type)
-
-        return emb
-
-    def _embedding_by_node(
-        self,
-        embeddings: dict[str, torch.Tensor],
-        graph: HeteroGraph,
-    ) -> dict[str, torch.Tensor]:
-        node_ids = graph.node_ids("global")
-        global_embeddings = embeddings.get("global")
-        if global_embeddings is None:
-            return {}
-        return {
-            node_id: global_embeddings[idx]
-            for idx, node_id in enumerate(node_ids)
-            if idx < global_embeddings.size(0)
-        }
-
-    def pair_logits(
-        self,
-        pairs: list[tuple[str, str]],
-        embeddings: dict[str, torch.Tensor],
-        graph: HeteroGraph,
-    ) -> torch.Tensor:
-        by_node = self._embedding_by_node(embeddings, graph)
-        logits: list[torch.Tensor] = []
-        device = next(self.parameters()).device
-        for node_a, node_b in pairs:
-            emb_a = by_node.get(node_a)
-            emb_b = by_node.get(node_b)
-            if emb_a is None or emb_b is None:
-                logits.append(torch.zeros((), device=device))
-                continue
-            emb_a_proj = self.sim_proj(emb_a.unsqueeze(0)).squeeze(0)
-            emb_b_proj = self.sim_proj(emb_b.unsqueeze(0)).squeeze(0)
-            logits.append(5.0 * F.cosine_similarity(
-                emb_a_proj.unsqueeze(0),
-                emb_b_proj.unsqueeze(0),
-                dim=-1,
-            ).squeeze(0))
-        if not logits:
-            return torch.empty((0,), device=device)
-        return torch.stack(logits)
-
-    def pair_scores(
-        self,
-        pairs: list[tuple[str, str]],
-        embeddings: dict[str, torch.Tensor],
-        graph: HeteroGraph,
-    ) -> torch.Tensor:
-        return torch.sigmoid(self.pair_logits(pairs, embeddings, graph))
-
-    def resolve(
-        self,
-        node_a: str,
-        node_b: str,
-        embeddings: dict[str, torch.Tensor],
-        graph: Optional[HeteroGraph] = None,
-    ) -> SimilarityOutput:
-        if graph is None:
-            return SimilarityOutput(
-                node_a=node_a,
-                node_b=node_b,
-                similarity=0.0,
-                is_cold_start=False,
-            )
-
-        score = self.pair_scores([(node_a, node_b)], embeddings, graph)
-        similarity = float(score.item()) if score.numel() else 0.0
-
-        return SimilarityOutput(
-            node_a=node_a,
-            node_b=node_b,
-            similarity=similarity,
-            is_cold_start=False,
         )
+        self.dropout = nn.Dropout(dropout)
+        # Persistent bilinear scoring head over the two node embeddings. Trained
+        # jointly with the HGT layers; deterministic at inference (no per-call
+        # random weights).
+        self.score_head = nn.Bilinear(embed_dim, embed_dim, 1)
 
-    def resolve_batch(
+    def forward(
         self,
-        pairs: list[tuple[str, str]],
-        embeddings: dict[str, torch.Tensor],
-        graph: Optional[HeteroGraph] = None,
-    ) -> list[SimilarityOutput]:
-        return [
-            self.resolve(a, b, embeddings, graph)
-            for a, b in pairs
-        ]
+        node_features: torch.Tensor,
+        node_type_ids: torch.Tensor,
+        edge_index: torch.Tensor,
+        edge_type_ids: torch.Tensor,
+    ) -> torch.Tensor:
+        x = node_features
+        x = x + self.node_type_embedding(node_type_ids)
+        num_relations = self.rel_type_embedding.num_embeddings
+        edge_type_emb = self.rel_type_embedding(
+            edge_type_ids.clamp(0, num_relations - 1)
+        )
+        edge_type_matrix = edge_type_emb.sum(dim=1)
+
+        for layer in self.layers:
+            x = layer(x, edge_type_matrix)
+
+        return self.dropout(x)
+
+    def resolve_score(
+        self,
+        address_a: str,
+        address_b: str,
+        chain_a: str,
+        chain_b: str,
+        features_a: torch.Tensor,
+        features_b: torch.Tensor,
+    ) -> float:
+        self.eval()
+        with torch.no_grad():
+            a = features_a.reshape(1, -1).float()
+            b = features_b.reshape(1, -1).float()
+            score = torch.sigmoid(self.score_head(a, b))
+        return float(score.item())
+
+
+class HGTPretrainedEmbeddings(nn.Module):
+    """Pretrained address embeddings for the HGT resolver."""
+
+    def __init__(self, num_addresses: int, embed_dim: int) -> None:
+        super().__init__()
+        self.embedding = nn.Embedding(num_addresses, embed_dim)
+        self.embed_dim = embed_dim
+
+    def forward(self, address_ids: torch.Tensor) -> torch.Tensor:
+        return self.embedding(address_ids)
+
+
+def build_hgt_input(
+    nodes: list[dict[str, Any]],
+    edges: list[dict[str, Any]],
+    chain_to_id: dict[str, int],
+    edge_type_to_id: dict[str, int],
+) -> tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    node_features_list: list[torch.Tensor] = []
+    node_type_ids: list[int] = []
+
+    for node in nodes:
+        feat_dim = 64
+        features = torch.zeros(feat_dim, dtype=torch.float32)
+        features[0] = float(node.get("in_value_total", 0)) / 1e20
+        features[1] = float(node.get("out_value_total", 0)) / 1e20
+        features[2] = float(node.get("bridge_count", 0)) / 10.0
+        features[3] = float(node.get("dex_swap_count", 0)) / 10.0
+        chain_id = chain_to_id.get(node.get("chain", "unknown"), 0)
+        node_type = str(node.get("node_type", "EOA"))
+        node_type_id = _node_type_id(node_type)
+        node_type_ids.append(node_type_id)
+        node_features_list.append(features)
+
+    node_features = torch.stack(node_features_list)
+    node_type_tensor = torch.tensor(node_type_ids, dtype=torch.long)
+
+    src_nodes = [edge["source"] for edge in edges]
+    dst_nodes = [edge["target"] for edge in edges]
+    edge_type_ids = [
+        edge_type_to_id.get(str(edge.get("edge_type", "default")), 0)
+        for edge in edges
+    ]
+    edge_index = torch.tensor([src_nodes, dst_nodes], dtype=torch.long)
+    edge_type_tensor = torch.tensor(edge_type_ids, dtype=torch.long)
+
+    return node_features, node_type_tensor, edge_index, edge_type_tensor
+
+
+def _node_type_id(node_type: str) -> int:
+    mapping = {"EOA": 0, "CONTRACT": 1, "EXCHANGE": 2, "BRIDGE": 3, "MIXER": 4, "CEX": 5, "UNKNOWN": 6}
+    return mapping.get(node_type, 7)
+
+
+def save_hgt_checkpoint(model: nn.Module, path: str, epoch: int, best_metric: float) -> None:
+    torch.save(
+        {
+            "model_state": model.state_dict(),
+            "epoch": epoch,
+            "best_metric": best_metric,
+        },
+        path,
+    )
+
+
+def load_hgt_checkpoint(model: nn.Module, path: str, device: str = "cpu") -> tuple[int, float]:
+    state = torch.load(path, map_location=device, weights_only=True)
+    model.load_state_dict(state["model_state"])
+    return state.get("epoch", 0), state.get("best_metric", 0.0)

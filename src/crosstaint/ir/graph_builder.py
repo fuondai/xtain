@@ -312,7 +312,6 @@ class IRGraphBuilder:
         return in_degree, out_degree
 
     def clear(self) -> None:
-        """Clear all nodes and edges."""
         self._nodes.clear()
         self._edges.clear()
         self._edge_counter = 0

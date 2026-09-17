@@ -1,5 +1,3 @@
-"""Synthetic evaluation graph builder."""
-
 from __future__ import annotations
 
 import datetime
@@ -28,8 +26,6 @@ TORNADO_CASH_MIXERS: dict[str, tuple[str, float]] = {
 
 
 class SyntheticGraphBuilder:
-    """Builds deterministic IR graphs from synthetic trajectories."""
-
     def __init__(
         self,
         trajectories: list[SyntheticTrajectory],
@@ -168,9 +164,6 @@ class SyntheticGraphBuilder:
         if address.lower() in [m.lower() for m in TORNADO_CASH_MIXERS]:
             return NodeType.MIXER
 
-        if address.lower().startswith("0x000000000000000000000000"):
-            return NodeType.BRIDGE
-
         return NodeType.EOA
 
     def _get_address_tags(self, address: str) -> frozenset[str]:
@@ -249,7 +242,7 @@ class SyntheticGraphBuilder:
             target_node=target_key,
             edge_type=edge_type,
             operator=operator,
-            bridge=bridge,
+            bridge=bridge or "",
             source_event=None,
             target_event=None,
             value=value,
@@ -433,9 +426,7 @@ class SyntheticGraphBuilder:
         noise_ratio: float = 1.0,
     ) -> None:
         num_noise = int(len(trajectories) * noise_ratio)
-
         selected_trajectories = trajectories[:num_noise]
-
         for trajectory in selected_trajectories:
             self._process_trajectory(trajectory)
 

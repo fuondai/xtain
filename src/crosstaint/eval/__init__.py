@@ -71,14 +71,12 @@ def compute_false_positive_rate(
         return 0.0
 
     false_positives = len(predicted_lower & benign_lower)
-
     return false_positives / len(benign_lower)
 
 
 def compute_f1(recall: float, precision: float) -> float:
     if recall + precision == 0:
         return 0.0
-
     return 2 * (precision * recall) / (precision + recall)
 
 
@@ -102,7 +100,6 @@ def compute_bootstrap_ci(
         )
 
     metric_name = getattr(metric_fn, "__name__", "metric")
-
     resampled_metrics: list[float] = []
 
     for _ in range(n_resamples):
@@ -127,7 +124,6 @@ def compute_bootstrap_ci(
         )
 
     resampled_metrics = np.array(resampled_metrics)
-
     mean = float(np.mean(resampled_metrics))
     lower_percentile = (alpha / 2) * 100
     upper_percentile = (1 - alpha / 2) * 100
@@ -165,7 +161,6 @@ def compute_wilcoxon(
         )
 
     diff = np.array(metrics_a) - np.array(metrics_b)
-
     nonzero_diffs = diff != 0
     if not np.any(nonzero_diffs):
         return WilcoxonResult(
@@ -332,19 +327,79 @@ def _binomial_tail(k: int, j_star: int, beta: float) -> float:
     ))
 
 
+def finite_sample_radius(
+    n_samples: int,
+    alpha: float = 0.05,
+    c_bound: float = 1.0,
+) -> float:
+    # Azuma-Hoeffding finite-sample radius epsilon = C * sqrt(ln(1/alpha) / (2n)),
+    # the additive uncertainty on the bounded-mismatch estimate under the Doob
+    # martingale filtration. C is the bounded difference of a single batch event,
+    # finite by the block gas limit (see propagation.certificate). With C = 1 this
+    # reduces to the classical Hoeffding radius for the worst-case unit influence.
+    from crosstaint.propagation.certificate import azuma_radius
+
+    return azuma_radius(n_samples, c_bound=c_bound, alpha=alpha)
+
+
+def compute_suspect_set_certificate(
+    beta_hat: float,
+    n_samples: int,
+    g_hat: int = 1,
+    alpha: float = 0.05,
+    c_bound: float = 1.0,
+) -> float:
+    # Per-case adaptive suspect-set certificate min(1, g_hat * (beta_hat + epsilon)).
+    # With g_hat = 1 this reduces to the per-group independence ceiling; it widens
+    # linearly with the number of correlated batch groups g_hat estimated for the
+    # case, matching the correlated-error union bound. The finite-sample radius
+    # folds in the Azuma-Hoeffding estimation error of beta.
+    beta_hat = float(min(1.0, max(0.0, beta_hat)))
+    g_hat = max(1, int(g_hat))
+    epsilon = finite_sample_radius(n_samples, alpha, c_bound)
+    return float(min(1.0, g_hat * (beta_hat + epsilon)))
+
+
+def compute_synthetic_vs_real_fpr(
+    predicted_set: list[str],
+    real_address_holdout: list[str],
+    synthetic_benign: list[str],
+) -> dict[str, float]:
+    """Side-by-side FPR on the real-address holdout and the synthetic pool.
+
+    A single FPR number mixes two different sources of false positives.
+    Reporting them separately reveals whether a low headline FPR is hiding a
+    high synthetic-pool FPR (over-fit to the synthetic distribution) or vice
+    versa. Returns both numbers plus a combined figure.
+    """
+    real = {a.lower() for a in real_address_holdout}
+    synth = {a.lower() for a in synthetic_benign}
+    predicted = {a.lower() for a in predicted_set}
+    if not real and not synth:
+        return {
+            "fpr_real": 0.0,
+            "fpr_synthetic": 0.0,
+            "fpr_combined": 0.0,
+            "real_count": 0,
+            "synthetic_count": 0,
+        }
+
+    real_overlap = len(predicted & real) / len(real) if real else 0.0
+    synth_overlap = len(predicted & synth) / len(synth) if synth else 0.0
+    combined_denom = len(real) + len(synth)
+    combined = (len(predicted & real) + len(predicted & synth)) / combined_denom
+    return {
+        "fpr_real": float(real_overlap),
+        "fpr_synthetic": float(synth_overlap),
+        "fpr_combined": float(combined),
+        "real_count": len(real),
+        "synthetic_count": len(synth),
+    }
+
+
 def compute_aggregate_metrics(
     results: list[EvalMetrics],
 ) -> dict[str, float]:
-    """Aggregate per-run metrics to summary statistics.
-
-    Computes mean, median, std, min, max over all runs for each metric.
-
-    Args:
-        results: List of per-run EvalMetrics objects.
-
-    Returns:
-        Dictionary with aggregated statistics.
-    """
     if not results:
         return {}
 

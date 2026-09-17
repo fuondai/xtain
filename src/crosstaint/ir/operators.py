@@ -1,12 +1,7 @@
-"""
-Bridge IR translation operators.
-"""
-
 from __future__ import annotations
 
 from typing import Any
 
-from crosstaint.config import Config, get_config
 from crosstaint.types import (
     DecodedEvent,
     IREdge,
@@ -16,13 +11,7 @@ from crosstaint.types import (
 
 
 class BridgeIRTranslator:
-    """Translates paired bridge events into canonical IREdge."""
-
-    def __init__(self, config: Config | None = None) -> None:
-        self._config = config
-
     def _extract_asset(self, event: DecodedEvent) -> str | None:
-        """Extract asset identifier from event parameters."""
         params = event.params
         for key in ("token", "asset", "erc20", "symbol", "currency"):
             if key in params:
@@ -30,7 +19,6 @@ class BridgeIRTranslator:
         return None
 
     def _extract_value(self, event: DecodedEvent) -> int:
-        """Extract value from event parameters."""
         params = event.params
         for key in ("amount", "value", "qty", "tokensAmount"):
             if key in params:
@@ -55,7 +43,6 @@ class BridgeIRTranslator:
         source_node_id: str,
         dest_node_id: str,
     ) -> IREdge | None:
-        """Translate a paired source and dest event into an IREdge."""
         operator = TaintOperator.LOCK
         if bridge_mode == "burn_mint":
             operator = TaintOperator.BURN
@@ -71,7 +58,6 @@ class BridgeIRTranslator:
         asset = self._extract_asset(source_event) or self._extract_asset(dest_event)
 
         edge_id = f"{bridge_id}_{source_event.event_id}_{dest_event.event_id}"
-        fee_bound_pct = self._fee_bound_for_bridge(bridge_id, bridge_mode)
 
         return IREdge(
             edge_id=edge_id,
@@ -86,18 +72,5 @@ class BridgeIRTranslator:
             asset=asset,
             timestamp=dest_event.timestamp,
             block_number=dest_event.block_number,
-            fee_bound_pct=fee_bound_pct,
+            fee_bound_pct=0.01,
         )
-
-    def _fee_bound_for_bridge(self, bridge_id: str, bridge_mode: str) -> float:
-        config = self._config or get_config()
-        try:
-            return config.bridge_fee_bound(bridge_id)
-        except (KeyError, FileNotFoundError):
-            mode_bounds = {
-                "lock_mint": 0.01,
-                "burn_mint": 0.01,
-                "pool": 0.05,
-                "intent": 0.08,
-            }
-            return mode_bounds.get(bridge_mode, 0.01)

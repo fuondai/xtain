@@ -1,5 +1,3 @@
-"""Synthetic benign trajectory generation."""
-
 from __future__ import annotations
 
 import hashlib
@@ -17,7 +15,7 @@ BRIDGES = ["wormhole", "layerzero", "multichain", "stargate", "across", "hop", "
 CHAINS = ["ethereum", "bsc", "polygon", "arbitrum", "avalanche"]
 
 BRIDGE_CHAINS: dict[str, list[str]] = {
-    "wormhole": ["ethereum", "bsc", "polygon", "arbitrum", "avalanche", "solana"],
+    "wormhole": ["ethereum", "bsc", "polygon", "arbitrum", "avalanche"],
     "layerzero": ["ethereum", "bsc", "polygon", "arbitrum", "avalanche"],
     "multichain": ["ethereum", "bsc", "polygon", "arbitrum", "avalanche"],
     "stargate": ["ethereum", "bsc", "polygon", "arbitrum", "avalanche"],
@@ -36,7 +34,7 @@ BRIDGE_MODES: dict[str, str] = {
     "across": BridgeMode.INTENT,
     "hop": BridgeMode.POOL,
     "cbridge": BridgeMode.POOL,
-    "synapse": BridgeMode.POOL,
+    "synapse": BridgeMode.BURN_MINT,
     "hyperlane": BridgeMode.LOCK_MINT,
 }
 
@@ -69,8 +67,6 @@ class _WeightedItem:
 
 
 class SyntheticBenignGenerator:
-    """Generates salted synthetic benign cross-chain trajectories."""
-
     def __init__(self, salt: str | None = None, seed: int = 42) -> None:
         self._seed = seed
         self._rng = random.Random(seed)
@@ -381,6 +377,64 @@ class SyntheticBenignGenerator:
             gen_quantile_values = np.quantile(gen_sorted, gen_quantiles)
             ref_quantile_values = np.quantile(ref_sorted, ref_quantiles)
 
-            distance = np.mean(np.abs(gen_quantile_values - ref_quantile_values))
+            distance = float(np.mean(np.abs(gen_quantile_values - ref_quantile_values)))
 
-        return float(distance)
+        return distance
+
+
+class AdversarialSlippageGenerator:
+    """Generate exploit trajectories that deliberately exceed fee bounds.
+
+    RQ-1 fix: a static value-conservation envelope is blind to a laundering
+    actor that routes value through a high-slippage AMM on the destination
+    chain to defeat the invariant. This generator emits a fraction ``slippage_rate``
+    of trajectories whose per-hop loss exceeds the default fee bound of the
+    chosen bridge mode, so the smoke test exercises the adaptive
+    :class:`AdaptiveEnvelope` and a known failure mode is recorded honestly
+    in the methodology.
+    """
+
+    def __init__(self, slippage_rate: float = 0.20, seed: int = 42) -> None:
+        if not (0.0 <= slippage_rate <= 1.0):
+            raise ValueError(f"slippage_rate must be in [0, 1], got {slippage_rate}")
+        self.slippage_rate = slippage_rate
+        self._seed = seed
+        self._rng = random.Random(seed)
+        self._np_rng = np.random.default_rng(seed)
+        self._benign = SyntheticBenignGenerator(seed=seed)
+
+    def generate(self, num_trajectories: int) -> list[SyntheticTrajectory]:
+        trajectories: list[SyntheticTrajectory] = []
+        for idx in range(num_trajectories):
+            if self._rng.random() < self.slippage_rate:
+                trajectories.append(self._slippage_trajectory(idx))
+            else:
+                trajectories.extend(self._benign.generate(num_trajectories=1))
+        return trajectories
+
+    def _slippage_trajectory(self, idx: int) -> SyntheticTrajectory:
+        base = self._benign.generate(num_trajectories=1)[0]
+        # Replace the per-hop value with a degraded fraction. The actor is
+        # willing to lose 15-25% per hop to blind the static envelope.
+        loss = float(self._np_rng.uniform(0.15, 0.25))
+        degraded_hops = tuple(
+            SyntheticHop(
+                from_chain=h.from_chain,
+                to_chain=h.to_chain,
+                bridge=h.bridge,
+                operator=h.operator,
+                value=max(1, int(h.value * (1.0 - loss))),
+                asset=h.asset,
+                inter_arrival_seconds=h.inter_arrival_seconds,
+            )
+            for h in base.hops
+        )
+        return SyntheticTrajectory(
+            trajectory_id=base.trajectory_id,
+            hops=degraded_hops,
+            origin_address=base.origin_address,
+            addresses=base.addresses,
+            total_hops=base.total_hops,
+            total_value=sum(h.value for h in degraded_hops),
+            salt=f"adv-{idx}-{base.salt}",
+        )

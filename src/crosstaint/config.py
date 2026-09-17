@@ -29,10 +29,8 @@ def _default_config_dir() -> Path:
     for candidate in _candidate_config_dirs():
         if candidate.exists() and any(candidate.glob("*.yaml")):
             return candidate
-    raise FileNotFoundError(
-        "no CrossTaint config directory found; set CROSSTAINT_CONFIG_DIR "
-        "or run from the framework root"
-    )
+    searched = ", ".join(str(path) for path in _candidate_config_dirs())
+    raise FileNotFoundError(f"no config directory found; searched: {searched}")
 
 
 def _env_interpolate(value: Any) -> Any:
@@ -46,21 +44,6 @@ def _env_interpolate(value: Any) -> Any:
     if isinstance(value, list):
         return [_env_interpolate(v) for v in value]
     return value
-
-
-def _index_by_id(items: Any, id_key: str) -> dict[str, dict]:
-    if isinstance(items, list):
-        return {
-            str(item[id_key]): item
-            for item in items
-            if isinstance(item, dict) and id_key in item
-        }
-    if isinstance(items, dict):
-        first_val = next(iter(items.values()), None)
-        if isinstance(first_val, dict) and id_key in first_val:
-            return {str(item[id_key]): item for item in items.values()}
-        return {str(key): value for key, value in items.items() if isinstance(value, dict)}
-    return {}
 
 
 class Config:
@@ -80,8 +63,8 @@ class Config:
         cfg._loaded = {}
 
         for yaml_file in sorted(directory.glob("*.yaml")):
-            with open(yaml_file, "r", encoding="utf-8") as handle:
-                raw = yaml.safe_load(handle)
+            with open(yaml_file, "r", encoding="utf-8") as f:
+                raw = yaml.safe_load(f)
             if raw is None:
                 raw = {}
             name = yaml_file.stem
@@ -109,20 +92,32 @@ class Config:
     def __getattr__(self, name: str) -> Any:
         if name in self._loaded:
             return self._loaded[name]
-        raise AttributeError(
-            f"No config section '{name}'. Available: {list(self._loaded.keys())}"
-        )
+        raise AttributeError(f"No config section '{name}'. Available: {list(self._loaded.keys())}")
 
     def get(self, section: str, default: Any = None) -> Any:
         return self._loaded.get(section, default)
 
     @property
     def chains(self) -> dict[str, dict]:
-        return _index_by_id(self._loaded.get("chains"), "chain_id")
+        raw = self._loaded.get("chains")
+        if isinstance(raw, list):
+            return {str(i): item for i, item in enumerate(raw)}
+        if isinstance(raw, dict):
+            first_key = next(iter(raw.keys()), None)
+            if first_key is not None and isinstance(raw[first_key], list):
+                return {str(i): item for i, item in enumerate(raw[first_key])}
+        return raw if raw else {}
 
     @property
     def bridges(self) -> dict[str, dict]:
-        return _index_by_id(self._loaded.get("bridges"), "bridge_id")
+        raw = self._loaded.get("bridges")
+        if isinstance(raw, list):
+            return {str(i): item for i, item in enumerate(raw)}
+        if isinstance(raw, dict):
+            first_key = next(iter(raw.keys()), None)
+            if first_key is not None and isinstance(raw[first_key], list):
+                return {str(i): item for i, item in enumerate(raw[first_key])}
+        return raw if raw else {}
 
     @property
     def matcher(self) -> dict:
@@ -149,17 +144,26 @@ class Config:
         return list(self.bridges.keys())
 
     def bridge_spec(self, bridge_id: str) -> dict:
-        if bridge_id in self.bridges:
-            return self.bridges[bridge_id]
+        bridges = self._loaded.get("bridges", {})
+        if isinstance(bridges, dict) and bridge_id in bridges:
+            spec = dict(bridges[bridge_id])
+            spec.setdefault("bridge_id", bridge_id)
+            return spec
+        for b in self.bridges.values():
+            if b.get("bridge_id") == bridge_id:
+                return b
         raise KeyError(f"Bridge '{bridge_id}' not found in config")
 
     def chain_spec(self, chain_id: str) -> dict:
-        if chain_id in self.chains:
-            return self.chains[chain_id]
+        chains = self._loaded.get("chains", {})
+        if isinstance(chains, dict) and chain_id in chains:
+            spec = dict(chains[chain_id])
+            spec.setdefault("chain_id", chain_id)
+            return spec
+        for c in self.chains.values():
+            if c.get("chain_id") == chain_id:
+                return c
         raise KeyError(f"Chain '{chain_id}' not found in config")
-
-    def bridge_fee_bound(self, bridge_id: str, default: float = 0.01) -> float:
-        return float(self.bridge_spec(bridge_id).get("fee_bound_pct", default))
 
 
 def get_config() -> Config:

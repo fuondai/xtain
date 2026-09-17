@@ -1,29 +1,17 @@
-"""Bridge event matcher package for CrossTaint."""
+"""Bridge event matcher: featurization, transformer model, training, and calibration."""
 
-from crosstaint.matcher.calibration import PlattCalibrator
-from crosstaint.matcher.featurizer import EventFeaturizer
-from crosstaint.matcher.model import (
-    BilinearBaseline,
-    BilinearScoringHead,
-    BridgeEventMatcher,
-    EventEmbedding,
-    MatcherOutput,
-    PositionalEncoding,
-    SiameseMLPMatcher,
-)
-from crosstaint.matcher.trainer import HardNegativeMiner, MatcherTrainer, TaintPairDataset
+from __future__ import annotations
+
+from .featurizer import EventFeaturizer
+from .model import BridgeEventMatcher, BilinearScoringMatcher, SiameseMLPMatcher
+from .trainer import MatcherTrainer
+from .calibration import PlattCalibrator
 
 __all__ = [
-    "BridgeEventMatcher",
     "EventFeaturizer",
+    "BridgeEventMatcher",
+    "BilinearScoringMatcher",
+    "SiameseMLPMatcher",
     "MatcherTrainer",
     "PlattCalibrator",
-    "BilinearBaseline",
-    "SiameseMLPMatcher",
-    "PositionalEncoding",
-    "EventEmbedding",
-    "BilinearScoringHead",
-    "MatcherOutput",
-    "TaintPairDataset",
-    "HardNegativeMiner",
 ]

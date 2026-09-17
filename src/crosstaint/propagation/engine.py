@@ -8,7 +8,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from crosstaint.config import Config
-from crosstaint.propagation.decay import DecayScheduler
+from crosstaint.propagation.decay import DecayScheduler, MEVResistantDecay
 from crosstaint.propagation.weight import EdgeWeightLearner
 from crosstaint.types import (
     AddressTag,
@@ -18,8 +18,8 @@ from crosstaint.types import (
     NodeType,
     PropagationResult,
     PropagationState,
-    SoundnessCertificate,
     SuspectEntry,
+    TaintOperator,
 )
 
 
@@ -45,6 +45,11 @@ class _VisitedEdge:
 
 
 class PropagationEngine:
+    KNOWN_MIXER_PATTERNS: frozenset[str] = frozenset({
+        "tornado", "tornadocash", "mixer", "whirlpool", "cyclone",
+        "gemini", "binance-mixer",
+    })
+
     def __init__(
         self,
         rho: float = 0.81,
@@ -53,13 +58,11 @@ class PropagationEngine:
         seed: int = 42,
         skip_hop_recovery: bool = True,
         skip_gate_multiplier: float = 2.0,
-        max_hops: int = 11,
-        mixer_addresses: frozenset[str] | None = None,
-        edge_learner: EdgeWeightLearner | None = None,
-        cold_start_degree: int = 2,
-        beta_hat: float | None = None,
-        finite_sample_epsilon: float | None = None,
-        batch_window_blocks: int = 20,
+        mev_decay: MEVResistantDecay | None = None,
+        adaptive_fmax_cap: float = 0.30,
+        intent_margin_bound: float = 0.08,
+        cert_ood_g_max: int = 4,
+        value_conservation_enabled: bool = True,
     ) -> None:
         if not (0.0 < rho <= 1.0):
             raise ValueError(f"rho must be in (0, 1], got {rho}")
@@ -72,60 +75,67 @@ class PropagationEngine:
         self.seed = seed
         self.skip_hop_recovery = skip_hop_recovery
         self.skip_gate = min(1.0, threshold * skip_gate_multiplier)
-        self.max_hops = max_hops
-        self.mixer_addresses = mixer_addresses or frozenset()
-        self.cold_start_degree = cold_start_degree
+        self._mev_decay = mev_decay
+        self.adaptive_fmax_cap = adaptive_fmax_cap
+        self.intent_margin_bound = intent_margin_bound
+        self.cert_ood_g_max = cert_ood_g_max
+        self.value_conservation_enabled = value_conservation_enabled
 
         self.decay_scheduler = DecayScheduler(rho)
-        self.edge_learner = edge_learner or EdgeWeightLearner()
-        self.beta_hat = beta_hat
-        self.finite_sample_epsilon = finite_sample_epsilon
-        self.batch_window_blocks = max(1, batch_window_blocks)
+        self.edge_learner = EdgeWeightLearner()
 
     @classmethod
-    def from_config(cls, config: Config | None = None, **overrides: object) -> "PropagationEngine":
-        cfg = config or Config.load()
-        propagation = cfg.propagation
-        mixer_cfg = propagation.get("mixer_detection", {})
-        known_mixers = mixer_cfg.get("known_mixers", []) if isinstance(mixer_cfg, dict) else []
-        mixer_addresses = frozenset(
-            str(address).lower()
-            for address in known_mixers
-            if isinstance(address, str)
-        )
-        cold_start_degree = int(cfg.pseudonym.get("cold_start_threshold", 2))
+    def from_config(
+        cls,
+        rho: float = 0.81,
+        threshold: float = 0.04,
+        **kwargs: Any,
+    ) -> "PropagationEngine":
+        """Build an engine, enabling MEV-resistant decay from the propagation config."""
+        from crosstaint.propagation.decay import calibrate_gamma
 
-        return cls(
-            rho=float(overrides.get("rho", propagation.get("rho", 0.81))),
-            threshold=float(overrides.get("threshold", propagation.get("threshold", 0.04))),
-            time_window_days=int(propagation.get("time_window_days", 30)),
-            seed=int(overrides.get("seed", propagation.get("seed", 42))),
-            max_hops=int(propagation.get("max_hops", 11)),
-            mixer_addresses=mixer_addresses,
-            edge_learner=EdgeWeightLearner.from_config(propagation),
-            cold_start_degree=cold_start_degree,
-            beta_hat=_optional_float(
-                overrides.get("beta_hat", propagation.get("soundness", {}).get("beta_hat"))
-            ),
-            finite_sample_epsilon=_optional_float(
-                overrides.get(
-                    "finite_sample_epsilon",
-                    propagation.get("soundness", {}).get("finite_sample_epsilon"),
+        cfg = Config.load().propagation if Config._instance is not None else {}
+        mev_cfg = cfg.get("mev_resistant_decay", {}) if isinstance(cfg, dict) else {}
+        mev_decay = None
+        if mev_cfg.get("enabled"):
+            if mev_cfg.get("gamma") is not None:
+                gamma = float(mev_cfg["gamma"])
+            else:
+                gamma = calibrate_gamma(
+                    alpha_fn=float(mev_cfg.get("alpha_fn", 0.01)),
+                    sigma_f=float(mev_cfg.get("sigma_f", 0.018)),
+                    z_alpha=float(mev_cfg.get("z_alpha", 2.33)),
                 )
-            ),
-            batch_window_blocks=int(
-                overrides.get(
-                    "batch_window_blocks",
-                    propagation.get("soundness", {}).get("batch_window_blocks", 20),
-                )
-            ),
-        )
+            mev_decay = MEVResistantDecay(
+                rho0=float(mev_cfg.get("rho0", rho)),
+                gamma=gamma,
+                f0=float(mev_cfg.get("f0", 0.01)),
+            )
+        return cls(rho=rho, threshold=threshold, mev_decay=mev_decay, **kwargs)
+
+    def _edge_rho(self, edge: IREdge, remaining_value: int) -> float:
+        if self._mev_decay is None:
+            return self.rho
+        if remaining_value <= 0:
+            return self._mev_decay.rho0
+        observed_fmax = max(0.0, (remaining_value - edge.value) / remaining_value)
+        operator_f0 = self._effective_fee_bound_pct(edge)
+        return self._mev_decay.rho(observed_fmax, f0=operator_f0)
+
+    def _effective_fee_bound_pct(self, edge: IREdge) -> float:
+        fee_bound_pct = max(0.0, edge.fee_bound_pct)
+        if edge.operator == TaintOperator.INTENT_FILL:
+            # Intent fills are evaluated from the realized destination-chain
+            # settlement when available; otherwise use the calibrated solver
+            # margin envelope and cap it to avoid unbounded catch-all matches.
+            return min(self.adaptive_fmax_cap, max(fee_bound_pct, self.intent_margin_bound))
+        return fee_bound_pct
 
     def _is_mixer(self, node: IRNode) -> bool:
         address_lower = node.address.lower()
         return (
             node.node_type == NodeType.MIXER
-            or address_lower in self.mixer_addresses
+            or any(p in address_lower for p in self.KNOWN_MIXER_PATTERNS)
             or AddressTag.MIXER_DEPOSIT in node.tags
         )
 
@@ -149,54 +159,24 @@ class PropagationEngine:
             terminated=set(),
             visited_edges=set(),
             values={origin: origin_value},
+            observations=[],
         )
 
     def _value_conserved(self, edge: IREdge, remaining_value: int) -> bool:
         if remaining_value <= 0 or edge.value <= 0:
             return False
-        fee_bound_pct = max(0.0, edge.fee_bound_pct)
+        fee_bound_pct = self._effective_fee_bound_pct(edge)
         fee_bound = math.ceil(remaining_value * fee_bound_pct)
-        return edge.value <= remaining_value + fee_bound
+        lower_bound = max(0, remaining_value - fee_bound)
+        return lower_bound <= edge.value <= remaining_value
 
     def _value_conserved_skip(self, edge: IREdge, remaining_value: int) -> bool:
         if remaining_value <= 0 or edge.value <= 0:
             return False
-        fee_bound_pct = max(0.0, edge.fee_bound_pct)
+        fee_bound_pct = self._effective_fee_bound_pct(edge)
         composed_bound = math.ceil(remaining_value * min(1.0, 2.0 * fee_bound_pct))
-        return edge.value <= remaining_value + composed_bound
-
-    def _soundness_certificate(self, edges: list[IREdge]) -> SoundnessCertificate:
-        cross_chain_edges = [
-            edge for edge in edges
-            if edge.edge_type == EdgeType.CROSS_CHAIN_BRIDGE
-        ]
-        groups = {
-            (
-                edge.bridge,
-                edge.block_number // self.batch_window_blocks
-                if edge.block_number is not None
-                else 0,
-            )
-            for edge in cross_chain_edges
-        }
-        batch_groups = max(1, len(groups))
-        parameters_loaded = (
-            self.beta_hat is not None
-            and self.finite_sample_epsilon is not None
-        )
-        bound = None
-        if parameters_loaded:
-            bound = min(
-                1.0,
-                batch_groups * (float(self.beta_hat) + float(self.finite_sample_epsilon)),
-            )
-        return SoundnessCertificate(
-            bound=bound,
-            beta_hat=self.beta_hat,
-            finite_sample_epsilon=self.finite_sample_epsilon,
-            batch_groups=batch_groups,
-            parameters_loaded=parameters_loaded,
-        )
+        lower_bound = max(0, remaining_value - composed_bound)
+        return lower_bound <= edge.value <= remaining_value
 
     def _matcher_confidence(self, edge: IREdge, matcher: Any | None) -> float:
         if edge.edge_type != EdgeType.CROSS_CHAIN_BRIDGE:
@@ -224,7 +204,7 @@ class PropagationEngine:
         target_node = graph.get(target)
         if target_node is None:
             return 1.0
-        if target_node.degree_at_first_seen <= self.cold_start_degree:
+        if target_node.degree_at_first_seen <= 2:
             return matcher_confidence
         if resolver is None or not hasattr(resolver, "resolve"):
             return 1.0
@@ -273,7 +253,7 @@ class PropagationEngine:
                 continue
             state.visited_edges.add(edge_key)
 
-            if not self._value_conserved(edge, remaining_value):
+            if self.value_conservation_enabled and not self._value_conserved(edge, remaining_value):
                 continue
 
             edge_weight = self.edge_learner.get_weight(edge)
@@ -286,13 +266,13 @@ class PropagationEngine:
                 matcher_confidence,
             )
             hop = hop_distance + 1
-            if hop > self.max_hops:
-                continue
-            decayed_score = score * self.rho * edge_weight * matcher_confidence * resolver_weight
+            edge_rho = self._edge_rho(edge, remaining_value)
+            decayed_score = score * edge_rho * edge_weight * matcher_confidence * resolver_weight
             new_value = int(edge.value)
 
             if decayed_score >= self.threshold:
                 target = edge.target_node
+                state.observations.append((matcher_confidence, edge.block_number))
                 if edge.edge_type == EdgeType.CROSS_CHAIN_BRIDGE:
                     matched_cross_chain = True
                 if (
@@ -356,7 +336,7 @@ class PropagationEngine:
                 target = second_edge.target_node
                 if target == node_id:
                     continue
-                if not self._value_conserved_skip(second_edge, remaining_value):
+                if self.value_conservation_enabled and not self._value_conserved_skip(second_edge, remaining_value):
                     continue
                 edge_key = _VisitedEdge(
                     f"skip:{first_edge.edge_id}:{second_edge.edge_id}",
@@ -377,11 +357,10 @@ class PropagationEngine:
                     matcher_confidence,
                 )
                 hop = hop_distance + 2
-                if hop > self.max_hops:
-                    continue
+                edge_rho = self._edge_rho(second_edge, remaining_value)
                 decayed_score = (
                     score
-                    * (self.rho ** 2)
+                    * (edge_rho ** 2)
                     * edge_weight
                     * matcher_confidence
                     * resolver_weight
@@ -392,6 +371,7 @@ class PropagationEngine:
                     target not in state.scores
                     or decayed_score > state.scores[target]
                 ):
+                    state.observations.append((matcher_confidence, second_edge.block_number))
                     state.scores[target] = decayed_score
                     state.hop_distances[target] = hop
                     state.values[target] = new_value
@@ -451,7 +431,7 @@ class PropagationEngine:
                     taint_score=score,
                     hop_distance=hop,
                     predecessors=(pred,) if pred else (),
-                    is_cold_start=node.degree_at_first_seen <= self.cold_start_degree,
+                    is_cold_start=node.degree_at_first_seen <= 2,
                     flags=frozenset(flags),
                 )
             )
@@ -459,6 +439,8 @@ class PropagationEngine:
         suspect_entries.sort(key=lambda e: e.taint_score, reverse=True)
 
         config_hash = Config.config_hash() if Config._instance is not None else ""
+
+        cert = self._emit_certificate(state.observations)
 
         return PropagationResult(
             case_id=case_id,
@@ -470,11 +452,38 @@ class PropagationEngine:
             config_hash=config_hash,
             seed=self.seed,
             path_count=path_count,
-            soundness_certificate=self._soundness_certificate(edges),
+            certificate=cert["certificate"],
+            cert_g_hat=cert["g_hat"],
+            cert_beta_hat=cert["beta_hat"],
+            cert_epsilon=cert["epsilon"],
+            cert_ood=cert["ood"],
         )
 
+    def _emit_certificate(self, observations: list) -> dict[str, Any]:
+        """Per-case Azuma-Hoeffding certificate over the observed mismatch trail.
 
-def _optional_float(value: object) -> float | None:
-    if value is None or value == "":
-        return None
-    return float(value)
+        ``hat_beta`` is the empirical off-trace mismatch rate (1 - matcher
+        confidence) and ``hat_g`` is the number of distinct correlated batch
+        groups (edges sharing a block collapse to one group). The certificate
+        widens when batch correlation is high (large ``hat_g``) and an OOD flag
+        is raised when it crosses the historical maximum used for calibration.
+        """
+        from crosstaint.propagation.certificate import azuma_radius, bounded_difference_C
+
+        n = len(observations)
+        if n == 0:
+            return {"certificate": None, "g_hat": 0, "beta_hat": 0.0, "epsilon": 0.0, "ood": False}
+
+        beta_hat = sum(max(0.0, 1.0 - conf) for conf, _ in observations) / n
+        g_hat = len({block for _, block in observations})
+        c_bound = bounded_difference_C(n)
+        epsilon = azuma_radius(n, c_bound, alpha=0.05)
+        certificate = min(1.0, g_hat * (beta_hat + epsilon)) if g_hat > 0 else 0.0
+        ood = g_hat > self.cert_ood_g_max
+        return {
+            "certificate": certificate,
+            "g_hat": g_hat,
+            "beta_hat": beta_hat,
+            "epsilon": epsilon,
+            "ood": ood,
+        }

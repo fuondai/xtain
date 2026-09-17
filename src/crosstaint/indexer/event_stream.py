@@ -1,5 +1,3 @@
-"""Event stream processor for multi-chain RPC ingestion."""
-
 from __future__ import annotations
 
 import logging
@@ -12,8 +10,6 @@ logger = logging.getLogger(__name__)
 
 
 class EventStream:
-    """Event stream processor for multi-chain RPC ingestion."""
-
     def __init__(self, chain_clients: dict[str, ChainClientProtocol]) -> None:
         self._clients = chain_clients
 

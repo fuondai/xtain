@@ -9,7 +9,9 @@ build/
 results/
 result/
 artifacts/
-data/
+data/*
+!data/crosschain_bridge_exploits_55.json
+!data/manifest_55_corpus.json
 datasets/
 checkpoints/
 *.pt
@@ -24,4 +26,6 @@ checkpoints/
 *.bbl
 *.blg
 *.pdf
+!figures/*.pdf
 .DS_Store
+

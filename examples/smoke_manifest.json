@@ -1,0 +1,99 @@
+{
+  "benchmark_name": "CrossTaint Smoke Test Benchmark",
+  "version": "1.0.0",
+  "cases": [
+    {
+      "case_id": "smoke_case_001",
+      "origin": {
+        "address": "0x0000000000000000000000000000000000000001",
+        "chain": "ethereum",
+        "value": 1000000000
+      },
+      "sources": [
+        {"source": "Etherscan manual verification"},
+        {"source": "Independent investigator tag"}
+      ],
+      "hops": [
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "wormhole",
+          "address": "0x0000000000000000000000000000000000000002",
+          "value": 1000000000,
+          "asset": "USDC",
+          "sources": [
+            {"source": "Wormhole explorer tx hash"},
+            {"source": "BSC block explorer mint event"}
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "polygon",
+          "bridge": "layerzero",
+          "address": "0x0000000000000000000000000000000000000003",
+          "value": 1000000000,
+          "asset": "USDC",
+          "sources": [
+            {"source": "LayerZero relay proof"},
+            {"source": "Polygon indexer event log"}
+          ]
+        }
+      ]
+    },
+    {
+      "case_id": "smoke_case_002",
+      "origin": {
+        "address": "0x0000000000000000000000000000000000000010",
+        "chain": "arbitrum",
+        "value": 500000000
+      },
+      "sources": [
+        {"source": "Arbiscan trace"},
+        {"source": "Independent wallet-monitoring report"}
+      ],
+      "hops": [
+        {
+          "from_chain": "arbitrum",
+          "to_chain": "ethereum",
+          "bridge": "across",
+          "address": "0x0000000000000000000000000000000000000011",
+          "value": 500000000,
+          "asset": "ETH",
+          "sources": [
+            {"source": "Across Protocol event log"},
+            {"source": "Ethereum deposit contract"}
+          ]
+        },
+        {
+          "from_chain": "ethereum",
+          "to_chain": "bsc",
+          "bridge": "stargate",
+          "address": "0x0000000000000000000000000000000000000012",
+          "value": 500000000,
+          "asset": "ETH",
+          "sources": [
+            {"source": "Stargate composer tx"},
+            {"source": "BSC Stargate vault"}
+          ]
+        },
+        {
+          "from_chain": "bsc",
+          "to_chain": "avalanche",
+          "bridge": "cbridge",
+          "address": "0x0000000000000000000000000000000000000013",
+          "value": 500000000,
+          "asset": "ETH",
+          "sources": [
+            {"source": "CBridge transfer log"},
+            {"source": "Avalanche C-Chain bridge"}
+          ]
+        }
+      ]
+    }
+  ],
+  "benign_addresses": [
+    "0x0000000000000000000000000000000000000100",
+    "0x0000000000000000000000000000000000000101",
+    "0x0000000000000000000000000000000000000102"
+  ]
+}

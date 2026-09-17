@@ -1,81 +1,98 @@
-"""Cold-start fallback for zero-history addresses."""
+"""Cold-start fallback for addresses with insufficient graph history."""
 
 from __future__ import annotations
 
-from typing import Protocol
+from dataclasses import dataclass
+from typing import Any
 
-from crosstaint.types import SimilarityOutput
+import numpy as np
 
 
-class MatcherProtocol(Protocol):
-    """Minimal matcher interface required by cold-start fallback."""
-
-    def match(self, source_event: str, dest_event: str) -> float:
-        """Return confidence score in [0, 1] for a source-dest pair."""
-        ...
+@dataclass(frozen=True, slots=True)
+class PseudonymCandidate:
+    address: str
+    chain: str
+    matcher_confidence: float
+    temporal_distance_blocks: int
+    tag_overlap_score: float
 
 
 class ColdStartFallback:
-    """Fallback resolver for addresses with negligible history.
+    """Fallback pseudonym resolver for addresses with insufficient graph history."""
 
-    Addresses with degree <= 2 at first observation lack sufficient graph
-    structure for the HGT resolver. This class uses the matcher confidence
-    as a proxy signal, applying a conservative threshold to avoid false links.
-
-    Threshold rule:
-        - If matcher_confidence >= 0.75: return similarity = matcher_confidence
-        - Otherwise: return similarity = 0.0
-    """
-
-    CONFIDENCE_THRESHOLD: float = 0.75
+    def __init__(
+        self,
+        default_confidence: float = 0.5,
+        min_tag_overlap_for_match: float = 0.3,
+    ) -> None:
+        self._default_confidence = default_confidence
+        self._min_tag_overlap = min_tag_overlap_for_match
+        self._address_cache: dict[tuple[str, str], PseudonymCandidate] = {}
 
     def resolve(
         self,
-        node_a: str,
-        node_b: str,
-        matcher_confidence: float,
-    ) -> SimilarityOutput:
-        """Resolve a pair using matcher confidence as a cold-start proxy.
+        address: str,
+        chain: str,
+        candidates: list[dict[str, Any]],
+        matcher_scores: dict[str, float],
+        query_tags: list[str] | None = None,
+        query_first_block: int | None = None,
+    ) -> list[dict[str, Any]]:
+        if not candidates and not matcher_scores:
+            return []
 
-        Args:
-            node_a: first node identifier
-            node_b: second node identifier
-            matcher_confidence: matcher confidence score in [0, 1]
+        self_tags = set(query_tags or [])
+        reference = {"first_block": query_first_block} if query_first_block is not None else {}
+        scored_candidates: list[tuple[float, dict[str, Any]]] = []
+        for cand in candidates:
+            cand_address = str(cand.get("address", ""))
+            cand_tags = set(cand.get("tags", []))
 
-        Returns:
-            SimilarityOutput with is_cold_start=True and appropriate similarity
-        """
-        if matcher_confidence >= self.CONFIDENCE_THRESHOLD:
-            similarity = float(matcher_confidence)
-        else:
-            similarity = 0.0
+            matcher_confidence = float(matcher_scores.get(cand_address, self._default_confidence))
+            tag_overlap = self._compute_tag_overlap(self_tags, cand_tags)
+            temporal_penalty = self._temporal_penalty(cand, reference)
+            temporal_penalty = max(0.0, min(1.0, temporal_penalty))
 
-        return SimilarityOutput(
-            node_a=node_a,
-            node_b=node_b,
-            similarity=similarity,
-            is_cold_start=True,
-            cold_start_matcher_confidence=float(matcher_confidence),
-        )
+            combined_score = (
+                0.50 * matcher_confidence
+                + 0.35 * tag_overlap
+                + 0.15 * (1.0 - temporal_penalty)
+            )
+            scored_candidates.append((combined_score, cand))
 
-    def resolve_batch(
+        scored_candidates.sort(key=lambda x: x[0], reverse=True)
+        results: list[dict[str, Any]] = []
+        for score, cand in scored_candidates:
+            results.append({
+                **cand,
+                "resolution_score": float(score),
+                "is_cold_start": True,
+                "matcher_confidence": float(matcher_scores.get(cand.get("address", ""), self._default_confidence)),
+            })
+        return results
+
+    def _compute_tag_overlap(self, tags_a: set[str], tags_b: set[str]) -> float:
+        if not tags_a or not tags_b:
+            return 0.0
+        intersection = len(tags_a & tags_b)
+        union = len(tags_a | tags_b)
+        return float(intersection) / float(union) if union > 0 else 0.0
+
+    def _temporal_penalty(
         self,
-        pairs: list[tuple[str, str]],
-        matcher_confidences: list[float],
-    ) -> list[SimilarityOutput]:
-        """Batch cold-start resolution.
+        candidate: dict[str, Any],
+        reference: dict[str, Any],
+    ) -> float:
+        cand_block = int(candidate.get("first_block", 0))
+        ref_block = int(reference.get("first_block", cand_block))
+        block_diff = abs(cand_block - ref_block)
+        return float(min(block_diff, 10000)) / 10000.0
 
-        Args:
-            pairs: list of (node_a, node_b) tuples
-            matcher_confidences: parallel list of matcher confidence scores
-
-        Returns:
-            list of SimilarityOutput, one per pair
-        """
-        if len(pairs) != len(matcher_confidences):
-            raise ValueError("pairs and matcher_confidences must have the same length")
-
+    def batch_resolve(
+        self,
+        queries: list[tuple[str, str, list[dict[str, Any]], dict[str, float]]],
+    ) -> list[list[dict[str, Any]]]:
         return [
-            self.resolve(a, b, conf)
-            for (a, b), conf in zip(pairs, matcher_confidences)
+            self.resolve(address, chain, candidates, scores)
+            for address, chain, candidates, scores in queries
         ]

@@ -1,5 +1,3 @@
-"""Multi-Chain Indexer."""
-
 from crosstaint.indexer.synthetic_graph import SyntheticGraphBuilder
 from crosstaint.indexer.event_stream import EventStream
 
