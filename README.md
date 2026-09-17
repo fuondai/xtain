@@ -37,9 +37,26 @@ result = stack.propagate(
 
 `result.suspect_set` contains ranked suspect addresses and `result.soundness_certificate` records the per-case bounded-mismatch certificate metadata.
 
-## Artifact Scope
+## Benchmark Dataset & Reproduction
 
-This repository intentionally ships source code and public configuration only. Historical exploit manifests, benign-user background pools, checkpoints, indexed graph snapshots, local experiment outputs, manuscripts, and bibliography files are not part of this artifact.
+The repository includes the verified corpus of 55 real-world cross-chain bridge exploits spanning 2021-2026:
+- Raw verified exploit incidents: `data/crosschain_bridge_exploits_55.json`
+- Ground-truth evaluation manifest: `data/manifest_55_corpus.json`
+
+To run the complete evaluation pipeline (smoke tests, manifest verification, 10-run comparative benchmarks, and vector figure generation):
+
+```bash
+bash run_pipeline.sh
+```
+
+Or run individual reproduction scripts:
+
+```bash
+python -m crosstaint.smoke_test
+python scripts/run_paper_benchmarks.py
+python scripts/reproduce_paper_full.py
+python generate_analytic_figures.py
+```
 
 ## License
 
